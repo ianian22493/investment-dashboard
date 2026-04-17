@@ -445,19 +445,21 @@
 // 台股：每股成本 = 總成本 ÷ 股數
 // ─────────────────────────────────────────
 
+// 台股成本計算方式：截圖欄位是「股數 / 現值 / 損益」
+// 成本 = 現值 − 未實現損益，每股成本 = 成本 ÷ 股數
 const TW_HOLDINGS = [
-  { code: "00692", name: "富邦公司治理", shares: 6618,  costPerShare: 73.62  },
-  { code: "00915", name: "凱基優選高股息30", shares: 2000, costPerShare: 24.54 },
-  { code: "1104",  name: "環泥",         shares: 20000, costPerShare: 29.22  },
-  { code: "2211",  name: "長榮鋼",       shares: 3100,  costPerShare: 99.56  },
-  { code: "2330",  name: "台積電",       shares: 40,    costPerShare: 2021.2 },
-  { code: "2536",  name: "宏普",         shares: 5000,  costPerShare: 22.25  },
-  { code: "2834",  name: "臺企銀",       shares: 13000, costPerShare: 16.23  },
-  { code: "3293",  name: "鈺象",         shares: 940,   costPerShare: 771.6  },
-  { code: "3661",  name: "世芯-KY",      shares: 10,    costPerShare: 3499.5 },
-  { code: "3703",  name: "欣陸",         shares: 12000, costPerShare: 21.75  },
-  { code: "4588",  name: "玖鼎電力",     shares: 1400,  costPerShare: 59.94  },
-  { code: "4707",  name: "磐亞",         shares: 32000, costPerShare: 14.98  },
+  { code: "00692", name: "富邦公司治理",     shares: 6618,  costPerShare: 35.45  }, // 487277-252691=234586÷6618
+  { code: "00915", name: "凱基優選高股息30", shares: 2000,  costPerShare: 8.025  }, // 49082-33032=16050÷2000
+  { code: "1104",  name: "環泥",             shares: 20000, costPerShare: 25.45  }, // 584423-75441=508982÷20000
+  { code: "2211",  name: "長榮鋼",           shares: 3100,  costPerShare: 85.61  }, // 308630-43250=265380÷3100
+  { code: "2330",  name: "台積電",           shares: 40,    costPerShare: 1792.5 }, // 80848-9148=71700÷40
+  { code: "2536",  name: "宏普",             shares: 5000,  costPerShare: 35.41  }, // 111260+65797=177057÷5000（賠錢）
+  { code: "2834",  name: "臺企銀",           shares: 13000, costPerShare: 12.75  }, // 210977-45246=165731÷13000
+  { code: "3293",  name: "鈺象",             shares: 940,   costPerShare: 667.19 }, // 725300-98143=627157÷940
+  { code: "3661",  name: "世芯-KY",          shares: 10,    costPerShare: 2503.5 }, // 34995-9960=25035÷10
+  { code: "3703",  name: "欣陸",             shares: 12000, costPerShare: 25.27  }, // 261048+42238=303286÷12000（賠錢）
+  { code: "4588",  name: "玖鼎電力",         shares: 1400,  costPerShare: 90.18  }, // 83911+42348=126259÷1400（賠錢）
+  { code: "4707",  name: "磐亞",             shares: 32000, costPerShare: 12.02  }, // 479490-94990=384500÷32000
 ];
 
 const US_HOLDINGS = [
@@ -465,13 +467,13 @@ const US_HOLDINGS = [
   { ticker: "CELH", name: "Celsius Holdings", shares: 4,       costPerShare: 34.25   },
   { ticker: "GOOGL",name: "Alphabet",         shares: 6.00049, costPerShare: 287.33  },
   { ticker: "MELI", name: "MercadoLibre",     shares: 1,       costPerShare: 1650.00 },
-  { ticker: "MSFT", name: "Microsoft",        shares: 4,       costPerShare: 377.00  },
+  { ticker: "MSFT", name: "Microsoft",        shares: 5,       costPerShare: 377.00  }, // 5×377=1885 ✓
   { ticker: "NVDA", name: "NVIDIA",           shares: 4.00006, costPerShare: 172.50  },
   { ticker: "ONDS", name: "Ondas Holdings",   shares: 7,       costPerShare: 8.73    },
   { ticker: "RBRK", name: "Rubrik",           shares: 9,       costPerShare: 47.06   },
   { ticker: "S",    name: "SentinelOne",      shares: 1,       costPerShare: 12.00   },
   { ticker: "SMR",  name: "NuScale Power",    shares: 1,       costPerShare: 11.50   },
-  { ticker: "SOUN", name: "SoundHound AI",    shares: 11,      costPerShare: 5.75    },
+  { ticker: "SOUN", name: "SoundHound AI",    shares: 10,      costPerShare: 6.33    }, // 10×7.83=78.30 ✓
   { ticker: "TSLA", name: "Tesla",            shares: 11,      costPerShare: 370.55  },
   { ticker: "TTD",  name: "The Trade Desk",   shares: 3,       costPerShare: 23.10   },
   { ticker: "ZS",   name: "Zscaler",          shares: 11,      costPerShare: 141.33  },
