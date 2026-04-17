@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>又瑄的投資儀表板</title>
+  <style>
+    /* ── 基礎 ── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg:        #0d1117;
+      --card:      #161b22;
+      --card2:     #1c2128;
+      --border:    #30363d;
+      --border2:   #21262d;
+      --text:      #e6edf3;
+      --text2:     #8b949e;
+      --text3:     #6e7681;
+      --navy:      #1b2d4f;
+      --blue:      #388bfd;
+      --green:     #3fb950;
+      --red:       #f85149;
+      --yellow:    #d29922;
+      --green-bg:  rgba(63,185,80,0.1);
+      --red-bg:    rgba(248,81,73,0.1);
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+      min-height: 100vh;
+      padding: 0 0 80px;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      background: var(--navy);
+      padding: 24px 20px 20px;
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .site-header-inner {
+      max-width: 960px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .site-title { font-size: 18px; font-weight: 700; color: #fff; }
+    .site-title span { opacity: .55; font-weight: 400; font-size: 14px; margin-left: 8px; }
+    .update-pill {
+      font-size: 12px; color: rgba(255,255,255,.5);
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 20px; padding: 4px 12px; white-space: nowrap;
+    }
+    .update-pill.loading { color: var(--yellow); }
+    .update-pill.done    { color: var(--green); }
+
+    /* ── Layout ── */
+    .page { max-width: 960px; margin: 0 auto; padding: 24px 16px 0; }
+
+    /* ── Section ── */
+    .section { margin-bottom: 36px; }
+    .section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--text3);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::after {
+      content:''; flex:1; height:1px; background: var(--border2);
+    }
+
+    /* ── Summary Cards ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media(min-width:600px){ .summary-grid { grid-template-columns: repeat(4,1fr); } }
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .summary-card .label { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+    .summary-card .value { font-size: 22px; font-weight: 700; line-height: 1.1; }
+    .summary-card .sub   { font-size: 12px; color: var(--text2); margin-top: 4px; }
+    .positive { color: var(--green); }
+    .negative { color: var(--red); }
+    .neutral  { color: var(--text2); }
+
+    /* ── Stock Table ── */
+    .stock-table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .stock-table-header {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border2);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .stock-table-header .tname {
+      font-size: 13px; font-weight: 700; color: var(--text);
+    }
+    .stock-table-header .ttotal {
+      font-size: 12px; color: var(--text2);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      font-size: 10px; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--text3);
+      padding: 8px 12px; text-align: right; background: var(--card2);
+    }
+    th:first-child { text-align: left; }
+    td {
+      font-size: 13px; padding: 10px 12px;
+      text-align: right; border-top: 1px solid var(--border2);
+      color: var(--text);
+    }
+    td:first-child { text-align: left; }
+    tr:hover td { background: rgba(255,255,255,.025); }
+    .ticker { font-weight: 700; font-size: 13px; }
+    .stock-name { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .badge {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      border-radius: 4px; padding: 1px 5px; margin-left: 5px;
+    }
+    .badge-tw { background: rgba(56,139,253,.15); color: #79c0ff; }
+    .badge-us { background: rgba(63,185,80,.12); color: #56d364; }
+    .loading-cell { color: var(--text3); font-size: 12px; }
+
+    /* ── 台股 mobile ── */
+    @media(max-width:599px) {
+      .hide-mobile { display: none; }
+    }
+
+    /* ── JPY Section ── */
+    .jpy-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media(min-width:600px){ .jpy-grid { grid-template-columns: 1fr 1fr; } }
+
+    .jpy-card {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .jpy-card .jpy-label { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+    .jpy-card .jpy-big   { font-size: 28px; font-weight: 700; }
+    .jpy-card .jpy-sub   { font-size: 12px; color: var(--text2); margin-top: 6px; }
+
+    /* Progress bar */
+    .progress-wrap {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .progress-label { font-size: 13px; font-weight: 600; margin-bottom: 14px; display: flex; justify-content: space-between; }
+    .progress-bar-bg {
+      background: var(--border);
+      border-radius: 100px; height: 10px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #388bfd, #56d364);
+      height: 100%; border-radius: 100px;
+      transition: width 1s ease;
+    }
+    .progress-meta {
+      display: flex; justify-content: space-between;
+      margin-top: 10px; font-size: 12px; color: var(--text2);
+    }
+
+    /* ── Fukuoka Section ── */
+    .fukuoka-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media(min-width:640px){ .fukuoka-grid { grid-template-columns: 1fr 1fr; } }
+    @media(min-width:900px){ .fukuoka-grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+    .fukuoka-card {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .fukuoka-card .fk-tag {
+      font-size: 10px; font-weight: 700; letter-spacing:.06em;
+      text-transform: uppercase; color: var(--blue);
+      margin-bottom: 8px;
+    }
+    .fukuoka-card .fk-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .fukuoka-card .fk-body  { font-size: 13px; line-height: 1.7; color: var(--text2); }
+    .fukuoka-card .fk-price {
+      font-size: 20px; font-weight: 700; color: var(--yellow);
+      margin-top: 10px;
+    }
+    .fukuoka-card .fk-date  { font-size: 11px; color: var(--text3); margin-top: 8px; }
+
+    .analysis-card {
+      background: var(--card);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .analysis-card .analysis-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 14px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border2);
+    }
+    .analysis-card .analysis-title { font-size: 15px; font-weight: 700; }
+    .analysis-card .analysis-date  { font-size: 11px; color: var(--text3); }
+    .analysis-body { font-size: 13px; line-height: 1.8; color: var(--text2); }
+    .analysis-body strong { color: var(--text); }
+    .analysis-body .highlight {
+      background: rgba(56,139,253,.1); border-left: 3px solid var(--blue);
+      padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0;
+      font-size: 13px; line-height: 1.7;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      text-align: center; padding: 32px 16px 16px;
+      font-size: 12px; color: var(--text3);
+    }
+    .site-footer a { color: var(--text3); text-decoration: none; }
+    .site-footer a:hover { color: var(--text2); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <div class="site-title">又瑄的投資儀表板 <span>Finance Dashboard</span></div>
+    <div class="update-pill loading" id="updatePill">⏳ 載入中...</div>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- ══════════════════════════════════════
+       投資組合總覽
+  ══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-title">投資組合總覽</div>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="label">台股市值（TWD）</div>
+        <div class="value" id="twTotal">—</div>
+        <div class="sub" id="twPnl">載入中</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">美股市值（USD）</div>
+        <div class="value" id="usTotal">—</div>
+        <div class="sub" id="usPnl">載入中</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">台股成本（TWD）</div>
+        <div class="value neutral" id="twCost">—</div>
+        <div class="sub">持倉 12 支</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">美股成本（USD）</div>
+        <div class="value neutral" id="usCost">—</div>
+        <div class="sub">持倉 14 支</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       台股持倉
+  ══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-title">台股持倉 <span class="badge badge-tw">TWSE</span></div>
+
+    <div class="stock-table-wrap">
+      <div class="stock-table-header">
+        <div class="tname">台灣股票</div>
+        <div class="ttotal" id="twTableTotal">市值合計：載入中</div>
+      </div>
+      <div style="overflow-x:auto">
+        <table id="twTable">
+          <thead>
+            <tr>
+              <th>股票</th>
+              <th>股數</th>
+              <th>現價</th>
+              <th class="hide-mobile">成本/股</th>
+              <th>市值</th>
+              <th>損益</th>
+              <th>報酬率</th>
+            </tr>
+          </thead>
+          <tbody id="twTableBody">
+            <tr><td colspan="7" class="loading-cell" style="text-align:center;padding:20px;">⏳ 抓取即時股價中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       美股持倉
+  ══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-title">美股持倉 <span class="badge badge-us">Firstrade</span></div>
+
+    <div class="stock-table-wrap">
+      <div class="stock-table-header">
+        <div class="tname">美國股票</div>
+        <div class="ttotal" id="usTableTotal">市值合計：載入中</div>
+      </div>
+      <div style="overflow-x:auto">
+        <table id="usTable">
+          <thead>
+            <tr>
+              <th>股票</th>
+              <th>股數</th>
+              <th>現價 (USD)</th>
+              <th class="hide-mobile">成本/股</th>
+              <th>市值</th>
+              <th>損益</th>
+              <th>報酬率</th>
+            </tr>
+          </thead>
+          <tbody id="usTableBody">
+            <tr><td colspan="7" class="loading-cell" style="text-align:center;padding:20px;">⏳ 抓取即時股價中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       日幣存款 × 福岡購屋夢
+  ══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-title">日幣存款 × 福岡購屋夢</div>
+
+    <div class="jpy-grid" style="margin-bottom:14px;">
+      <div class="jpy-card">
+        <div class="jpy-label">目前日幣存款</div>
+        <div class="jpy-big" id="jpyBalance">¥600,000</div>
+        <div class="jpy-sub" id="jpyInTwd">換算台幣：載入中</div>
+      </div>
+      <div class="jpy-card">
+        <div class="jpy-label">即時匯率 JPY／TWD</div>
+        <div class="jpy-big" id="jpyRate">—</div>
+        <div class="jpy-sub" id="jpyRateUpdate">載入中</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>🏠 福岡購屋進度</span>
+        <span id="progressPct" style="color:var(--blue)">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-meta">
+        <span>目前：<strong id="progressCurrent" style="color:var(--text)">¥600,000</strong></span>
+        <span>目標：<strong style="color:var(--text)">¥30,000,000</strong>（中古屋，約 3,000 萬日幣）</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       福岡房市分析
+  ══════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-title">福岡房市分析</div>
+
+    <div class="fukuoka-grid" style="margin-bottom:14px;">
+      <div class="fukuoka-card">
+        <div class="fk-tag">中古屋均價</div>
+        <div class="fk-title">福岡市全區均價</div>
+        <div class="fk-body">70㎡ 以上中古屋，市區平均行情。</div>
+        <div class="fk-price">約 3,276 萬円</div>
+        <div class="fk-date">資料來源：2026年2月</div>
+      </div>
+      <div class="fukuoka-card">
+        <div class="fk-tag">中央區（最貴）</div>
+        <div class="fk-title">天神・大濠・六本松</div>
+        <div class="fk-body">福岡市最核心地段，步行可達天神商圈。</div>
+        <div class="fk-price">約 4,215 萬円</div>
+        <div class="fk-date">均價 60 萬円／㎡</div>
+      </div>
+      <div class="fukuoka-card">
+        <div class="fk-tag">新築分讓（參考）</div>
+        <div class="fk-title">新建大樓（70㎡）</div>
+        <div class="fk-body">2024年市內新築均價大幅上漲，需求旺盛。</div>
+        <div class="fk-price">約 5,598 萬円</div>
+        <div class="fk-date">2024 比 2023 漲 40.1%</div>
+      </div>
+    </div>
+
+    <div class="analysis-card">
+      <div class="analysis-header">
+        <div class="analysis-title">📊 第一期市場分析：福岡市中央區・早良區</div>
+        <div class="analysis-date">2026年4月</div>
+      </div>
+      <div class="analysis-body">
+        <strong>為什麼是福岡？</strong>
+        <p>福岡是日本九州最大城市，擁有機場市區直達地鐵（10 分鐘）、便宜的生活費、溫和的氣候，是近年外國人移居日本的熱門首選。2025 年全日本漲幅最大的城市之一（+21.8%）。</p>
+
+        <div class="highlight">
+          <strong>建議關注區域</strong>：中央區（天神・大濠）生活機能最強但較貴；早良區（西新・藤崎）兼顧價格與便利性，是性價比較高的選項，目前中古 70㎡ 約 2,500–3,000 萬円。
+        </div>
+
+        <strong>給你的具體建議</strong>
+        <p>以你目前 60 萬日幣的基礎，目標中古屋 3,000 萬円（不含稅費），還需 2,940 萬円。以每週穩定存款的速度，儀表板會自動更新進度條。</p>
+        <p style="margin-top:10px;">下一期分析（約兩週後）：東區・博多區性價比盤點，含實際建案比較。</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  又瑄的投資儀表板 · 數據每次開啟頁面時自動更新 · <a href="https://ianian22493.github.io/daily-brief/" target="_blank">← 每日簡報</a>
+</footer>
+
+<!-- ══════════════════════════════════════
+     JavaScript：即時資料抓取
+══════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────
+// 【持倉設定】這裡是你的持股資料，之後只要在這裡修改就好
+// 台股：每股成本 = 總成本 ÷ 股數
+// ─────────────────────────────────────────
+
+const TW_HOLDINGS = [
+  { code: "00692", name: "富邦公司治理", shares: 6618,  costPerShare: 73.62  },
+  { code: "00915", name: "凱基優選高股息30", shares: 2000, costPerShare: 24.54 },
+  { code: "1104",  name: "環泥",         shares: 20000, costPerShare: 29.22  },
+  { code: "2211",  name: "長榮鋼",       shares: 3100,  costPerShare: 99.56  },
+  { code: "2330",  name: "台積電",       shares: 40,    costPerShare: 2021.2 },
+  { code: "2536",  name: "宏普",         shares: 5000,  costPerShare: 22.25  },
+  { code: "2834",  name: "臺企銀",       shares: 13000, costPerShare: 16.23  },
+  { code: "3293",  name: "鈺象",         shares: 940,   costPerShare: 771.6  },
+  { code: "3661",  name: "世芯-KY",      shares: 10,    costPerShare: 3499.5 },
+  { code: "3703",  name: "欣陸",         shares: 12000, costPerShare: 21.75  },
+  { code: "4588",  name: "玖鼎電力",     shares: 1400,  costPerShare: 59.94  },
+  { code: "4707",  name: "磐亞",         shares: 32000, costPerShare: 14.98  },
+];
+
+const US_HOLDINGS = [
+  { ticker: "AMZN", name: "Amazon",           shares: 2,       costPerShare: 201.50  },
+  { ticker: "CELH", name: "Celsius Holdings", shares: 4,       costPerShare: 34.25   },
+  { ticker: "GOOGL",name: "Alphabet",         shares: 6.00049, costPerShare: 287.33  },
+  { ticker: "MELI", name: "MercadoLibre",     shares: 1,       costPerShare: 1650.00 },
+  { ticker: "MSFT", name: "Microsoft",        shares: 4,       costPerShare: 377.00  },
+  { ticker: "NVDA", name: "NVIDIA",           shares: 4.00006, costPerShare: 172.50  },
+  { ticker: "ONDS", name: "Ondas Holdings",   shares: 7,       costPerShare: 8.73    },
+  { ticker: "RBRK", name: "Rubrik",           shares: 9,       costPerShare: 47.06   },
+  { ticker: "S",    name: "SentinelOne",      shares: 1,       costPerShare: 12.00   },
+  { ticker: "SMR",  name: "NuScale Power",    shares: 1,       costPerShare: 11.50   },
+  { ticker: "SOUN", name: "SoundHound AI",    shares: 11,      costPerShare: 5.75    },
+  { ticker: "TSLA", name: "Tesla",            shares: 11,      costPerShare: 370.55  },
+  { ticker: "TTD",  name: "The Trade Desk",   shares: 3,       costPerShare: 23.10   },
+  { ticker: "ZS",   name: "Zscaler",          shares: 11,      costPerShare: 141.33  },
+];
+
+// 目標日幣金額（3,000萬円）
+const JPY_GOAL = 30_000_000;
+// 目前日幣存款
+let jpyBalance = 600_000;
+
+// ─────────────────────────────────────────
+// 工具函式
+// ─────────────────────────────────────────
+const fmt = (n, dec=0, prefix='') =>
+  prefix + n.toLocaleString('zh-TW', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+
+function colorClass(n) { return n >= 0 ? 'positive' : 'negative'; }
+function sign(n)       { return n >= 0 ? '+' : ''; }
+
+function pnlHtml(pnl, pct) {
+  const cls = colorClass(pnl);
+  return `<span class="${cls}">${sign(pnl)}${fmt(pnl, pnl > 1000 ? 0 : 2)}</span>
+          <span class="${cls}" style="font-size:11px;margin-left:4px">(${sign(pct)}${pct.toFixed(2)}%)</span>`;
+}
+
+// ─────────────────────────────────────────
+// 台股：TWSE Open API
+// ─────────────────────────────────────────
+async function fetchTWPrices() {
+  // 一次取得所有上市股票當日收盤價
+  const url = 'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL';
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    // 建立 code→price 的 Map
+    const priceMap = {};
+    for (const item of data) {
+      if (item.Code && item.ClosingPrice) {
+        priceMap[item.Code] = parseFloat(item.ClosingPrice.replace(/,/g,'')) || null;
+      }
+    }
+    return priceMap;
+  } catch(e) {
+    console.error('TWSE fetch error:', e);
+    return {};
+  }
+}
+
+// ─────────────────────────────────────────
+// 美股：Yahoo Finance（非官方，免費無需 API Key）
+// ─────────────────────────────────────────
+async function fetchUSPrice(ticker) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=1d&interval=1d`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const meta = data?.chart?.result?.[0]?.meta;
+    return meta?.regularMarketPrice ?? null;
+  } catch(e) {
+    console.error(`Yahoo fetch error for ${ticker}:`, e);
+    return null;
+  }
+}
+
+// ─────────────────────────────────────────
+// 匯率：ExchangeRate-API（免費，無需 Key）
+// ─────────────────────────────────────────
+async function fetchJPYRate() {
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/JPY');
+    const data = await res.json();
+    // JPY→TWD：1 JPY = ? TWD
+    return data?.rates?.TWD ?? null;
+  } catch(e) {
+    console.error('Exchange rate fetch error:', e);
+    return null;
+  }
+}
+
+// ─────────────────────────────────────────
+// 渲染台股表格
+// ─────────────────────────────────────────
+function renderTWTable(priceMap) {
+  const tbody = document.getElementById('twTableBody');
+  let totalValue = 0, totalCost = 0;
+  let rows = '';
+
+  for (const h of TW_HOLDINGS) {
+    const price = priceMap[h.code];
+    const cost  = h.shares * h.costPerShare;
+    totalCost += cost;
+
+    if (price === null || price === undefined) {
+      rows += `<tr>
+        <td><div class="ticker">${h.code}</div><div class="stock-name">${h.name}</div></td>
+        <td>${h.shares.toLocaleString()}</td>
+        <td class="loading-cell">—</td>
+        <td class="hide-mobile">${fmt(h.costPerShare, 2)}</td>
+        <td class="loading-cell">—</td>
+        <td class="loading-cell">—</td>
+        <td class="loading-cell">—</td>
+      </tr>`;
+      continue;
+    }
+
+    const value = price * h.shares;
+    const pnl   = value - cost;
+    const pct   = (pnl / cost) * 100;
+    totalValue += value;
+
+    rows += `<tr>
+      <td><div class="ticker">${h.code}</div><div class="stock-name">${h.name}</div></td>
+      <td>${h.shares.toLocaleString()}</td>
+      <td>${fmt(price, 2)}</td>
+      <td class="hide-mobile">${fmt(h.costPerShare, 2)}</td>
+      <td>${fmt(value, 0)}</td>
+      <td>${pnlHtml(pnl, pct)}</td>
+      <td class="${colorClass(pct)}">${sign(pct)}${pct.toFixed(2)}%</td>
+    </tr>`;
+  }
+
+  tbody.innerHTML = rows;
+
+  // 更新表格標頭合計
+  document.getElementById('twTableTotal').textContent =
+    `市值合計：NT$ ${fmt(totalValue, 0)}`;
+
+  return { totalValue, totalCost };
+}
+
+// ─────────────────────────────────────────
+// 渲染美股表格
+// ─────────────────────────────────────────
+function renderUSTable(prices) {
+  const tbody = document.getElementById('usTableBody');
+  let totalValue = 0, totalCost = 0;
+  let rows = '';
+
+  US_HOLDINGS.forEach((h, i) => {
+    const price = prices[i];
+    const cost  = h.shares * h.costPerShare;
+    totalCost += cost;
+
+    if (!price) {
+      rows += `<tr>
+        <td><div class="ticker">${h.ticker}</div><div class="stock-name">${h.name}</div></td>
+        <td>${h.shares}</td>
+        <td class="loading-cell">—</td>
+        <td class="hide-mobile">$${fmt(h.costPerShare, 2)}</td>
+        <td class="loading-cell">—</td>
+        <td class="loading-cell">—</td>
+        <td class="loading-cell">—</td>
+      </tr>`;
+      return;
+    }
+
+    const value = price * h.shares;
+    const pnl   = value - cost;
+    const pct   = (pnl / cost) * 100;
+    totalValue += value;
+
+    rows += `<tr>
+      <td><div class="ticker">${h.ticker}</div><div class="stock-name">${h.name}</div></td>
+      <td>${h.shares}</td>
+      <td>$${fmt(price, 2)}</td>
+      <td class="hide-mobile">$${fmt(h.costPerShare, 2)}</td>
+      <td>$${fmt(value, 2)}</td>
+      <td>${pnlHtml(pnl, pct)}</td>
+      <td class="${colorClass(pct)}">${sign(pct)}${pct.toFixed(2)}%</td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = rows;
+  document.getElementById('usTableTotal').textContent =
+    `市值合計：USD $${fmt(totalValue, 2)}`;
+
+  return { totalValue, totalCost };
+}
+
+// ─────────────────────────────────────────
+// 渲染 Summary Cards
+// ─────────────────────────────────────────
+function renderSummary(tw, us) {
+  const twPnl = tw.totalValue - tw.totalCost;
+  const twPct = (twPnl / tw.totalCost) * 100;
+  const usPnl = us.totalValue - us.totalCost;
+  const usPct = (usPnl / us.totalCost) * 100;
+
+  document.getElementById('twTotal').textContent = `NT$${fmt(tw.totalValue, 0)}`;
+  document.getElementById('twTotal').className = `value ${colorClass(twPct)}`;
+  document.getElementById('twPnl').innerHTML =
+    `<span class="${colorClass(twPnl)}">${sign(twPnl)}NT$${fmt(Math.abs(twPnl), 0)} (${sign(twPct)}${twPct.toFixed(2)}%)</span>`;
+
+  document.getElementById('usTotal').textContent = `$${fmt(us.totalValue, 2)}`;
+  document.getElementById('usTotal').className = `value ${colorClass(usPct)}`;
+  document.getElementById('usPnl').innerHTML =
+    `<span class="${colorClass(usPnl)}">${sign(usPnl)}$${fmt(Math.abs(usPnl), 2)} (${sign(usPct)}${usPct.toFixed(2)}%)</span>`;
+
+  document.getElementById('twCost').textContent = `NT$${fmt(tw.totalCost, 0)}`;
+  document.getElementById('usCost').textContent = `$${fmt(us.totalCost, 2)}`;
+}
+
+// ─────────────────────────────────────────
+// 渲染日幣存款 + 進度條
+// ─────────────────────────────────────────
+function renderJPY(rate) {
+  const inTwd = rate ? jpyBalance * rate : null;
+  const pct   = Math.min((jpyBalance / JPY_GOAL) * 100, 100);
+
+  document.getElementById('jpyBalance').textContent = `¥${jpyBalance.toLocaleString()}`;
+  document.getElementById('jpyInTwd').textContent =
+    inTwd ? `換算台幣：NT$${fmt(inTwd, 0)}` : '匯率載入中...';
+
+  if (rate) {
+    document.getElementById('jpyRate').textContent = `1 JPY ≈ ${rate.toFixed(4)} TWD`;
+    document.getElementById('jpyRateUpdate').textContent = `1 TWD ≈ ${(1/rate).toFixed(2)} JPY`;
+  }
+
+  document.getElementById('progressPct').textContent = pct.toFixed(2) + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCurrent').textContent = `¥${jpyBalance.toLocaleString()}`;
+}
+
+// ─────────────────────────────────────────
+// 主程式：全部一起跑
+// ─────────────────────────────────────────
+async function loadAll() {
+  const pill = document.getElementById('updatePill');
+  pill.className = 'update-pill loading';
+  pill.textContent = '⏳ 載入中...';
+
+  try {
+    // 1. 台股價格（一次全拿）
+    const twPriceMap = await fetchTWPrices();
+
+    // 2. 美股價格（全部同時發送）
+    const usPrices = await Promise.all(US_HOLDINGS.map(h => fetchUSPrice(h.ticker)));
+
+    // 3. 匯率
+    const jpyRate = await fetchJPYRate();
+
+    // 渲染
+    const tw = renderTWTable(twPriceMap);
+    const us = renderUSTable(usPrices);
+    renderSummary(tw, us);
+    renderJPY(jpyRate);
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('zh-TW', { hour:'2-digit', minute:'2-digit' });
+    pill.className = 'update-pill done';
+    pill.textContent = `✓ 已更新 ${timeStr}`;
+
+  } catch(err) {
+    console.error('loadAll error:', err);
+    pill.className = 'update-pill';
+    pill.textContent = '⚠ 部分資料未能載入';
+  }
+}
+
+// 頁面載入時執行
+loadAll();
+</script>
+
+</body>
+</html>
