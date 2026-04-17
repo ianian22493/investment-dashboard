@@ -576,145 +576,143 @@ function buildNewsLinks() {
 }
 
 // ─────────────────────────────────────────
-// 台股：TWSE API
 // ─────────────────────────────────────────
-async function fetchTW() {
-  try {
-    const res  = await fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL');
-    const data = await res.json();
-
-    let dateLabel = '';
-    if (data[0]?.Date) {
-      const d = data[0].Date;
-      const yr = parseInt(d.slice(0,3)) + 1911, mo = d.slice(3,5), dy = d.slice(5,7);
-      const today = new Date();
-      const isToday = today.getFullYear()===yr && (today.getMonth()+1)===+mo && today.getDate()===+dy;
-      dateLabel = isToday ? '' : `<span style="font-size:10px;color:var(--text3);margin-left:4px">收盤 ${mo}/${dy}</span>`;
-    }
-
-    const map = {};
-    for (const item of data) {
-      if (item.Code) map[item.Code] = {
-        price:  parseFloat(item.ClosingPrice?.replace(/,/g,'')) || null,
-        change: parseFloat(item.Change?.replace(/,/g,''))       || 0,
-      };
-    }
-
-    let rows = '';
-    for (const h of TW_HOLDINGS) {
-      const d = map[h.code];
-      if (!d?.price) {
-        rows += `<tr>
-          <td><div class="stock-code">${h.code}</div><div class="stock-name">${h.name}</div></td>
-          <td style="color:var(--text3)">—</td><td style="color:var(--text3)">—</td><td style="color:var(--text3)">—</td>
-        </tr>`;
-        continue;
-      }
-      const pct = d.change / (d.price - d.change) * 100;
-      const cls = d.change > 0 ? 'up' : d.change < 0 ? 'down' : 'flat';
-      const sign = d.change > 0 ? '+' : '';
-      rows += `<tr>
-        <td><div class="stock-code">${h.code}<a class="yf-link" href="https://tw.stock.yahoo.com/quote/${h.code}.TW" target="_blank">↗</a></div>
-            <div class="stock-name">${h.name}</div></td>
-        <td>${fmt(d.price)}${dateLabel}</td>
-        <td class="${cls}">${sign}${fmt(d.change)}</td>
-        <td class="${cls}">${sign}${pct.toFixed(2)}%</td>
-      </tr>`;
-    }
-    document.getElementById('twBody').innerHTML = rows;
-  } catch(e) {
-    document.getElementById('twBody').innerHTML =
-      `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text3)">無法取得台股資料</td></tr>`;
-  }
+// 核心：從 data.json 讀取股價（GitHub Actions 每日更新）
+// ─────────────────────────────────────────
+async function loadData() {
+  const res = await fetch('./data.json');
+  if (!res.ok) throw new Error(`data.json ${res.status}`);
+  return res.json();
 }
 
 // ─────────────────────────────────────────
-// 美股：Yahoo Finance v7（一次全部）
+// 台股：從 data.json 渲染
 // ─────────────────────────────────────────
-async function fetchUS() {
-  const symbols = US_HOLDINGS.map(h => h.ticker).join(',');
-  try {
-    const res  = await fetch(`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols}`);
-    const data = await res.json();
-    const results = data?.quoteResponse?.result || [];
-    const map = {};
-    for (const q of results) map[q.symbol] = q;
-
-    let rows = '';
-    for (const h of US_HOLDINGS) {
-      const q = map[h.ticker];
-      if (!q) {
-        rows += `<tr>
-          <td><div class="stock-code">${h.ticker}</div><div class="stock-name">${h.name}</div></td>
-          <td colspan="5" style="color:var(--text3)">—</td>
-        </tr>`;
-        continue;
-      }
-
-      const state  = q.marketState || 'CLOSED';
-      let price, change, pct;
-      if ((state==='PRE'||state==='PREPRE') && q.preMarketPrice) {
-        price = q.preMarketPrice; change = q.preMarketChange||0; pct = q.preMarketChangePercent||0;
-      } else if ((state==='POST'||state==='POSTPOST') && q.postMarketPrice) {
-        price = q.postMarketPrice; change = q.postMarketChange||0; pct = q.postMarketChangePercent||0;
-      } else {
-        price = q.regularMarketPrice; change = q.regularMarketChange||0; pct = q.regularMarketChangePercent||0;
-      }
-
-      const cls  = change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
-      const sign = change > 0 ? '+' : '';
-      const range = rangeBar(q.fiftyTwoWeekLow, q.fiftyTwoWeekHigh, price);
-
-      rows += `<tr>
-        <td><div class="stock-code">${h.ticker}<a class="yf-link" href="https://finance.yahoo.com/quote/${h.ticker}" target="_blank">↗</a></div>
-            <div class="stock-name">${h.name}</div></td>
-        <td>$${fmt(price)}</td>
-        <td class="${cls}">${sign}$${fmt(Math.abs(change))}</td>
-        <td class="${cls}">${sign}${pct.toFixed(2)}%</td>
-        <td class="hide-sm">${stateTag(state)}</td>
-        <td class="hide-sm">${range}</td>
-      </tr>`;
-    }
-    document.getElementById('usBody').innerHTML = rows;
-  } catch(e) {
-    document.getElementById('usBody').innerHTML =
-      `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text3)">無法取得美股資料</td></tr>`;
+function renderTW(twData) {
+  if (!twData || Object.keys(twData).length === 0) {
+    document.getElementById('twBody').innerHTML =
+      `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text3)">尚無資料（等待 GitHub Actions 首次執行）</td></tr>`;
+    return;
   }
+
+  let dateLabel = '';
+  const anyEntry = Object.values(twData)[0];
+  if (anyEntry?.date) {
+    const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    if (anyEntry.date !== todayStr) {
+      const parts = anyEntry.date.split('-');
+      dateLabel = `<span style="font-size:10px;color:var(--text3);margin-left:4px">收盤 ${parts[1]}/${parts[2]}</span>`;
+    }
+  }
+
+  let rows = '';
+  for (const h of TW_HOLDINGS) {
+    const d = twData[h.code];
+    if (!d?.price) {
+      rows += `<tr>
+        <td><div class="stock-code">${h.code}</div><div class="stock-name">${h.name}</div></td>
+        <td style="color:var(--text3)">—</td><td style="color:var(--text3)">—</td><td style="color:var(--text3)">—</td>
+      </tr>`;
+      continue;
+    }
+    const pct  = d.change / (d.price - d.change) * 100;
+    const cls  = d.change > 0 ? 'up' : d.change < 0 ? 'down' : 'flat';
+    const sign = d.change > 0 ? '+' : '';
+    rows += `<tr>
+      <td><div class="stock-code">${h.code}<a class="yf-link" href="https://tw.stock.yahoo.com/quote/${h.code}.TW" target="_blank">↗</a></div>
+          <div class="stock-name">${h.name}</div></td>
+      <td>${fmt(d.price)}${dateLabel}</td>
+      <td class="${cls}">${sign}${fmt(d.change)}</td>
+      <td class="${cls}">${sign}${pct.toFixed(2)}%</td>
+    </tr>`;
+  }
+  document.getElementById('twBody').innerHTML = rows;
+}
+
+// ─────────────────────────────────────────
+// 美股：從 data.json 渲染
+// ─────────────────────────────────────────
+function renderUS(usData) {
+  if (!usData || Object.keys(usData).length === 0) {
+    document.getElementById('usBody').innerHTML =
+      `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text3)">尚無資料（等待 GitHub Actions 首次執行）</td></tr>`;
+    return;
+  }
+
+  let rows = '';
+  for (const h of US_HOLDINGS) {
+    const q = usData[h.ticker];
+    if (!q?.price) {
+      rows += `<tr>
+        <td><div class="stock-code">${h.ticker}</div><div class="stock-name">${h.name}</div></td>
+        <td colspan="5" style="color:var(--text3)">—</td>
+      </tr>`;
+      continue;
+    }
+    const cls   = q.change > 0 ? 'up' : q.change < 0 ? 'down' : 'flat';
+    const sign  = q.change > 0 ? '+' : '';
+    const range = rangeBar(q.low52, q.high52, q.price);
+    rows += `<tr>
+      <td><div class="stock-code">${h.ticker}<a class="yf-link" href="https://finance.yahoo.com/quote/${h.ticker}" target="_blank">↗</a></div>
+          <div class="stock-name">${h.name}</div></td>
+      <td>$${fmt(q.price)}</td>
+      <td class="${cls}">${sign}$${fmt(Math.abs(q.change))}</td>
+      <td class="${cls}">${sign}${(q.pct||0).toFixed(2)}%</td>
+      <td class="hide-sm">${stateTag(q.state)}</td>
+      <td class="hide-sm">${range}</td>
+    </tr>`;
+  }
+  document.getElementById('usBody').innerHTML = rows;
 }
 
 // ─────────────────────────────────────────
 // 匯率 + 進度條
+// 優先用 data.json 快取，若無則直接打 API（er-api 允許跨域）
 // ─────────────────────────────────────────
-async function fetchJPY() {
+async function fetchJPY(cachedRate) {
   const pct = Math.min((JPY_BALANCE / JPY_GOAL) * 100, 100);
   document.getElementById('progressPct').textContent  = pct.toFixed(2) + '%';
   document.getElementById('progressFill').style.width = pct + '%';
 
-  try {
-    const res  = await fetch('https://open.er-api.com/v6/latest/JPY');
-    const data = await res.json();
-    const rate = data?.rates?.TWD;
-    if (!rate) return;
-    document.getElementById('jpyRate').textContent    = `1 JPY ≈ ${rate.toFixed(4)} TWD`;
-    document.getElementById('jpyRateSub').textContent = `1 TWD ≈ ${(1/rate).toFixed(2)} JPY`;
-    document.getElementById('jpyInTwd').textContent   = `換算台幣：NT$${Math.round(JPY_BALANCE * rate).toLocaleString()}`;
-  } catch(e) {}
+  let rate = cachedRate;
+  if (!rate) {
+    try {
+      const res  = await fetch('https://open.er-api.com/v6/latest/JPY');
+      const data = await res.json();
+      rate = data?.rates?.TWD;
+    } catch(e) {}
+  }
+  if (!rate) return;
+  document.getElementById('jpyRate').textContent    = `1 JPY ≈ ${rate.toFixed(4)} TWD`;
+  document.getElementById('jpyRateSub').textContent = `1 TWD ≈ ${(1/rate).toFixed(2)} JPY`;
+  document.getElementById('jpyInTwd').textContent   = `換算台幣：NT$${Math.round(JPY_BALANCE * rate).toLocaleString()}`;
 }
 
 // ─────────────────────────────────────────
 // 啟動
 // ─────────────────────────────────────────
-buildNewsLinks();   // 立刻產生連結（不需要網路）
+buildNewsLinks();
 
-Promise.all([fetchTW(), fetchUS(), fetchJPY()]).then(() => {
+(async () => {
   const pill = document.getElementById('updatePill');
-  pill.className = 'pill done';
-  pill.textContent = `✓ 已更新 ${new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})}`;
-}).catch(() => {
-  const pill = document.getElementById('updatePill');
-  pill.className = 'pill';
-  pill.textContent = '⚠ 部分資料未能載入';
-});
+  try {
+    const data = await loadData();
+    renderTW(data.tw);
+    renderUS(data.us);
+    await fetchJPY(data.jpy_twd);
+
+    pill.className   = 'pill done';
+    pill.textContent = data.updated_at ? `✓ 資料更新：${data.updated_at}` : '✓ 已載入';
+  } catch(e) {
+    // data.json 尚未存在（首次部署前），顯示友善提示
+    renderTW({});
+    renderUS({});
+    await fetchJPY(null);   // 匯率仍可直接打 API
+    pill.className   = 'pill';
+    pill.textContent = '⚠ 股價尚未更新（稍後自動觸發）';
+  }
+})();
 </script>
 </body>
 </html>
