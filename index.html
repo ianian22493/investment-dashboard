@@ -251,26 +251,33 @@
   <section class="section">
     <div class="section-title">投資組合總覽</div>
 
+    <!-- 說明列 -->
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.7;">
+      ・<strong style="color:var(--text2)">成本</strong>＝你當初花了多少錢買入
+      ・<strong style="color:var(--text2)">市值</strong>＝以現在股價計算，你的持股現在值多少錢
+      ・<strong style="color:var(--green)">損益</strong>＝市值 − 成本（正數賺、負數賠）
+    </div>
+
     <div class="summary-grid">
       <div class="summary-card">
-        <div class="label">台股市值（TWD）</div>
-        <div class="value" id="twTotal">—</div>
-        <div class="sub" id="twPnl">載入中</div>
+        <div class="label">台股　買入成本</div>
+        <div class="value neutral" id="twCost">計算中…</div>
+        <div class="sub">你總共花了這些錢買台股</div>
       </div>
       <div class="summary-card">
-        <div class="label">美股市值（USD）</div>
-        <div class="value" id="usTotal">—</div>
-        <div class="sub" id="usPnl">載入中</div>
+        <div class="label">台股　目前市值</div>
+        <div class="value" id="twTotal">⏳ 抓取中</div>
+        <div class="sub" id="twPnl">等待即時股價</div>
       </div>
       <div class="summary-card">
-        <div class="label">台股成本（TWD）</div>
-        <div class="value neutral" id="twCost">—</div>
-        <div class="sub">持倉 12 支</div>
+        <div class="label">美股　買入成本</div>
+        <div class="value neutral" id="usCost">計算中…</div>
+        <div class="sub">你總共花了這些錢買美股</div>
       </div>
       <div class="summary-card">
-        <div class="label">美股成本（USD）</div>
-        <div class="value neutral" id="usCost">—</div>
-        <div class="sub">持倉 14 支</div>
+        <div class="label">美股　目前市值</div>
+        <div class="value" id="usTotal">⏳ 抓取中</div>
+        <div class="sub" id="usPnl">等待即時股價</div>
       </div>
     </div>
   </section>
@@ -689,43 +696,187 @@ function renderJPY(rate) {
 }
 
 // ─────────────────────────────────────────
-// 主程式：全部一起跑
+// 【第一步】頁面一開啟，立刻用靜態資料算出「成本」並顯示
+// 這不需要任何網路請求，所以永遠不會是 0 或 —
 // ─────────────────────────────────────────
-async function loadAll() {
-  const pill = document.getElementById('updatePill');
-  pill.className = 'update-pill loading';
-  pill.textContent = '⏳ 載入中...';
+function showStaticCosts() {
+  // 計算台股總成本
+  const twTotalCost = TW_HOLDINGS.reduce((sum, h) => sum + h.shares * h.costPerShare, 0);
+  // 計算美股總成本
+  const usTotalCost = US_HOLDINGS.reduce((sum, h) => sum + h.shares * h.costPerShare, 0);
 
-  try {
-    // 1. 台股價格（一次全拿）
-    const twPriceMap = await fetchTWPrices();
+  document.getElementById('twCost').textContent = `NT$${fmt(twTotalCost, 0)}`;
+  document.getElementById('usCost').textContent = `$${fmt(usTotalCost, 2)}`;
 
-    // 2. 美股價格（全部同時發送）
-    const usPrices = await Promise.all(US_HOLDINGS.map(h => fetchUSPrice(h.ticker)));
+  // 先把表格用靜態資料填好（股數、成本欄位先出現）
+  renderTWTableStatic();
+  renderUSTableStatic();
 
-    // 3. 匯率
-    const jpyRate = await fetchJPYRate();
-
-    // 渲染
-    const tw = renderTWTable(twPriceMap);
-    const us = renderUSTable(usPrices);
-    renderSummary(tw, us);
-    renderJPY(jpyRate);
-
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('zh-TW', { hour:'2-digit', minute:'2-digit' });
-    pill.className = 'update-pill done';
-    pill.textContent = `✓ 已更新 ${timeStr}`;
-
-  } catch(err) {
-    console.error('loadAll error:', err);
-    pill.className = 'update-pill';
-    pill.textContent = '⚠ 部分資料未能載入';
-  }
+  // 日幣進度條（不需要網路）
+  renderJPY(null);
 }
 
-// 頁面載入時執行
-loadAll();
+// 用靜態資料先畫台股表格（現價欄位先留空）
+function renderTWTableStatic() {
+  const tbody = document.getElementById('twTableBody');
+  let rows = '';
+  for (const h of TW_HOLDINGS) {
+    const cost = h.shares * h.costPerShare;
+    rows += `<tr id="tw-row-${h.code}">
+      <td><div class="ticker">${h.code}</div><div class="stock-name">${h.name}</div></td>
+      <td>${h.shares.toLocaleString()}</td>
+      <td class="loading-cell" id="tw-price-${h.code}">⏳</td>
+      <td class="hide-mobile">${fmt(h.costPerShare, 2)}</td>
+      <td class="loading-cell" id="tw-value-${h.code}">—</td>
+      <td class="loading-cell" id="tw-pnl-${h.code}">—</td>
+      <td class="loading-cell" id="tw-pct-${h.code}">—</td>
+    </tr>`;
+  }
+  tbody.innerHTML = rows;
+}
+
+// 用靜態資料先畫美股表格
+function renderUSTableStatic() {
+  const tbody = document.getElementById('usTableBody');
+  let rows = '';
+  for (const h of US_HOLDINGS) {
+    const cost = h.shares * h.costPerShare;
+    rows += `<tr id="us-row-${h.ticker}">
+      <td><div class="ticker">${h.ticker}</div><div class="stock-name">${h.name}</div></td>
+      <td>${h.shares}</td>
+      <td class="loading-cell" id="us-price-${h.ticker}">⏳</td>
+      <td class="hide-mobile">$${fmt(h.costPerShare, 2)}</td>
+      <td class="loading-cell" id="us-value-${h.ticker}">—</td>
+      <td class="loading-cell" id="us-pnl-${h.ticker}">—</td>
+      <td class="loading-cell" id="us-pct-${h.ticker}">—</td>
+    </tr>`;
+  }
+  tbody.innerHTML = rows;
+}
+
+// ─────────────────────────────────────────
+// 【第二步】非同步抓即時股價，抓到哪支更新哪支
+// ─────────────────────────────────────────
+async function loadLivePrices() {
+  const pill = document.getElementById('updatePill');
+  pill.className = 'update-pill loading';
+  pill.textContent = '⏳ 抓取即時股價…';
+
+  let twTotalValue = 0;
+  const twTotalCost = TW_HOLDINGS.reduce((sum, h) => sum + h.shares * h.costPerShare, 0);
+
+  // 台股：一次拿所有收盤價
+  const twPriceMap = await fetchTWPrices();
+  for (const h of TW_HOLDINGS) {
+    const price = twPriceMap[h.code];
+    const priceEl = document.getElementById(`tw-price-${h.code}`);
+    const valueEl = document.getElementById(`tw-value-${h.code}`);
+    const pnlEl   = document.getElementById(`tw-pnl-${h.code}`);
+    const pctEl   = document.getElementById(`tw-pct-${h.code}`);
+
+    if (!price) {
+      if (priceEl) priceEl.textContent = '休市';
+      continue;
+    }
+
+    const cost  = h.shares * h.costPerShare;
+    const value = price * h.shares;
+    const pnl   = value - cost;
+    const pct   = (pnl / cost) * 100;
+    twTotalValue += value;
+
+    if (priceEl) { priceEl.textContent = fmt(price, 2); priceEl.className = ''; }
+    if (valueEl) { valueEl.textContent = fmt(value, 0); valueEl.className = ''; }
+    if (pnlEl)   { pnlEl.innerHTML = pnlHtml(pnl, pct); pnlEl.className = ''; }
+    if (pctEl)   {
+      pctEl.textContent = `${sign(pct)}${pct.toFixed(2)}%`;
+      pctEl.className = colorClass(pct);
+    }
+  }
+
+  // 台股市值 + 損益 summary 更新
+  const twPnl = twTotalValue - twTotalCost;
+  const twPct = twTotalCost ? (twPnl / twTotalCost) * 100 : 0;
+  const twTotalEl = document.getElementById('twTotal');
+  const twPnlEl   = document.getElementById('twPnl');
+  if (twTotalValue > 0) {
+    twTotalEl.textContent = `NT$${fmt(twTotalValue, 0)}`;
+    twTotalEl.className   = `value ${colorClass(twPnl)}`;
+    twPnlEl.innerHTML = `<span class="${colorClass(twPnl)}">${sign(twPnl)}NT$${fmt(Math.abs(twPnl), 0)} (${sign(twPct)}${twPct.toFixed(2)}%)</span>`;
+  } else {
+    twTotalEl.textContent = '休市 / 無資料';
+    twTotalEl.className   = 'value neutral';
+    twPnlEl.textContent   = '台股收盤後更新';
+  }
+
+  document.getElementById('twTableTotal').textContent =
+    twTotalValue > 0 ? `市值合計：NT$${fmt(twTotalValue, 0)}` : '市值：等待股價';
+
+  // 美股：同時發出所有請求
+  let usTotalValue = 0;
+  const usTotalCost = US_HOLDINGS.reduce((sum, h) => sum + h.shares * h.costPerShare, 0);
+  const usPricePromises = US_HOLDINGS.map(h => fetchUSPrice(h.ticker));
+  const usPrices = await Promise.all(usPricePromises);
+
+  US_HOLDINGS.forEach((h, i) => {
+    const price   = usPrices[i];
+    const priceEl = document.getElementById(`us-price-${h.ticker}`);
+    const valueEl = document.getElementById(`us-value-${h.ticker}`);
+    const pnlEl   = document.getElementById(`us-pnl-${h.ticker}`);
+    const pctEl   = document.getElementById(`us-pct-${h.ticker}`);
+
+    if (!price) {
+      if (priceEl) priceEl.textContent = '—';
+      return;
+    }
+
+    const cost  = h.shares * h.costPerShare;
+    const value = price * h.shares;
+    const pnl   = value - cost;
+    const pct   = (pnl / cost) * 100;
+    usTotalValue += value;
+
+    if (priceEl) { priceEl.textContent = `$${fmt(price, 2)}`; priceEl.className = ''; }
+    if (valueEl) { valueEl.textContent = `$${fmt(value, 2)}`; valueEl.className = ''; }
+    if (pnlEl)   { pnlEl.innerHTML = pnlHtml(pnl, pct); pnlEl.className = ''; }
+    if (pctEl)   {
+      pctEl.textContent = `${sign(pct)}${pct.toFixed(2)}%`;
+      pctEl.className = colorClass(pct);
+    }
+  });
+
+  const usPnl = usTotalValue - usTotalCost;
+  const usPct = usTotalCost ? (usPnl / usTotalCost) * 100 : 0;
+  const usTotalEl = document.getElementById('usTotal');
+  const usPnlEl   = document.getElementById('usPnl');
+  if (usTotalValue > 0) {
+    usTotalEl.textContent = `$${fmt(usTotalValue, 2)}`;
+    usTotalEl.className   = `value ${colorClass(usPnl)}`;
+    usPnlEl.innerHTML = `<span class="${colorClass(usPnl)}">${sign(usPnl)}$${fmt(Math.abs(usPnl), 2)} (${sign(usPct)}${usPct.toFixed(2)}%)</span>`;
+  } else {
+    usTotalEl.textContent = '無資料';
+    usTotalEl.className   = 'value neutral';
+    usPnlEl.textContent   = '美股收盤後更新';
+  }
+
+  document.getElementById('usTableTotal').textContent =
+    usTotalValue > 0 ? `市值合計：USD $${fmt(usTotalValue, 2)}` : '市值：等待股價';
+
+  // 匯率
+  const jpyRate = await fetchJPYRate();
+  renderJPY(jpyRate);
+
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('zh-TW', { hour:'2-digit', minute:'2-digit' });
+  pill.className = 'update-pill done';
+  pill.textContent = `✓ 已更新 ${timeStr}`;
+}
+
+// ─────────────────────────────────────────
+// 啟動順序：先靜態 → 再非同步更新
+// ─────────────────────────────────────────
+showStaticCosts();          // 立刻顯示成本（不需要網路）
+loadLivePrices();           // 同時開始抓即時股價（有網路才能顯示）
 </script>
 
 </body>
