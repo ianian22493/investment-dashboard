@@ -499,18 +499,35 @@ function pnlHtml(pnl, pct) {
 
 // ─────────────────────────────────────────
 // 台股：TWSE Open API
+// 不管有沒有開市，TWSE 永遠回傳最後一個交易日的收盤價
+// 回傳格式：{ code: { price, date } }
 // ─────────────────────────────────────────
 async function fetchTWPrices() {
-  // 一次取得所有上市股票當日收盤價
   const url = 'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL';
   try {
     const res = await fetch(url);
     const data = await res.json();
-    // 建立 code→price 的 Map
+
+    // API 回傳的 Date 欄位格式：民國年份，例如 "1140417" = 2026/04/17
+    // 我們從第一筆資料取得日期，用來標示是今天或前一個交易日
+    let dataDateStr = '';
+    if (data[0]?.Date) {
+      const d = data[0].Date; // e.g. "1140417"
+      const year  = parseInt(d.slice(0,3)) + 1911;
+      const month = d.slice(3,5);
+      const day   = d.slice(5,7);
+      const today = new Date();
+      const isToday = (today.getFullYear() === year &&
+                       (today.getMonth()+1) === parseInt(month) &&
+                       today.getDate()      === parseInt(day));
+      dataDateStr = isToday ? '即時' : `收盤 ${month}/${day}`;
+    }
+
     const priceMap = {};
     for (const item of data) {
       if (item.Code && item.ClosingPrice) {
-        priceMap[item.Code] = parseFloat(item.ClosingPrice.replace(/,/g,'')) || null;
+        const price = parseFloat(item.ClosingPrice.replace(/,/g,''));
+        if (price) priceMap[item.Code] = { price, label: dataDateStr || '收盤' };
       }
     }
     return priceMap;
@@ -521,15 +538,36 @@ async function fetchTWPrices() {
 }
 
 // ─────────────────────────────────────────
-// 美股：Yahoo Finance（非官方，免費無需 API Key）
+// 美股：Yahoo Finance v7（支援盤前／盤中／盤後）
+// 回傳 { price, label, state }
+//   label 範例：「即時」「盤前」「盤後」「昨收」
 // ─────────────────────────────────────────
 async function fetchUSPrice(ticker) {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=1d&interval=1d`;
+  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${ticker}`;
   try {
     const res = await fetch(url);
     const data = await res.json();
-    const meta = data?.chart?.result?.[0]?.meta;
-    return meta?.regularMarketPrice ?? null;
+    const q = data?.quoteResponse?.result?.[0];
+    if (!q) return null;
+
+    const state = q.marketState || 'CLOSED';
+    // marketState 可能值：PRE（盤前）/ REGULAR（盤中）/ POST（盤後）
+    //                     POSTPOST / PREPRE / CLOSED（收盤）
+
+    // 盤前：使用盤前價格（如果有）
+    if ((state === 'PRE' || state === 'PREPRE') && q.preMarketPrice) {
+      return { price: q.preMarketPrice, label: '盤前', state };
+    }
+    // 盤後：使用盤後價格（如果有）
+    if ((state === 'POST' || state === 'POSTPOST') && q.postMarketPrice) {
+      return { price: q.postMarketPrice, label: '盤後', state };
+    }
+    // 盤中 or 收盤：使用 regular market price
+    return {
+      price: q.regularMarketPrice,
+      label: state === 'REGULAR' ? '即時' : '昨收',
+      state
+    };
   } catch(e) {
     console.error(`Yahoo fetch error for ${ticker}:`, e);
     return null;
@@ -768,24 +806,29 @@ async function loadLivePrices() {
   // 台股：一次拿所有收盤價
   const twPriceMap = await fetchTWPrices();
   for (const h of TW_HOLDINGS) {
-    const price = twPriceMap[h.code];
+    const entry   = twPriceMap[h.code]; // { price, label } 或 undefined
     const priceEl = document.getElementById(`tw-price-${h.code}`);
     const valueEl = document.getElementById(`tw-value-${h.code}`);
     const pnlEl   = document.getElementById(`tw-pnl-${h.code}`);
     const pctEl   = document.getElementById(`tw-pct-${h.code}`);
 
-    if (!price) {
-      if (priceEl) priceEl.textContent = '休市';
+    if (!entry) {
+      if (priceEl) priceEl.textContent = '無資料';
       continue;
     }
 
+    const { price, label } = entry;
     const cost  = h.shares * h.costPerShare;
     const value = price * h.shares;
     const pnl   = value - cost;
     const pct   = (pnl / cost) * 100;
     twTotalValue += value;
 
-    if (priceEl) { priceEl.textContent = fmt(price, 2); priceEl.className = ''; }
+    if (priceEl) {
+      // 顯示價格 + 小標籤（即時 / 收盤 04/17）
+      priceEl.innerHTML = `${fmt(price, 2)}<span style="font-size:10px;color:var(--text3);margin-left:4px">${label}</span>`;
+      priceEl.className = '';
+    }
     if (valueEl) { valueEl.textContent = fmt(value, 0); valueEl.className = ''; }
     if (pnlEl)   { pnlEl.innerHTML = pnlHtml(pnl, pct); pnlEl.className = ''; }
     if (pctEl)   {
@@ -819,24 +862,32 @@ async function loadLivePrices() {
   const usPrices = await Promise.all(usPricePromises);
 
   US_HOLDINGS.forEach((h, i) => {
-    const price   = usPrices[i];
+    const entry   = usPrices[i]; // { price, label, state } 或 null
     const priceEl = document.getElementById(`us-price-${h.ticker}`);
     const valueEl = document.getElementById(`us-value-${h.ticker}`);
     const pnlEl   = document.getElementById(`us-pnl-${h.ticker}`);
     const pctEl   = document.getElementById(`us-pct-${h.ticker}`);
 
-    if (!price) {
+    if (!entry) {
       if (priceEl) priceEl.textContent = '—';
       return;
     }
 
+    const { price, label } = entry;
     const cost  = h.shares * h.costPerShare;
     const value = price * h.shares;
     const pnl   = value - cost;
     const pct   = (pnl / cost) * 100;
     usTotalValue += value;
 
-    if (priceEl) { priceEl.textContent = `$${fmt(price, 2)}`; priceEl.className = ''; }
+    // 標籤顏色：盤前/盤後用黃色，即時用綠色，昨收用灰色
+    const labelColor = label === '即時' ? 'var(--green)'
+                     : label === '昨收' ? 'var(--text3)'
+                     : 'var(--yellow)'; // 盤前 / 盤後
+    if (priceEl) {
+      priceEl.innerHTML = `$${fmt(price, 2)}<span style="font-size:10px;color:${labelColor};margin-left:4px">${label}</span>`;
+      priceEl.className = '';
+    }
     if (valueEl) { valueEl.textContent = `$${fmt(value, 2)}`; valueEl.className = ''; }
     if (pnlEl)   { pnlEl.innerHTML = pnlHtml(pnl, pct); pnlEl.className = ''; }
     if (pctEl)   {
