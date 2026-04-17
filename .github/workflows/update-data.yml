@@ -1,15 +1,15 @@
 name: 更新股價資料
 
 on:
-  # 台股收盤後（台灣時間 14:35 = UTC 06:35）
-  # 台灣早上（UTC 01:00 = 台灣 09:00）預先更新美股昨收
-  # 美股收盤後（台灣時間 05:00 = UTC 21:00）
   schedule:
     - cron: '0 1 * * 1-5'   # 台灣 09:00（美股昨收）
     - cron: '35 6 * * 1-5'  # 台灣 14:35（台股收盤後）
     - cron: '0 21 * * 1-5'  # 台灣 05:00 隔天（美股收盤後）
-  # 手動觸發（測試用）
   workflow_dispatch:
+
+# 允許 Actions 寫入 repo（commit data.json 需要）
+permissions:
+  contents: write
 
 jobs:
   fetch-and-commit:
@@ -34,6 +34,5 @@ jobs:
           git config user.email "bot@investment-dashboard"
           git config user.name "Dashboard Bot"
           git add data.json
-          # 只有在 data.json 有變更時才 commit
           git diff --cached --quiet || git commit -m "📊 更新股價資料 $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
