@@ -107,9 +107,6 @@
     .state-post    { background:rgba(210,153,34,.15); color:var(--yellow); }
     .state-closed  { background:rgba(110,118,129,.15);color:var(--text3); }
 
-    /* 52週位置 */
-    .range-bar { width:64px; height:5px; background:var(--border); border-radius:100px; display:inline-block; position:relative; vertical-align:middle; }
-    .range-dot { position:absolute; top:-2px; width:9px; height:9px; border-radius:50%; background:var(--blue); transform:translateX(-50%); }
 
     @media(max-width:599px) { .hide-sm { display:none; } }
 
@@ -248,7 +245,28 @@
     .ta-hist-name { font-size:12px; color:var(--text3); flex-shrink:0; min-width:80px; }
     .ta-hist-summary { font-size:12px; color:var(--text2); flex:1; }
     .ta-hist-date { font-size:11px; color:var(--text3); white-space:nowrap; flex-shrink:0; }
+    .ta-hist-entry { border-bottom:1px solid var(--border); }
+    .ta-hist-entry:last-child { border-bottom:none; }
+    .ta-hist-compact {
+      display:flex; align-items:center; gap:12px; padding:11px 20px;
+      cursor:pointer; flex-wrap:wrap; user-select:none;
+    }
+    .ta-hist-compact:hover { background:rgba(255,255,255,.02); }
+    .ta-hist-toggle { font-size:10px; color:var(--text3); margin-left:auto; flex-shrink:0; transition:transform .2s; }
+    .ta-hist-toggle.open { transform:rotate(90deg); }
+    .ta-hist-detail { display:none; border-top:1px solid var(--border); }
+    .ta-hist-detail.open { display:block; }
     .ta-history-empty { padding:20px; text-align:center; font-size:13px; color:var(--text3); }
+
+    /* -- 老婆基金 -- */
+    .wife-card {
+      background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px;
+    }
+    .wife-row { display:flex; align-items:flex-start; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
+    .wife-metric { min-width:120px; }
+    .wife-label { font-size:11px; color:var(--text3); margin-bottom:4px; }
+    .wife-value { font-size:22px; font-weight:700; line-height:1.1; }
+    .wife-sub   { font-size:12px; color:var(--text2); margin-top:3px; }
 
     .site-footer { text-align:center; padding:32px 16px 0; font-size:12px; color:var(--text3); }
     .site-footer a { color:var(--text3); text-decoration:none; }
@@ -281,12 +299,49 @@
             <th>今日漲跌</th>
             <th>漲跌幅</th>
             <th class="hide-sm">盤別</th>
-            <th class="hide-sm">52週區間</th>
           </tr></thead>
           <tbody id="usBody">
-            <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text3)">⏳ 抓取中…</td></tr>
+            <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">⏳ 抓取中…</td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 老婆基金 ══ -->
+  <section class="section">
+    <div class="section-label">老婆基金</div>
+    <div class="wife-card">
+      <div class="wife-row">
+        <div class="wife-metric">
+          <div class="wife-label">目前市値（美元計）</div>
+          <div class="wife-value" id="wifeUSD">—</div>
+          <div class="wife-sub">換算台幣：<span id="wifeTWD">—</span></div>
+        </div>
+        <div class="wife-metric">
+          <div class="wife-label">投入成本</div>
+          <div class="wife-value" style="color:var(--text2)">NT$400,000</div>
+          <div class="wife-sub">老婆本金</div>
+        </div>
+        <div class="wife-metric">
+          <div class="wife-label">年化目標（+5%）</div>
+          <div class="wife-value" style="color:var(--yellow)">NT$420,000</div>
+          <div class="wife-sub">+NT$20,000</div>
+        </div>
+        <div class="wife-metric">
+          <div class="wife-label">目前損益</div>
+          <div class="wife-value" id="wifePL">—</div>
+          <div class="wife-sub" id="wifePLPct">—</div>
+        </div>
+      </div>
+      <div class="progress-top">
+        <span>🎯 目標達成進度（NT$40萬 → NT$42萬）</span>
+        <span class="progress-pct" id="wifePct">—</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" id="wifeFill" style="width:0%"></div></div>
+      <div class="progress-bottom">
+        <span>成本 <strong style="color:var(--text)">NT$400,000</strong></span>
+        <span>目標 <strong style="color:var(--yellow)">NT$420,000</strong></span>
       </div>
     </div>
   </section>
@@ -445,23 +500,23 @@
     <div class="ta-card">
       <div class="ta-header">
         <div class="ta-left">
-          <div class="ta-week-badge">第 2 週</div>
-          <div class="ta-ticker">TSLA <span class="ta-name">Tesla · 電動車</span></div>
-          <div class="ta-subtitle">電動車品牌先驅，FSD 自駕與 Robotaxi 商業化是下一個成長引擎</div>
+          <div class="ta-week-badge">第 1 週</div>
+          <div class="ta-ticker">NVDA <span class="ta-name">NVIDIA · AI 晶片</span></div>
+          <div class="ta-subtitle">全球 AI 運算龍頭，CUDA 生態系建立深厘護城河</div>
         </div>
-        <div class="ta-sentiment sent-neut">觀察格局</div>
+        <div class="ta-sentiment sent-bull">偏多格局</div>
       </div>
       <div class="ta-indicators">
         <div class="ta-ind">
           <div class="ta-ind-header">
             <span class="ta-ind-icon">📈</span>
             <span class="ta-ind-name">移動平均線 (MA)</span>
-            <span class="ta-ind-status status-neut">盤整整理</span>
+            <span class="ta-ind-status status-bull">多頭排列</span>
           </div>
           <div class="ta-ind-body">
-            <strong>移動平均線的邏輯：</strong>把過去 N 天的收盤價取平均，平滑掉每日雜訊，讓趨勢方向一目瞭然。5日（週線感）、20日（月線感）、60日（季線感）是最常用的三條。<br><br>
-            <strong>TSLA 現況：</strong>5日（$379.62）、20日（$367.80）、60日（$396.82）三線糾結，多空拉鋸，<strong>方向尚未明確</strong>，等待突破。
-            <div class="ta-tip">📌 <strong>操作參考：</strong>向上放量突破 20 日線（$367.80）偏多；跌破 60 日線（$396.82）偏空。</div>
+            <strong>移動平均線的邏輯：</strong>把過去 N 天的收盤價取平均，平滑每日雜訊，讓趨勢方向一目瞭然。5日（週線感）、20日（月線感）、60日（季線感）是最常用的三條。<br><br>
+            <strong>NVDA 現況：</strong>5日（$879）、20日（$842）、60日（$791）呼現「短線 &gt; 中線 &gt; 長線」的<strong>多頭排列</strong>，代表整體趨勢向上，買方力道持續。
+            <div class="ta-tip">📌 <strong>操作參考：</strong>股價站穩 5 日線（$879）以上偏多；若跌破 20 日線（$842）需留意短期回調。多頭排列的特徵就是「每次拉回都遇到支撑」，這正是趨勢強股的典型走法。</div>
           </div>
         </div>
         <div class="ta-ind">
@@ -471,34 +526,32 @@
             <span class="ta-ind-status status-bull">強勢健康</span>
           </div>
           <div class="ta-ind-body">
-            <strong>RSI 的邏輯：</strong>衡量「最近這段時間，上漲的力道 vs 下跌的力道」，結果化為 0–100 的數字。&gt;70 超買、&lt;30 超賣、50 是多空分界。<br><br>
-            <strong>TSLA 現況：</strong>RSI 為 <strong>64.5</strong>，處於 60–75 的健康偏多區間，「強勢但不過熱」的理想狀態。
-            <div class="ta-tip">📌 <strong>實戰建議：</strong>這個區間是比較舒適的持有環境。若 RSI 在此整理後再度走高，往往是趨勢延續的訊號。</div>
+            <strong>RSI 的邏輯：</strong>衡量「最近這段時間，上漲的力道 vs 下跌的力道」，結果化為 0–100 的數字。&gt;70 超買、&lt;30 超賣、50 是多空分界線。<br><br>
+            <strong>NVDA 現況：</strong>RSI 約 <strong>62</strong>，處於 60–70 的「強勢健康」區間——有動能、不過熱，是持有的舒適帶。
+            <div class="ta-tip">📌 <strong>實戰建議：</strong>RSI 在 60–70 且均線多頭排列，是技術面最理想的組合之一。若 RSI 衝過 75 後開始往下，才需要警覺短期可能高點已到。</div>
           </div>
         </div>
         <div class="ta-ind">
           <div class="ta-ind-header">
             <span class="ta-ind-icon">🎯</span>
-            <span class="ta-ind-name">52 週位置 ＆ 支撐壓力</span>
-            <span class="ta-ind-status status-watch">關鍵位置</span>
+            <span class="ta-ind-name">支撑與壓力</span>
+            <span class="ta-ind-status status-bull">支撑明確</span>
           </div>
           <div class="ta-ind-body">
-            <strong>52 週位置的意義：</strong>把過去一年的低點到高點當作座標系，現在股價落在哪個百分比，幫助判斷現在是「相對便宜」還是「相對昂貴」。<br><br>
-            <strong>TSLA 現況：</strong>現價 $400.62 目前在 52 週區間的<strong>中段（54%）</strong>，屬於相對合理的位置，無明顯追高或超跌的疑慮。<br>
-            52週低：$343.25 ／ 高：$449.36<br><br>
-            <strong>關鍵價位：</strong>支撐 $346.65、$346.68；壓力 $388.90、$444.87。
-            <div class="ta-tip">📌 <strong>記住：</strong>支撐和壓力不是一條精確的線，而是一個「區間」。在支撐區附近出現止跌＋成交量縮小，才是比較有效的支撐訊號。</div>
+            <strong>支撑與壓力的意義：</strong>過去曾多次出現買方（或賣方）積極進場的價位區間。「跌到這裡有人接」就是支撑；「漲到這裡有人賣」就是壓力。<br><br>
+            <strong>NVDA 關鍵價位：</strong>支撑區 <strong>$835–845</strong>（20日線附近）、<strong>$785–800</strong>（60日線）；壓力區 <strong>$920–940</strong>（前波高點區間）。
+            <div class="ta-tip">📌 <strong>記住：</strong>支撑和壓力是「區間」不是精確數字。在支撑區出現「止跌 + 量縮」才是比較有效的支撑訊號。若股價放量突破壓力，才算真正突破。</div>
           </div>
         </div>
       </div>
       <div class="ta-summary">
-        <div class="ta-summary-title">🎯 本週總結：TSLA 怎麼看？</div>
+        <div class="ta-summary-title">🎯 本週總結：NVDA 怎麼看？</div>
         <div class="ta-summary-body">
-          均線方向：<strong>盤整整理（觀察）</strong> · RSI 動能：<strong>強勢健康（64.5）</strong> · 52週位置：<strong>54%</strong><br><br>
-          <strong>學習重點：</strong>MA 看方向、RSI 看動能、52週位置看相對位階——這三個維度是技術分析最基礎的架構。每次看一支股票，先確認這三點，就能快速判斷現在是「順勢做多」、「等待整理」，還是「謹慎觀察」。
+          均線方向：<strong>多頭排列（偏多）</strong> · RSI 動能：<strong>強勢健康（約 62）</strong> · 技術面：<strong>支撑明確</strong><br><br>
+          <strong>學習重點：</strong>MA 看方向、RSI 看動能、支撑壓力看關鍵轉折——這三個維度是技術分析最基礎的架構。NVDA 目前三項指標均偏多，是典型的趨勢強勢股。每次看一支股票，先確認這三點，就能快速判斷現在是「順勢做多」、「等待整理回踩」，還是「謹慎觀察」。
         </div>
       </div>
-      <div class="ta-footer">每週一更新 · 2026/04/18 · 美股 2/14 · 下週：MSFT</div>
+      <div class="ta-footer">每週一更新 · 2026/04/14 · 美股 1/14 · 下週：MSFT</div>
     </div>
     <!-- TA_CARD_END -->
   </section>
@@ -512,23 +565,6 @@
     </div>
     <div class="ta-history-body" id="histBody">
       <!-- HIST_ROWS_START -->
-      <div class="ta-hist-row">
-        <span class="ta-hist-week">第 1 週</span>
-        <span class="ta-hist-ticker">NVDA</span>
-        <span class="ta-hist-name">NVIDIA</span>
-        <span class="ta-hist-summary">—</span>
-        <span class="ta-hist-date">2026/04/18</span>
-      </div>
-      <!-- 每次更新新的分析卡片時，把舊的一則摘要貼在這裡 -->
-      <!-- 格式：
-      <div class="ta-hist-row">
-        <span class="ta-hist-week">第 N 週</span>
-        <span class="ta-hist-ticker">XXXX</span>
-        <span class="ta-hist-name">公司名稱</span>
-        <span class="ta-hist-summary">一句話重點</span>
-        <span class="ta-hist-date">YYYY/MM/DD</span>
-      </div>
-      -->
       <!-- HIST_ROWS_END -->
     </div>
   </div>
@@ -651,6 +687,18 @@ const US_HOLDINGS = [
 const JPY_GOAL    = 30_000_000;
 const JPY_BALANCE = 600_000;
 
+// -----------------------------------------
+// 老婆基金：美股持倉 + 目標
+// 有變動時請告知 Claude 更新這裡
+// -----------------------------------------
+const WIFE_SHARES = {
+  AMZN: 2, CELH: 4, GOOGL: 6.00049, MELI: 1, MSFT: 5,
+  NVDA: 4.00006, ONDS: 7, RBRK: 9, S: 1, SMR: 1,
+  SOUN: 10, TSLA: 11, TTD: 3, ZS: 11,
+};
+const WIFE_COST_TWD   = 400_000;
+const WIFE_TARGET_TWD = 420_000;
+
 // ─────────────────────────────────────────
 // 工具
 // ─────────────────────────────────────────
@@ -670,12 +718,6 @@ function stateTag(state) {
   return '<span class="state-tag state-closed">昨收</span>';
 }
 
-function rangeBar(low, high, cur) {
-  if (!low || !high || low >= high) return '—';
-  const pct = Math.max(0, Math.min(100, ((cur - low) / (high - low)) * 100));
-  return `<div class="range-bar"><div class="range-dot" style="left:${pct}%"></div></div>
-          <span style="font-size:10px;color:var(--text3);margin-left:6px">${pct.toFixed(0)}%</span>`;
-}
 
 // ─────────────────────────────────────────
 // 快速連結（頁面一開啟就產生）
@@ -712,7 +754,7 @@ async function loadData() {
 function renderUS(usData) {
   if (!usData || Object.keys(usData).length === 0) {
     document.getElementById('usBody').innerHTML =
-      `<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text3)">尚無資料（等待 GitHub Actions 首次執行）</td></tr>`;
+      `<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">尚無資料（等待 GitHub Actions 首次執行）</td></tr>`;
     return;
   }
 
@@ -728,7 +770,6 @@ function renderUS(usData) {
     }
     const cls   = q.change > 0 ? 'up' : q.change < 0 ? 'down' : 'flat';
     const sign  = q.change > 0 ? '+' : '';
-    const range = rangeBar(q.low52, q.high52, q.price);
     rows += `<tr>
       <td><div class="stock-code">${h.ticker}<a class="yf-link" href="https://finance.yahoo.com/quote/${h.ticker}" target="_blank">↗</a></div>
           <div class="stock-name">${h.name}</div></td>
@@ -736,7 +777,6 @@ function renderUS(usData) {
       <td class="${cls}">${sign}$${fmt(Math.abs(q.change))}</td>
       <td class="${cls}">${sign}${(q.pct||0).toFixed(2)}%</td>
       <td class="hide-sm">${stateTag(q.state)}</td>
-      <td class="hide-sm">${range}</td>
     </tr>`;
   }
   document.getElementById('usBody').innerHTML = rows;
@@ -746,6 +786,36 @@ function renderUS(usData) {
 // 匯率 + 進度條
 // 優先用 data.json 快取，若無則直接打 API（er-api 允許跨域）
 // ─────────────────────────────────────────
+// -----------------------------------------
+// 老婆基金：計算美股總市値並更新量表
+// -----------------------------------------
+function renderWifeFund(usData, usdTwd) {
+  if (!usData || !usdTwd) return;
+
+  let totalUSD = 0;
+  for (const [ticker, shares] of Object.entries(WIFE_SHARES)) {
+    const q = usData[ticker];
+    if (q && q.price) totalUSD += q.price * shares;
+  }
+  if (totalUSD === 0) return;
+
+  const totalTWD = Math.round(totalUSD * usdTwd);
+  const pl       = totalTWD - WIFE_COST_TWD;
+  const plPct    = (pl / WIFE_COST_TWD * 100);
+  const progress = Math.max(0, Math.min(100,
+    (pl / (WIFE_TARGET_TWD - WIFE_COST_TWD)) * 100
+  ));
+  const plCls  = pl >= 0 ? 'up' : 'down';
+  const plSign = pl >= 0 ? '+' : '';
+
+  document.getElementById('wifeUSD').textContent = '$' + totalUSD.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  document.getElementById('wifeTWD').textContent = 'NT$' + totalTWD.toLocaleString();
+  document.getElementById('wifePL').innerHTML    = `<span class="${plCls}">${plSign}NT$${Math.abs(pl).toLocaleString()}</span>`;
+  document.getElementById('wifePLPct').innerHTML = `<span class="${plCls}">${plSign}${plPct.toFixed(2)}%</span>`;
+  document.getElementById('wifePct').textContent  = progress.toFixed(1) + '%';
+  document.getElementById('wifeFill').style.width = progress + '%';
+}
+
 async function fetchJPY(cachedRate) {
   const pct = Math.min((JPY_BALANCE / JPY_GOAL) * 100, 100);
   document.getElementById('progressPct').textContent  = pct.toFixed(2) + '%';
@@ -775,6 +845,7 @@ buildNewsLinks();
   try {
     const data = await loadData();
     renderUS(data.us);
+    renderWifeFund(data.us, data.usd_twd);
     await fetchJPY(data.jpy_twd);
 
     pill.className   = 'pill done';
@@ -799,12 +870,20 @@ function toggleHistory() {
   chevron.classList.toggle('open', !isOpen);
 }
 
+// 每一筆歷史紀錄：點擊展開完整分析
+function toggleHistEntry(id) {
+  const detail = document.getElementById(id + '-detail');
+  const toggle = document.getElementById(id + '-toggle');
+  if (!detail) return;
+  const isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  if (toggle) toggle.classList.toggle('open', !isOpen);
+}
+
 // 動態顯示歷史則數（計算 ta-hist-row 數量）
 (function updateHistCount() {
-  const rows  = document.querySelectorAll('.ta-hist-row').length;
-  const empty = document.getElementById('histEmpty');
+  const rows = document.querySelectorAll('.ta-hist-entry').length;
   document.getElementById('histCount').textContent = `共 ${rows} 則`;
-  if (rows > 0 && empty) empty.style.display = 'none';
 })();
 </script>
 </body>

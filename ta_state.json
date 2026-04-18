@@ -1,8 +1,5 @@
 {
-  "week": 2,
-  "covered": [
-    "NVDA",
-    "TSLA"
-  ],
-  "last_updated": "2026-04-18"
+  "week": 1,
+  "covered": ["NVDA"],
+  "last_updated": "2026-04-14"
 }

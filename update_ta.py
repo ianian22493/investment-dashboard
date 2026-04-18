@@ -251,16 +251,34 @@ def generate_ta_card(stock, ind, week_num, date_str):
     return card, hist_summary
 
 
-def generate_hist_row(week_num, stock, date_str, summary):
+def generate_hist_row(entry_id, week_num, stock, date_str, summary, card_inner_html=''):
+    """
+    生成可展開的歷史紀錄項目。
+    點擊最左該列可展開 / 收合完整分析內容。
+    """
     sym  = stock["symbol"] if isinstance(stock, dict) else stock
     name = stock.get("name", sym) if isinstance(stock, dict) else sym
-    return (f'      <div class="ta-hist-row">\n'
-            f'        <span class="ta-hist-week">第 {week_num} 週</span>\n'
-            f'        <span class="ta-hist-ticker">{sym}</span>\n'
-            f'        <span class="ta-hist-name">{name}</span>\n'
-            f'        <span class="ta-hist-summary">{summary}</span>\n'
-            f'        <span class="ta-hist-date">{date_str}</span>\n'
-            f'      </div>')
+
+    # 展開區塊（包含該週完整分析內容）
+    detail_html = (
+        f'        <div class="ta-hist-detail" id="{entry_id}-detail">\n'
+        f'{card_inner_html}\n'
+        f'        </div>\n'
+    ) if card_inner_html.strip() else ''
+
+    return (
+        f'      <div class="ta-hist-entry" id="{entry_id}">\n'
+        f'        <div class="ta-hist-compact" onclick="toggleHistEntry(\'{entry_id}\')">\n'
+        f'          <span class="ta-hist-week">第 {week_num} 週</span>\n'
+        f'          <span class="ta-hist-ticker">{sym}</span>\n'
+        f'          <span class="ta-hist-name">{name}</span>\n'
+        f'          <span class="ta-hist-summary">{summary}</span>\n'
+        f'          <span class="ta-hist-date">{date_str}</span>\n'
+        f'          <span class="ta-hist-toggle" id="{entry_id}-toggle">▶</span>\n'
+        f'        </div>\n'
+        f'{detail_html}'
+        f'      </div>'
+    )
 
 
 def update_html(new_card_html, hist_row_html):
@@ -304,17 +322,20 @@ def main():
     m_week   = re.search(r'ta-week-badge">第 (\d+) 週', old_html)
     m_ticker = re.search(r'ta-ticker">(\S+) <span', old_html)
     m_date   = re.search(r'ta-footer">每週一更新 · (\d{4}/\d{2}/\d{2})', old_html)
-    m_sum    = re.search(r'均線(.+?) · RSI (.+?) · 52週位 (.+?)%', old_html)
+    m_sent   = re.search(r'ta-sentiment\b[^>]+>([^<]+)', old_html)
+    # 提取舊卡片完整內容（加進展開區塊）
+    m_card   = re.search(r'<!-- TA_CARD_START -->(.*?)<!-- TA_CARD_END -->', old_html, flags=re.DOTALL)
 
-    old_week    = int(m_week.group(1))   if m_week   else week_num - 1
-    old_ticker  = m_ticker.group(1)      if m_ticker else "—"
-    old_date    = m_date.group(1)        if m_date   else "—"
-    old_summary = (f"均線{m_sum.group(1)} · RSI {m_sum.group(2)} · 52週位 {m_sum.group(3)}%"
-                   if m_sum else "—")
+    old_week     = int(m_week.group(1)) if m_week   else week_num - 1
+    old_ticker   = m_ticker.group(1)    if m_ticker else "—"
+    old_date     = m_date.group(1)      if m_date   else "—"
+    old_summary  = m_sent.group(1).strip() if m_sent else "—"
+    old_card_inner = m_card.group(1).strip() if m_card else ""
     old_stock = next((s for s in ROTATION if s["symbol"] == old_ticker),
                      {"symbol": old_ticker, "name": old_ticker})
 
-    hist_row = generate_hist_row(old_week, old_stock, old_date, old_summary)
+    entry_id = f"hist-{old_week}"
+    hist_row = generate_hist_row(entry_id, old_week, old_stock, old_date, old_summary, old_card_inner)
     update_html(new_card, hist_row)
 
     new_covered = state["covered"] + [next_stk["symbol"]]
