@@ -1,0 +1,37 @@
+name: 每週技術分析教學更新
+
+on:
+  # 每週一 08:00 UTC = 台灣時間 16:00
+  schedule:
+    - cron: '0 8 * * 1'
+  # 手動觸發（測試用）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-ta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝依賴
+        run: pip install yfinance
+
+      - name: 執行每週技術分析更新
+        run: python update_ta.py
+
+      - name: Commit 並 Push
+        run: |
+          git config user.email "bot@investment-dashboard"
+          git config user.name "Dashboard Bot"
+          git add index.html ta_state.json
+          git diff --cached --quiet || git commit -m "📊 第$(python -c "import json; print(json.load(open('ta_state.json'))['week'])")週技術分析教學更新 $(date -u +'%Y-%m-%d')"
+          git push
