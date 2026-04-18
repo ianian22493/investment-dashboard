@@ -245,7 +245,8 @@ def generate_ta_card(stock, ind, week_num, date_str):
         "      </div>\n"
         f"      <div class=\"ta-footer\">每週一更新 · {date_str} · {progress} · 下週：{next_sym}</div>\n"
         "    </div>\n"
-        "    <!-- TA_CARD_END -->"
+        "    <!-- TA_CARD_END -->
+"
     )
     return card, hist_summary
 

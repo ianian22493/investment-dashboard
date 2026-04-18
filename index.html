@@ -698,15 +698,12 @@ function buildNewsLinks() {
 }
 
 // ─────────────────────────────────────────
-// ─────────────────────────────────────────
 // 核心：從 data.json 讀取股價（GitHub Actions 每日更新）
 // ─────────────────────────────────────────
 async function loadData() {
   const res = await fetch('./data.json');
   if (!res.ok) throw new Error(`data.json ${res.status}`);
   return res.json();
-}
-
 }
 
 // ─────────────────────────────────────────
