@@ -231,6 +231,24 @@
     .ta-summary-body { font-size:13px; line-height:1.8; color:var(--text2); }
     .ta-summary-body strong { color:var(--text); }
     .ta-footer { padding:12px 24px; border-top:1px solid var(--border); font-size:11px; color:var(--text3); }
+    /* ── 技術分析：歷史紀錄 ── */
+    .ta-history-card { margin-top:10px; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .ta-history-header { display:flex; align-items:center; gap:10px; padding:14px 20px; cursor:pointer; user-select:none; }
+    .ta-history-header:hover { background:rgba(255,255,255,.02); }
+    .ta-history-title { font-size:13px; font-weight:700; color:var(--text); flex:1; }
+    .ta-history-count { font-size:11px; color:var(--text3); background:var(--card2); border:1px solid var(--border); border-radius:20px; padding:2px 9px; }
+    .ta-history-chevron { font-size:11px; color:var(--text3); transition:transform .2s; }
+    .ta-history-chevron.open { transform:rotate(180deg); }
+    .ta-history-body { display:none; border-top:1px solid var(--border); }
+    .ta-history-body.open { display:block; }
+    .ta-hist-row { display:flex; align-items:center; gap:12px; padding:11px 20px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+    .ta-hist-row:last-child { border-bottom:none; }
+    .ta-hist-week { font-size:10px; font-weight:700; color:var(--blue); background:rgba(56,139,253,.1); border-radius:4px; padding:2px 7px; white-space:nowrap; flex-shrink:0; }
+    .ta-hist-ticker { font-size:13px; font-weight:700; color:var(--text); flex-shrink:0; min-width:52px; }
+    .ta-hist-name { font-size:12px; color:var(--text3); flex-shrink:0; min-width:80px; }
+    .ta-hist-summary { font-size:12px; color:var(--text2); flex:1; }
+    .ta-hist-date { font-size:11px; color:var(--text3); white-space:nowrap; flex-shrink:0; }
+    .ta-history-empty { padding:20px; text-align:center; font-size:13px; color:var(--text3); }
 
     .site-footer { text-align:center; padding:32px 16px 0; font-size:12px; color:var(--text3); }
     .site-footer a { color:var(--text3); text-decoration:none; }
@@ -486,9 +504,32 @@
         </div>
       </div>
 
-      <div class="ta-footer">每週更新 · 2026/04/18 · 下週預告：如何用 K 線型態判斷轉折？</div>
+      <div class="ta-footer">每週一更新 · 2026/04/18 首發 · 美股 1/14 · 下週：TSLA</div>
     </div>
   </section>
+
+  <!-- ══ 歷史分析紀錄 ══ -->
+  <div class="ta-history-card" style="margin-bottom:36px">
+    <div class="ta-history-header" onclick="toggleHistory()">
+      <span class="ta-history-title">歷史分析紀錄</span>
+      <span class="ta-history-count" id="histCount">共 0 則</span>
+      <span class="ta-history-chevron" id="histChevron">▼</span>
+    </div>
+    <div class="ta-history-body" id="histBody">
+      <!-- 每次更新新的分析卡片時，把舊的一則摘要貼在這裡 -->
+      <!-- 格式：
+      <div class="ta-hist-row">
+        <span class="ta-hist-week">第 N 週</span>
+        <span class="ta-hist-ticker">XXXX</span>
+        <span class="ta-hist-name">公司名稱</span>
+        <span class="ta-hist-summary">一句話重點</span>
+        <span class="ta-hist-date">YYYY/MM/DD</span>
+      </div>
+      -->
+      <div class="ta-history-empty" id="histEmpty">尚無歷史紀錄，每週一新增一則</div>
+    </div>
+  </div>
+
 
   <!-- ══ 日幣存款 ══ -->
   <section class="section">
@@ -745,6 +786,25 @@ buildNewsLinks();
     pill.className   = 'pill';
     pill.textContent = '⚠ 股價尚未更新（稍後自動觸發）';
   }
+})();
+
+// ─────────────────────────────────────────
+// 歷史分析紀錄：展開 / 收合
+// ─────────────────────────────────────────
+function toggleHistory() {
+  const body    = document.getElementById('histBody');
+  const chevron = document.getElementById('histChevron');
+  const isOpen  = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+// 動態顯示歷史則數（計算 ta-hist-row 數量）
+(function updateHistCount() {
+  const rows  = document.querySelectorAll('.ta-hist-row').length;
+  const empty = document.getElementById('histEmpty');
+  document.getElementById('histCount').textContent = `共 ${rows} 則`;
+  if (rows > 0 && empty) empty.style.display = 'none';
 })();
 </script>
 </body>
