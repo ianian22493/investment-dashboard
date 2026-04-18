@@ -238,13 +238,6 @@
     .ta-history-chevron.open { transform:rotate(180deg); }
     .ta-history-body { display:none; border-top:1px solid var(--border); }
     .ta-history-body.open { display:block; }
-    .ta-hist-row { display:flex; align-items:center; gap:12px; padding:11px 20px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
-    .ta-hist-row:last-child { border-bottom:none; }
-    .ta-hist-week { font-size:10px; font-weight:700; color:var(--blue); background:rgba(56,139,253,.1); border-radius:4px; padding:2px 7px; white-space:nowrap; flex-shrink:0; }
-    .ta-hist-ticker { font-size:13px; font-weight:700; color:var(--text); flex-shrink:0; min-width:52px; }
-    .ta-hist-name { font-size:12px; color:var(--text3); flex-shrink:0; min-width:80px; }
-    .ta-hist-summary { font-size:12px; color:var(--text2); flex:1; }
-    .ta-hist-date { font-size:11px; color:var(--text3); white-space:nowrap; flex-shrink:0; }
     .ta-hist-entry { border-bottom:1px solid var(--border); }
     .ta-hist-entry:last-child { border-bottom:none; }
     .ta-hist-compact {
@@ -551,7 +544,7 @@
           <strong>學習重點：</strong>MA 看方向、RSI 看動能、支撑壓力看關鍵轉折——這三個維度是技術分析最基礎的架構。NVDA 目前三項指標均偏多，是典型的趨勢強勢股。每次看一支股票，先確認這三點，就能快速判斷現在是「順勢做多」、「等待整理回踩」，還是「謹慎觀察」。
         </div>
       </div>
-      <div class="ta-footer">每週一更新 · 2026/04/14 · 美股 1/14 · 下週：MSFT</div>
+      <div class="ta-footer">每週一更新 · 2026/04/14 · 美股 1/14 · 下週：TSLA</div>
     </div>
     <!-- TA_CARD_END -->
   </section>
@@ -802,9 +795,10 @@ function renderWifeFund(usData, usdTwd) {
   const totalTWD = Math.round(totalUSD * usdTwd);
   const pl       = totalTWD - WIFE_COST_TWD;
   const plPct    = (pl / WIFE_COST_TWD * 100);
-  const progress = Math.max(0, Math.min(100,
+  const progressPct = Math.max(0,
     (pl / (WIFE_TARGET_TWD - WIFE_COST_TWD)) * 100
-  ));
+  );
+  const barWidth   = Math.min(100, progressPct); // 條子最多充滿，但數字可超過 100%
   const plCls  = pl >= 0 ? 'up' : 'down';
   const plSign = pl >= 0 ? '+' : '';
 
@@ -812,8 +806,12 @@ function renderWifeFund(usData, usdTwd) {
   document.getElementById('wifeTWD').textContent = 'NT$' + totalTWD.toLocaleString();
   document.getElementById('wifePL').innerHTML    = `<span class="${plCls}">${plSign}NT$${Math.abs(pl).toLocaleString()}</span>`;
   document.getElementById('wifePLPct').innerHTML = `<span class="${plCls}">${plSign}${plPct.toFixed(2)}%</span>`;
-  document.getElementById('wifePct').textContent  = progress.toFixed(1) + '%';
-  document.getElementById('wifeFill').style.width = progress + '%';
+  document.getElementById('wifePct').textContent  = progressPct.toFixed(1) + '%';
+  document.getElementById('wifeFill').style.width = barWidth + '%';
+  // 超過目標時進度條變金色，表示超达
+  document.getElementById('wifeFill').style.background = progressPct >= 100
+    ? 'var(--yellow)'
+    : 'linear-gradient(90deg,#388bfd,#56d364)';
 }
 
 async function fetchJPY(cachedRate) {
