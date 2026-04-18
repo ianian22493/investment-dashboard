@@ -1,7 +1,8 @@
 """
 fetch_data.py — 投資儀表板資料抓取腳本
-GitHub Actions 每天自動執行，抓取台股、美股、日幣匯率
-並輸出 data.json 供前端讀取（同源，無 CORS 問題）
+GitHub Actions 每天自動執行，抓取美股報價與 JPY/TWD 匯率
+輸出 data.json 供前端讀取（同源，無 CORS 問題）
+（台股已移除，改用個人 APP 查看）
 """
 
 import json
@@ -11,57 +12,10 @@ from datetime import datetime, timezone, timedelta
 # ──────────────────────────────────────────
 # 持倉清單（和 index.html 保持一致）
 # ──────────────────────────────────────────
-TW_STOCKS = [
-    "00692", "00915", "1104", "2211", "2330",
-    "2536", "2834", "3293", "3661", "3703", "4588", "4707",
-]
-
 US_STOCKS = [
     "AMZN", "CELH", "GOOGL", "MELI", "MSFT", "NVDA",
     "ONDS", "RBRK", "S", "SMR", "SOUN", "TSLA", "TTD", "ZS",
 ]
-
-# ──────────────────────────────────────────
-# 台股：TWSE 開放 API
-# ──────────────────────────────────────────
-def fetch_tw():
-    print("📈 抓取台股資料...")
-    result = {}
-    try:
-        url = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
-        headers = {"Accept": "application/json"}
-        res = requests.get(url, headers=headers, timeout=15)
-        res.raise_for_status()
-        data = res.json()
-
-        data_date = ""
-        if data and data[0].get("Date"):
-            raw = data[0]["Date"]
-            yr = int(raw[:3]) + 1911
-            mo, dy = raw[3:5], raw[5:7]
-            data_date = f"{yr}-{mo}-{dy}"
-
-        for item in data:
-            code = item.get("Code", "")
-            if code not in TW_STOCKS:
-                continue
-            try:
-                price  = float(item["ClosingPrice"].replace(",", ""))
-                change_str = item.get("Change", "0") or "0"
-                change = float(change_str.replace(",", "").replace("+", ""))
-                result[code] = {
-                    "price":  price,
-                    "change": change,
-                    "date":   data_date,
-                }
-            except (ValueError, AttributeError):
-                pass
-
-        print(f"  ✓ 取得 {len(result)} 檔台股，資料日期：{data_date}")
-    except Exception as e:
-        print(f"  ✗ 台股抓取失敗：{e}")
-    return result
-
 
 # ──────────────────────────────────────────
 # 美股：yfinance
@@ -127,7 +81,6 @@ def fetch_jpy_rate():
 # 主程式
 # ──────────────────────────────────────────
 def main():
-    tw   = fetch_tw()
     us   = fetch_us()
     rate = fetch_jpy_rate()
 
@@ -136,7 +89,6 @@ def main():
 
     output = {
         "updated_at": updated_at,
-        "tw":         tw,
         "us":         us,
         "jpy_twd":    rate,
     }

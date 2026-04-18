@@ -201,6 +201,37 @@
     .report-body strong { color:var(--text); }
     .highlight-box { background:rgba(56,139,253,.08); border-left:3px solid var(--blue); padding:10px 14px; border-radius:0 8px 8px 0; margin:12px 0; font-size:13px; }
 
+
+    /* ── 技術分析教學 ── */
+    .ta-card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .ta-header { background:linear-gradient(135deg,#0d1f3c 0%,#1b2d4f 100%); padding:22px 24px; display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .ta-left {}
+    .ta-week-badge { display:inline-block; font-size:10px; font-weight:700; letter-spacing:.08em; background:rgba(56,139,253,.25); color:#79c0ff; border:1px solid rgba(56,139,253,.35); border-radius:20px; padding:2px 10px; margin-bottom:8px; }
+    .ta-ticker { font-size:20px; font-weight:700; color:#fff; line-height:1.2; }
+    .ta-name { font-size:13px; font-weight:400; color:rgba(255,255,255,.5); margin-left:8px; }
+    .ta-subtitle { font-size:12px; color:rgba(255,255,255,.4); margin-top:6px; }
+    .ta-sentiment { font-size:11px; font-weight:700; border-radius:20px; padding:5px 14px; white-space:nowrap; flex-shrink:0; }
+
+    .ta-indicators { padding:20px 24px; display:flex; flex-direction:column; gap:18px; }
+    .ta-ind { background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:16px 18px; }
+    .ta-ind-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+    .ta-ind-icon { font-size:16px; line-height:1; }
+    .ta-ind-name { font-size:13px; font-weight:700; color:var(--text); flex:1; }
+    .ta-ind-status { font-size:10px; font-weight:700; border-radius:4px; padding:2px 8px; letter-spacing:.04em; }
+    .status-bull  { background:rgba(63,185,80,.15);  color:var(--green); }
+    .status-neut  { background:rgba(210,153,34,.15); color:var(--yellow); }
+    .status-watch { background:rgba(188,140,255,.15);color:var(--purple); }
+    .ta-ind-body { font-size:13px; line-height:1.8; color:var(--text2); }
+    .ta-ind-body strong { color:var(--text); }
+    .ta-tip { margin-top:10px; padding:9px 12px; background:rgba(56,139,253,.07); border-left:3px solid var(--blue); border-radius:0 6px 6px 0; font-size:12px; line-height:1.6; color:var(--text2); }
+    .ta-tip strong { color:var(--blue); }
+
+    .ta-summary { margin:0 24px 20px; background:rgba(56,139,253,.06); border:1px solid rgba(56,139,253,.15); border-radius:10px; padding:16px 18px; }
+    .ta-summary-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px; }
+    .ta-summary-body { font-size:13px; line-height:1.8; color:var(--text2); }
+    .ta-summary-body strong { color:var(--text); }
+    .ta-footer { padding:12px 24px; border-top:1px solid var(--border); font-size:11px; color:var(--text3); }
+
     .site-footer { text-align:center; padding:32px 16px 0; font-size:12px; color:var(--text3); }
     .site-footer a { color:var(--text3); text-decoration:none; }
   </style>
@@ -215,30 +246,6 @@
 </header>
 
 <main class="page">
-
-  <!-- ══ 台股 ══ -->
-  <section class="section">
-    <div class="section-label">台股持股</div>
-    <div class="table-wrap">
-      <div class="table-subheader">
-        <div class="tname">台灣上市</div>
-        <div class="market-badge badge-tw">TWSE</div>
-      </div>
-      <div class="table-scroll">
-        <table>
-          <thead><tr>
-            <th>股票</th>
-            <th>現價</th>
-            <th>今日漲跌</th>
-            <th>漲跌幅</th>
-          </tr></thead>
-          <tbody id="twBody">
-            <tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text3)">⏳ 抓取中…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
 
   <!-- ══ 美股 ══ -->
   <section class="section">
@@ -409,6 +416,77 @@
     <div style="margin-top:14px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px;">
       <div style="font-size:11px; color:var(--text3); margin-bottom:10px; font-weight:700; letter-spacing:.06em;">快速查看各股消息 → Yahoo Finance</div>
       <div id="newsLinks" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+    </div>
+  </section>
+
+
+  <!-- ══ 本週技術分析教學 ══ -->
+  <section class="section">
+    <div class="section-label">本週技術分析教學</div>
+    <div class="ta-card">
+      <div class="ta-header">
+        <div class="ta-left">
+          <div class="ta-week-badge">第 1 週</div>
+          <div class="ta-ticker">NVDA <span class="ta-name">NVIDIA · AI 晶片龍頭</span></div>
+          <div class="ta-subtitle">本週選股：全球 AI 浪潮的核心，最多人關注的科技股之一</div>
+        </div>
+        <div class="ta-sentiment sent-bull">看多格局</div>
+      </div>
+
+      <div class="ta-indicators">
+
+        <div class="ta-ind">
+          <div class="ta-ind-header">
+            <span class="ta-ind-icon">📈</span>
+            <span class="ta-ind-name">移動平均線 (MA)</span>
+            <span class="ta-ind-status status-bull">多頭排列</span>
+          </div>
+          <div class="ta-ind-body">
+            <strong>什麼是移動平均線？</strong>把過去 N 天的收盤價取平均，連成一條線，用來看趨勢方向。<br>
+            常用的有 <strong>5日（週線）、20日（月線）、60日（季線）</strong>。<br><br>
+            <strong>NVDA 現況：</strong>5日線 > 20日線 > 60日線，稱為「多頭排列」——短中長期趨勢全部向上，是強勢股的典型特徵。當股價回測 20 日線附近時，通常是觀察買點的位置。
+          </div>
+          <div class="ta-tip">📌 <strong>實戰口訣：</strong>股價在 20 日線上方 → 偏多操作；跌破 60 日線且無法回升 → 需謹慎。</div>
+        </div>
+
+        <div class="ta-ind">
+          <div class="ta-ind-header">
+            <span class="ta-ind-icon">⚡</span>
+            <span class="ta-ind-name">相對強弱指數 (RSI)</span>
+            <span class="ta-ind-status status-neut">中性偏強</span>
+          </div>
+          <div class="ta-ind-body">
+            <strong>什麼是 RSI？</strong>0–100 的數字，衡量「最近這段時間漲的力道 vs 跌的力道」。<br>
+            <strong>&gt; 70 = 超買</strong>（漲太快，可能回調）；<strong>&lt; 30 = 超賣</strong>（跌太多，可能反彈）；50 是多空分界。<br><br>
+            <strong>NVDA 現況：</strong>RSI 約在 55–65 區間，代表強勢但未過熱。這個區間是「健康的上漲」——有動能，又不會因過度樂觀而崩跌。
+          </div>
+          <div class="ta-tip">📌 <strong>新手常見誤區：</strong>RSI > 70 不一定要賣！強勢股可以在高 RSI 維持很久。要搭配趨勢一起看。</div>
+        </div>
+
+        <div class="ta-ind">
+          <div class="ta-ind-header">
+            <span class="ta-ind-icon">🌊</span>
+            <span class="ta-ind-name">支撐與壓力</span>
+            <span class="ta-ind-status status-watch">關鍵位置</span>
+          </div>
+          <div class="ta-ind-body">
+            <strong>什麼是支撐／壓力？</strong>過去曾多次「跌到這裡就止跌」的價位叫<strong>支撐</strong>，曾多次「漲到這裡就回落」的叫<strong>壓力</strong>。突破壓力後，壓力就轉為支撐。<br><br>
+            <strong>NVDA 現況：</strong>$100–110 是強力支撐區（前低＋60日均線聚集），$135–140 是近期壓力。若能站穩 $135 上方，下一目標看前高 $150+。
+          </div>
+          <div class="ta-tip">📌 <strong>觀察重點：</strong>價格靠近支撐時成交量縮 → 籌碼穩定；突破壓力時成交量放大 → 有效突破的信號。</div>
+        </div>
+
+      </div>
+
+      <div class="ta-summary">
+        <div class="ta-summary-title">🎯 本週總結：NVDA 怎麼看？</div>
+        <div class="ta-summary-body">
+          NVDA 目前技術面整體偏多——趨勢向上、RSI 健康、籌碼集中在支撐區。對長期持有者來說，只要不跌破 60 日均線，就不需要擔心。<br><br>
+          <strong>新手學習重點：</strong>技術分析是用來「確認方向、選擇時機」，不是用來預測未來。配合基本面（NVDA 的 AI 晶片需求、財報成長）一起看，判斷才完整。
+        </div>
+      </div>
+
+      <div class="ta-footer">每週更新 · 2026/04/18 · 下週預告：如何用 K 線型態判斷轉折？</div>
     </div>
   </section>
 
@@ -585,49 +663,6 @@ async function loadData() {
   return res.json();
 }
 
-// ─────────────────────────────────────────
-// 台股：從 data.json 渲染
-// ─────────────────────────────────────────
-function renderTW(twData) {
-  if (!twData || Object.keys(twData).length === 0) {
-    document.getElementById('twBody').innerHTML =
-      `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text3)">尚無資料（等待 GitHub Actions 首次執行）</td></tr>`;
-    return;
-  }
-
-  let dateLabel = '';
-  const anyEntry = Object.values(twData)[0];
-  if (anyEntry?.date) {
-    const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
-    const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-    if (anyEntry.date !== todayStr) {
-      const parts = anyEntry.date.split('-');
-      dateLabel = `<span style="font-size:10px;color:var(--text3);margin-left:4px">收盤 ${parts[1]}/${parts[2]}</span>`;
-    }
-  }
-
-  let rows = '';
-  for (const h of TW_HOLDINGS) {
-    const d = twData[h.code];
-    if (!d?.price) {
-      rows += `<tr>
-        <td><div class="stock-code">${h.code}</div><div class="stock-name">${h.name}</div></td>
-        <td style="color:var(--text3)">—</td><td style="color:var(--text3)">—</td><td style="color:var(--text3)">—</td>
-      </tr>`;
-      continue;
-    }
-    const pct  = d.change / (d.price - d.change) * 100;
-    const cls  = d.change > 0 ? 'up' : d.change < 0 ? 'down' : 'flat';
-    const sign = d.change > 0 ? '+' : '';
-    rows += `<tr>
-      <td><div class="stock-code">${h.code}<a class="yf-link" href="https://tw.stock.yahoo.com/quote/${h.code}.TW" target="_blank">↗</a></div>
-          <div class="stock-name">${h.name}</div></td>
-      <td>${fmt(d.price)}${dateLabel}</td>
-      <td class="${cls}">${sign}${fmt(d.change)}</td>
-      <td class="${cls}">${sign}${pct.toFixed(2)}%</td>
-    </tr>`;
-  }
-  document.getElementById('twBody').innerHTML = rows;
 }
 
 // ─────────────────────────────────────────
@@ -698,7 +733,6 @@ buildNewsLinks();
   const pill = document.getElementById('updatePill');
   try {
     const data = await loadData();
-    renderTW(data.tw);
     renderUS(data.us);
     await fetchJPY(data.jpy_twd);
 
@@ -706,7 +740,6 @@ buildNewsLinks();
     pill.textContent = data.updated_at ? `✓ 資料更新：${data.updated_at}` : '✓ 已載入';
   } catch(e) {
     // data.json 尚未存在（首次部署前），顯示友善提示
-    renderTW({});
     renderUS({});
     await fetchJPY(null);   // 匯率仍可直接打 API
     pill.className   = 'pill';
