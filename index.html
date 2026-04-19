@@ -128,7 +128,7 @@
       padding:1px 5px; background:rgba(56,139,253,.12); color:#79c0ff; margin-right:6px;
     }
 
-    /* ── 日幣 ── */
+    /* ── 日幣存款 ── */
     .two-col { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
     @media(max-width:480px) { .two-col { grid-template-columns:1fr; } }
     .stat-card {
@@ -138,6 +138,62 @@
     .stat-value { font-size:26px; font-weight:700; line-height:1.1; }
     .stat-sub   { font-size:12px; color:var(--text2); margin-top:5px; }
 
+    /* 匯率走勢框 */
+    .jpy-trend-box {
+      background:var(--card); border:1px solid var(--border); border-radius:12px;
+      padding:14px 18px; margin-bottom:12px; font-size:13px; line-height:1.8;
+    }
+    .jpy-trend-row { font-weight:600; margin-bottom:4px; }
+    .jpy-trend-sub { font-size:11px; color:var(--text3); }
+    .jpy-range-bar {
+      display:flex; align-items:center; gap:8px; margin-top:10px;
+    }
+    .jpy-range-bg {
+      flex:1; height:6px; background:var(--border); border-radius:100px;
+      position:relative; overflow:visible;
+    }
+    .jpy-range-dot {
+      position:absolute; top:50%; transform:translate(-50%,-50%);
+      width:10px; height:10px; border-radius:50%;
+      background:var(--yellow); border:2px solid var(--bg);
+    }
+
+    /* 里程碑 */
+    .milestone-wrap {
+      background:var(--card); border:1px solid var(--border); border-radius:12px;
+      padding:16px 18px; margin-bottom:12px;
+    }
+    .ms-item { margin-bottom:12px; }
+    .ms-item:last-child { margin-bottom:0; }
+    .ms-head { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+    .ms-icon { font-size:14px; flex-shrink:0; }
+    .ms-label { font-size:13px; font-weight:600; flex:1; }
+    .ms-target { font-size:11px; color:var(--text3); white-space:nowrap; }
+    .ms-done .ms-label { color:var(--text3); text-decoration:line-through; }
+    .ms-future .ms-label { color:var(--text3); }
+    .ms-bar-bg {
+      background:var(--border); border-radius:100px; height:6px; overflow:hidden; margin-bottom:4px;
+    }
+    .ms-bar-fill {
+      background:linear-gradient(90deg,#388bfd,#56d364); height:100%;
+      border-radius:100px; transition:width 1s ease;
+    }
+    .ms-prog-text { font-size:10px; color:var(--text3); }
+
+    /* 時間軸預估 */
+    .timeline-box {
+      background:var(--card); border:1px solid var(--border); border-radius:12px;
+      padding:14px 18px; margin-bottom:12px;
+    }
+    .tl-title { font-size:11px; font-weight:700; color:var(--text3);
+      letter-spacing:.05em; margin-bottom:10px; }
+    .tl-row { display:flex; justify-content:space-between; align-items:baseline;
+      font-size:13px; padding:5px 0; border-bottom:1px solid var(--border); }
+    .tl-row:last-child { border-bottom:none; }
+    .tl-label { color:var(--text2); }
+    .tl-val { font-weight:600; }
+
+    /* 保留老進度條類（老婆基金仍用） */
     .progress-card {
       background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px;
     }
@@ -559,29 +615,37 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
   <!-- ══ 日幣存款 ══ -->
   <section class="section">
     <div class="section-label">日幣存款 × 福岡購屋夢</div>
+
+    <!-- 存款金額 + 永豐牌告匯率 -->
     <div class="two-col">
       <div class="stat-card">
         <div class="stat-label">目前日幣存款</div>
-        <div class="stat-value">¥600,000</div>
+        <div class="stat-value" id="jpySavingsVal">¥600,000</div>
         <div class="stat-sub" id="jpyInTwd">換算台幣：載入中</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">即時匯率 JPY ／ TWD</div>
+        <div class="stat-label">永豐銀行 JPY 牌告匯率</div>
         <div class="stat-value" id="jpyRate">—</div>
         <div class="stat-sub" id="jpyRateSub">載入中</div>
       </div>
     </div>
-    <div class="progress-card">
-      <div class="progress-top">
-        <span>🏠 福岡購屋進度</span>
-        <span class="progress-pct" id="progressPct">0%</span>
+
+    <!-- 匯率走勢 -->
+    <div id="jpyTrendBox"></div>
+
+    <!-- 里程碑進度 -->
+    <div class="milestone-wrap">
+      <div style="font-size:11px;color:var(--text3);font-weight:700;letter-spacing:.05em;margin-bottom:12px;">
+        🏠 福岡購屋里程碑
       </div>
-      <div class="bar-bg"><div class="bar-fill" id="progressFill" style="width:0%"></div></div>
-      <div class="progress-bottom">
-        <span>目前 <strong style="color:var(--text)">¥600,000</strong></span>
-        <span>目標 <strong style="color:var(--text)">¥30,000,000</strong>（中古屋 3,000 萬）</span>
+      <div id="milestoneList">
+        <div style="color:var(--text3);font-size:12px;text-align:center;padding:12px">載入中…</div>
       </div>
     </div>
+
+    <!-- 預估時程 -->
+    <div id="jpyTimeline"></div>
+
   </section>
 
   <!-- ══ 福岡房市 ══ -->
@@ -670,8 +734,7 @@ const US_HOLDINGS = [
   { ticker: "ZS",    name: "Zscaler"          },
 ];
 
-const JPY_GOAL    = 30_000_000;
-const JPY_BALANCE = 600_000;
+// JPY_GOAL / JPY_BALANCE 已移至 data.json (jpy_savings, jpy_monthly_estimate)
 
 // -----------------------------------------
 // 老婆基金：美股持倉 + 目標
@@ -788,23 +851,144 @@ function renderWifeFund(usData, usdTwd) {
     : 'linear-gradient(90deg,#388bfd,#56d364)';
 }
 
-async function fetchJPY(cachedRate) {
-  const pct = Math.min((JPY_BALANCE / JPY_GOAL) * 100, 100);
-  document.getElementById('progressPct').textContent  = pct.toFixed(2) + '%';
-  document.getElementById('progressFill').style.width = pct + '%';
+// ─────────────────────────────────────────
+// 日幣存款模組
+// ─────────────────────────────────────────
 
-  let rate = cachedRate;
-  if (!rate) {
+const JPY_MILESTONES = [
+  { label: "第一個百萬", target: 1_000_000,  icon: "🌱", desc: "起步！" },
+  { label: "仲介費備用金", target: 3_000_000, icon: "💼", desc: "諸費用＋仲介約 100 萬円" },
+  { label: "頭期款目標",  target: 10_000_000, icon: "🔑", desc: "2~3 成頭期款" },
+  { label: "全額購屋目標", target: 30_000_000, icon: "🏠", desc: "福岡中古屋全額" },
+];
+
+function renderMilestones(savings) {
+  const el = document.getElementById("milestoneList");
+  if (!el) return;
+  let prevTarget = 0;
+  let html = "";
+  for (const ms of JPY_MILESTONES) {
+    const done   = savings >= ms.target;
+    const active = !done && savings > prevTarget;
+    const segProg = done ? 100
+      : active ? Math.min(((savings - prevTarget) / (ms.target - prevTarget)) * 100, 100)
+      : 0;
+    html += `<div class="ms-item ${done ? "ms-done" : active ? "ms-active" : "ms-future"}">
+      <div class="ms-head">
+        <span class="ms-icon">${done ? "✅" : active ? ms.icon : "⭕"}</span>
+        <span class="ms-label">${ms.label}</span>
+        <span class="ms-target">¥${ms.target.toLocaleString()}</span>
+      </div>
+      ${active ? `<div class="ms-bar-bg"><div class="ms-bar-fill" style="width:${segProg.toFixed(1)}%"></div></div>
+      <div class="ms-prog-text">¥${savings.toLocaleString()} ／ ¥${ms.target.toLocaleString()}（${segProg.toFixed(1)}%）</div>` : ""}
+    </div>`;
+    prevTarget = ms.target;
+  }
+  el.innerHTML = html;
+}
+
+function renderTrend(sellRate, history) {
+  const el = document.getElementById("jpyTrendBox");
+  if (!el) return;
+  if (!history || history.length < 2) {
+    el.innerHTML = `<div class="jpy-trend-box"><div class="jpy-trend-sub">累積匯率歷史資料中，約 7 天後顯示走勢…</div></div>`;
+    return;
+  }
+
+  const now = new Date();
+  function findRate(daysAgo) {
+    const cutoff = new Date(now - daysAgo * 86400000).toISOString().slice(0,10);
+    const cands  = history.filter(h => h.date <= cutoff);
+    return cands.length ? cands[cands.length - 1] : null;
+  }
+
+  const ref7  = findRate(7);
+  const ref30 = findRate(30);
+  const recent = history.slice(-30);
+  const sells  = recent.map(h => h.sell).filter(Boolean);
+  const minR   = Math.min(...sells);
+  const maxR   = Math.max(...sells);
+  const pos    = (maxR > minR) ? Math.round(((sellRate - minR) / (maxR - minR)) * 100) : 50;
+
+  let trendLine = "";
+  if (ref7) {
+    const chg = ((sellRate - ref7.sell) / ref7.sell) * 100;
+    const up   = chg > 0;
+    const col  = up ? "var(--red)" : "var(--green)";
+    const note = up ? "日圓走強，換匯成本上升" : "日圓走弱，換匯成本下降，可考慮換入";
+    trendLine = `<span style="color:${col}">${up?"↑":"↓"} ${Math.abs(chg).toFixed(2)}%（vs 7 日前）</span>　${note}`;
+  }
+
+  let rangeTip = "";
+  if (sells.length >= 5) {
+    if (pos >= 80)      rangeTip = "⚠️ 近 30 日偏高，換匯成本偏貴";
+    else if (pos <= 20) rangeTip = "✅ 近 30 日偏低，現在換匯較划算";
+    else                rangeTip = `目前在近 30 日區間第 ${pos}% 位置`;
+  }
+
+  el.innerHTML = `<div class="jpy-trend-box">
+    <div class="jpy-trend-row">${trendLine}</div>
+    ${ref30 ? `<div class="jpy-trend-sub">30 日前賣出：${ref30.sell.toFixed(4)}　→　今日：${sellRate.toFixed(4)}</div>` : ""}
+    ${rangeTip ? `<div class="jpy-trend-sub" style="margin-top:2px">${rangeTip}</div>` : ""}
+    ${sells.length >= 2 ? `<div class="jpy-range-bar">
+      <span style="font-size:10px;color:var(--text3)">低 ${minR.toFixed(4)}</span>
+      <div class="jpy-range-bg"><div class="jpy-range-dot" style="left:${pos}%"></div></div>
+      <span style="font-size:10px;color:var(--text3)">高 ${maxR.toFixed(4)}</span>
+    </div>` : ""}
+  </div>`;
+}
+
+function renderTimeline(savings, monthly, sellRate) {
+  const el = document.getElementById("jpyTimeline");
+  if (!el || !monthly || monthly <= 0) return;
+  const remaining = 30_000_000 - savings;
+  if (remaining <= 0) { el.innerHTML = ""; return; }
+  const months   = Math.ceil(remaining / monthly);
+  const years    = Math.floor(months / 12);
+  const mLeft    = months % 12;
+  const timeStr  = years > 0 ? `${years} 年 ${mLeft} 個月` : `${months} 個月`;
+  const goalDate = new Date(); goalDate.setMonth(goalDate.getMonth() + months);
+  const goalYM   = `${goalDate.getFullYear()} 年 ${goalDate.getMonth()+1} 月`;
+  const twdNeed  = sellRate ? "NT$" + Math.round(remaining * sellRate).toLocaleString() : "—";
+
+  el.innerHTML = `<div class="timeline-box">
+    <div class="tl-title">📅 預估達標時程（依每月存入估算）</div>
+    <div class="tl-row"><span class="tl-label">每月預估存入</span><span class="tl-val">¥${monthly.toLocaleString()}</span></div>
+    <div class="tl-row"><span class="tl-label">距離目標 ¥30,000,000</span><span class="tl-val">¥${remaining.toLocaleString()}（${twdNeed}）</span></div>
+    <div class="tl-row"><span class="tl-label">預計達標</span><span class="tl-val" style="color:var(--yellow)">${timeStr} 後（${goalYM}）</span></div>
+  </div>`;
+}
+
+async function fetchJPY(cachedSell) {
+  // 從 data.json 讀取（主流程傳入），fallback 打 API
+  const savings = window.__jpySavings || 600_000;
+  const monthly = window.__jpyMonthly || 50_000;
+  const history = window.__jpyHistory || [];
+  const buyRate = window.__jpyBuy;
+
+  let sellRate = cachedSell;
+  if (!sellRate) {
     try {
-      const res  = await fetch('https://open.er-api.com/v6/latest/JPY');
-      const data = await res.json();
-      rate = data?.rates?.TWD;
+      const r = await fetch("https://open.er-api.com/v6/latest/JPY");
+      sellRate = (await r.json())?.rates?.TWD;
     } catch(e) {}
   }
-  if (!rate) return;
-  document.getElementById('jpyRate').textContent    = `1 JPY ≈ ${rate.toFixed(4)} TWD`;
-  document.getElementById('jpyRateSub').textContent = `1 TWD ≈ ${(1/rate).toFixed(2)} JPY`;
-  document.getElementById('jpyInTwd').textContent   = `換算台幣：NT$${Math.round(JPY_BALANCE * rate).toLocaleString()}`;
+
+  // 基本數字
+  const savEl = document.getElementById("jpySavingsVal");
+  if (savEl) savEl.textContent = `¥${savings.toLocaleString()}`;
+  if (sellRate) {
+    document.getElementById("jpyRate").textContent    = `賣出 ${sellRate.toFixed(4)} TWD`;
+    document.getElementById("jpyRateSub").textContent = buyRate
+      ? `買入 ${buyRate.toFixed(4)}　（大戶優惠請洽永豐）`
+      : "永豐銀行牌告匯率";
+    document.getElementById("jpyInTwd").textContent   =
+      `換算台幣：NT$${Math.round(savings * sellRate).toLocaleString()}`;
+  }
+
+  renderTrend(sellRate, history);
+  renderMilestones(savings);
+  renderTimeline(savings, monthly, sellRate);
 }
 
 // ─────────────────────────────────────────
@@ -817,7 +1001,12 @@ async function fetchJPY(cachedRate) {
     const data = await loadData();
     renderUS(data.us);
     renderWifeFund(data.us, data.usd_twd);
-    await fetchJPY(data.jpy_twd);
+    // 傳入 data.json 的日幣欄位
+    window.__jpySavings = data.jpy_savings          || 600_000;
+    window.__jpyMonthly = data.jpy_monthly_estimate || 50_000;
+    window.__jpyHistory = data.jpy_rate_history     || [];
+    window.__jpyBuy     = data.jpy_buy              || null;
+    await fetchJPY(data.jpy_sell || data.jpy_twd);
 
     pill.className   = 'pill done';
     pill.textContent = data.updated_at ? `✓ 資料更新：${data.updated_at}` : '✓ 已載入';

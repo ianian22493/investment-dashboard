@@ -1,11 +1,11 @@
 """
 fetch_data.py — 投資儀表板資料抓取腳本
-GitHub Actions 每天自動執行，抓取美股報價與匯率
+GitHub Actions 每天自動執行，抓取美股報價與永豐銀行匯率
 輸出 data.json 供前端讀取（同源，無 CORS 問題）
-（台股已移除，改用個人 APP 查看）
 """
 
 import json
+import re
 import requests
 from datetime import datetime, timezone, timedelta
 
@@ -57,20 +57,81 @@ def fetch_us():
 
 
 # ──────────────────────────────────────────
-# 匯率：open.er-api.com（允許跨域，無需金鑰）
+# 匯率：永豐銀行牌告匯率（掛牌買入 / 賣出）
+# 大戶換匯時請電話詢問最新優惠匯率，此為牌告參考價
 # ──────────────────────────────────────────
-def fetch_jpy_rate():
-    print("💴 抓取 JPY/TWD 匯率...")
+def fetch_sinopac_jpy():
+    """
+    從永豐銀行 API 抓取 JPY/TWD 牌告匯率，傳回 (buy, sell)
+    buy  = 銀行買入日幣（你賣出日幣時拿到的 TWD）
+    sell = 銀行賣出日幣（你買入日幣時付出的 TWD） ← 存款/換匯用這個
+    大戶實際優惠匯率通常比牌告 sell 略低（約 0.001–0.003 TWD）
+    """
+    print("💴 抓取永豐銀行 JPY/TWD 牌告匯率...")
     try:
-        res  = requests.get("https://open.er-api.com/v6/latest/JPY", timeout=10)
+        url = (
+            "https://mma.sinopac.com/ws/share/rate/ws_exchange.ashx"
+            "?exchangeType=REMIT&Cross=genREMITResult"
+        )
+        headers = {"User-Agent": "Mozilla/5.0 (compatible; DashboardBot/1.0)"}
+        res = requests.get(url, timeout=10, headers=headers)
         res.raise_for_status()
-        data = res.json()
-        rate = data["rates"]["TWD"]
-        print(f"  ✓ 1 JPY = {rate:.4f} TWD")
-        return round(rate, 6)
+
+        # JSONP 格式：genREMITResult({...})
+        text  = res.text
+        match = re.search(r'genREMITResult\s*\((.*)\)\s*;?\s*$', text, re.DOTALL)
+        if not match:
+            raise ValueError("無法解析 JSONP 格式，原始回應：" + text[:200])
+
+        data = json.loads(match.group(1))
+
+        # 永豐 JSONP 結構：data["Result"] 列表
+        # 欄位名稱從其前端 JS 推斷：
+        #   DataValue2 = 銀行買入匯率
+        #   DataValue3 = 銀行賣出匯率
+        #   DataValue4 = 幣別代碼（如 "JPY"）
+        jpy_buy = jpy_sell = None
+        for item in data.get("Result", []):
+            ccy = str(item.get("DataValue4", "")).strip()
+            if ccy == "JPY":
+                try:
+                    jpy_buy  = float(item["DataValue2"])
+                    jpy_sell = float(item["DataValue3"])
+                except (KeyError, ValueError):
+                    pass
+                break
+
+        # 若上述欄位名稱不符，試遍歷值找 JPY
+        if jpy_buy is None:
+            for item in data.get("Result", []):
+                vals = list(item.values())
+                for i, v in enumerate(vals):
+                    if str(v).strip() == "JPY" and i >= 2:
+                        try:
+                            jpy_buy  = float(vals[i - 2])
+                            jpy_sell = float(vals[i - 1])
+                        except (IndexError, ValueError):
+                            pass
+                        break
+                if jpy_buy is not None:
+                    break
+
+        if jpy_buy is None or jpy_sell is None:
+            raise ValueError("找不到 JPY 欄位，Result 筆數：" + str(len(data.get("Result", []))))
+
+        print(f"  ✓ 永豐 JPY 買入:{jpy_buy:.4f}  賣出:{jpy_sell:.4f} TWD")
+        return round(jpy_buy, 6), round(jpy_sell, 6)
+
     except Exception as e:
-        print(f"  ✗ JPY 匯率抓取失敗：{e}")
-        return None
+        print(f"  ✗ 永豐匯率失敗：{e}，改用備用 API")
+        try:
+            res  = requests.get("https://open.er-api.com/v6/latest/JPY", timeout=10)
+            rate = round(res.json()["rates"]["TWD"], 6)
+            # 估算牌告買賣差（約 ±1.8%）
+            return round(rate * 0.982, 6), round(rate * 1.018, 6)
+        except Exception as e2:
+            print(f"  ✗ 備用 API 也失敗：{e2}")
+            return None, None
 
 
 def fetch_usd_rate():
@@ -78,8 +139,7 @@ def fetch_usd_rate():
     try:
         res  = requests.get("https://open.er-api.com/v6/latest/USD", timeout=10)
         res.raise_for_status()
-        data = res.json()
-        rate = data["rates"]["TWD"]
+        rate = res.json()["rates"]["TWD"]
         print(f"  ✓ 1 USD = {rate:.4f} TWD")
         return round(rate, 4)
     except Exception as e:
@@ -91,24 +151,55 @@ def fetch_usd_rate():
 # 主程式：組合並輸出 data.json
 # ──────────────────────────────────────────
 def main():
-    us       = fetch_us()
-    jpy_rate = fetch_jpy_rate()
-    usd_rate = fetch_usd_rate()
+    us               = fetch_us()
+    jpy_buy, jpy_sell = fetch_sinopac_jpy()
+    usd_rate         = fetch_usd_rate()
 
     tz_tw      = timezone(timedelta(hours=8))
-    updated_at = datetime.now(tz_tw).strftime("%Y-%m-%d %H:%M")
+    now_tw     = datetime.now(tz_tw)
+    updated_at = now_tw.strftime("%Y-%m-%d %H:%M")
+    today_str  = now_tw.strftime("%Y-%m-%d")
+
+    # ── 讀取現有 data.json（保留手動欄位 + 歷史紀錄）
+    try:
+        with open("data.json", "r", encoding="utf-8") as f:
+            old = json.load(f)
+    except Exception:
+        old = {}
+
+    # 手動欄位（只能由使用者透過 Claude 更新）
+    jpy_savings          = old.get("jpy_savings", 600_000)
+    jpy_monthly_estimate = old.get("jpy_monthly_estimate", 50_000)
+
+    # 匯率歷史：今日記一筆，保留最近 60 天
+    history = old.get("jpy_rate_history", [])
+    if jpy_sell is not None:
+        history = [h for h in history if h.get("date") != today_str]  # 移除同日舊筆
+        history.append({
+            "date": today_str,
+            "buy":  jpy_buy,
+            "sell": jpy_sell,
+        })
+        history = sorted(history, key=lambda h: h["date"])[-60:]  # 只保留最近 60 天
 
     output = {
-        "updated_at": updated_at,
-        "us":         us,
-        "jpy_twd":    jpy_rate,
-        "usd_twd":    usd_rate,   # 老婆基金美股市值換算用
+        "updated_at":           updated_at,
+        "us":                   us,
+        "jpy_twd":              jpy_sell,           # 向後相容（舊 JS 仍讀這個）
+        "jpy_buy":              jpy_buy,
+        "jpy_sell":             jpy_sell,
+        "jpy_savings":          jpy_savings,        # 手動更新：告知 Claude 最新餘額
+        "jpy_monthly_estimate": jpy_monthly_estimate,  # 手動更新：每月大概存多少
+        "jpy_rate_history":     history,            # 自動累積，供走勢分析使用
+        "usd_twd":              usd_rate,
     }
 
     with open("data.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     print(f"\n✅ data.json 已產生，更新時間：{updated_at}")
+    print(f"   JPY 歷史紀錄：{len(history)} 筆")
+    print(f"   日幣存款：¥{jpy_savings:,}（手動欄位，如需更新請告知 Claude）")
 
 
 if __name__ == "__main__":
