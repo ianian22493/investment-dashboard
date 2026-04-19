@@ -190,6 +190,30 @@
     .ta-ind-body strong { color:var(--text); }
     .ta-tip { margin-top:10px; padding:9px 12px; background:rgba(56,139,253,.07); border-left:3px solid var(--blue); border-radius:0 6px 6px 0; font-size:12px; line-height:1.6; color:var(--text2); }
     .ta-tip strong { color:var(--blue); }
+    /* ── 技術面快照格 ── */
+    .ta-snap-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(105px,1fr)); gap:8px; padding:4px 0 4px; }
+    .ta-snap-item { background:var(--card2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; }
+    .ta-snap-label { font-size:10px; color:var(--text3); font-weight:700; letter-spacing:.04em; margin-bottom:4px; }
+    .ta-snap-val   { font-size:13px; font-weight:700; color:var(--text); line-height:1.3; }
+    .ta-snap-sub   { font-size:10px; color:var(--text3); margin-top:3px; }
+    .snap-bull { color:var(--green) !important; }
+    .snap-bear { color:var(--red) !important; }
+    /* ── 多空論點 ── */
+    .ta-bb-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0; }
+    @media(max-width:540px) { .ta-bb-grid { grid-template-columns:1fr; } }
+    .ta-bull-box, .ta-bear-box { border-radius:8px; padding:12px 14px; }
+    .ta-bull-box { background:rgba(86,211,100,.08); border:1px solid rgba(86,211,100,.2); }
+    .ta-bear-box { background:rgba(248,81,73,.08);  border:1px solid rgba(248,81,73,.2); }
+    .ta-bb-title { font-size:10px; font-weight:700; letter-spacing:.05em; margin-bottom:8px; }
+    .ta-bull-box .ta-bb-title { color:var(--green); }
+    .ta-bear-box .ta-bb-title { color:var(--red); }
+    .ta-bb-item { font-size:12px; color:var(--text2); line-height:1.75; }
+    .ta-bb-item::before { content:"• "; color:var(--text3); }
+    /* ── 關注 / 催化劑框 ── */
+    .ta-watch-box { margin-top:10px; padding:10px 14px; background:rgba(210,153,34,.07);
+      border:1px solid rgba(210,153,34,.2); border-radius:8px;
+      font-size:12px; color:var(--text2); line-height:1.8; }
+    .ta-watch-box strong { color:var(--yellow); }
     .ta-calc-box {
       background:rgba(56,139,253,.06); border-left:3px solid rgba(56,139,253,.3);
       border-radius:6px; padding:12px 16px; margin:10px 0;
