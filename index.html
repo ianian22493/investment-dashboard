@@ -190,6 +190,12 @@
     .ta-ind-body strong { color:var(--text); }
     .ta-tip { margin-top:10px; padding:9px 12px; background:rgba(56,139,253,.07); border-left:3px solid var(--blue); border-radius:0 6px 6px 0; font-size:12px; line-height:1.6; color:var(--text2); }
     .ta-tip strong { color:var(--blue); }
+    .ta-calc-box {
+      background:rgba(56,139,253,.06); border-left:3px solid rgba(56,139,253,.3);
+      border-radius:6px; padding:12px 16px; margin:10px 0;
+      font-family:monospace; font-size:12px; line-height:2; color:var(--text2);
+    }
+    .ta-calc-box strong { color:var(--text); }
 
     .ta-summary { margin:0 24px 20px; background:rgba(56,139,253,.06); border:1px solid rgba(56,139,253,.15); border-radius:10px; padding:16px 18px; }
     .ta-summary-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px; }
@@ -434,7 +440,7 @@
         <div class="ta-left">
           <div class="ta-week-badge">第 1 週</div>
           <div class="ta-ticker">NVDA <span class="ta-name">NVIDIA · AI 晶片</span></div>
-          <div class="ta-subtitle">全球 AI 運算龍頭，CUDA 生態系建立深厘護城河</div>
+          <div class="ta-subtitle">全球 AI 運算龍頭，CUDA 生態系護城河極深，H 系列 GPU 供不應求</div>
         </div>
         <div class="ta-sentiment sent-watch">謹慎觀察</div>
       </div>
@@ -443,57 +449,73 @@
           <div class="ta-ind-header">
             <span class="ta-ind-icon">📈</span>
             <span class="ta-ind-name">移動平均線 (MA)</span>
-            <span class="ta-ind-status status-bull">價格站穩均線上方</span>
+            <span class="ta-ind-status status-bull">短期偏多</span>
           </div>
           <div class="ta-ind-body">
-            <strong>移動平均線的邏輯：</strong>把過去 N 天的收盤價取平均，平滑每日雜訊讓趨勢方向一目瞭然。5日（週線感）、20日（月線感）、60日（季線感）是最常用的三條。<br><br>
-            <strong>NVDA 現況（實際數據）：</strong>
-            <ul style="margin:8px 0 8px 18px;line-height:1.9;">
-              <li>5日均線：<strong>$196.94</strong>（最近一週平均價）</li>
-              <li>20日均線：<strong>$181.44</strong>（月線，心理支撑面）</li>
-              <li>60日均線：<strong>$183.79</strong>（季線，中長期趨勢參考）</li>
-            </ul>
-            現價 $201.68 站穩全部均線上方，短期連續強勢回升。但詫意：20日線（$181）低於 60日線（$183），代表中期均線尚未形成標準的「多頭排列」，趨勢回升中但基礎還在鹞固。
-            <div class="ta-tip">📌 <strong>操作參考：</strong>股價維持在 5日均線（$196）上方是短期偉多訊號；若跌破 20日（$181）需警慧回調加深。大幅度回升後的山頂機會額，適少量分批应對。</div>
+            <strong>怎麼算？</strong>把過去 N 天的收盤價加總再除以 N。N 越大，線越平滑、越滯後。常用的有：5日（週線感）、20日（月線感）、60日（季線感）三條。<br><br>
+            <strong>MA5 實際計算（2026/04/13–17，最近 5 個交易日）：</strong>
+            <div class="ta-calc-box">
+04/13（週一）收盤：<strong>$189.31</strong><br>
+04/14（週二）收盤：<strong>$196.51</strong><br>
+04/15（週三）收盤：<strong>$198.87</strong><br>
+04/16（週四）收盤：<strong>$198.35</strong><br>
+04/17（週五）收盤：<strong>$201.68</strong><br>
+─────────────────────────<br>
+合計 $984.72 ÷ 5 日 ＝ <strong style="color:#79c0ff">MA5 = $196.94</strong>
+            </div>
+            各均線數值：MA5 <strong>$196.94</strong>、MA20 <strong>$181.44</strong>、MA60 <strong>$183.79</strong><br>
+            現價 $201.68 站上全部均線，短期動能強。但注意 MA20（$181）仍低於 MA60（$183），中期均線尚未形成標準「多頭排列」，趨勢回升中基礎仍在鞏固。
+            <div class="ta-tip">📌 <strong>操作參考：</strong>維持在 MA5（$196）上方是短期偏多訊號；跌破 MA20（$181）需警戒回調加深。</div>
           </div>
         </div>
         <div class="ta-ind">
           <div class="ta-ind-header">
             <span class="ta-ind-icon">⚡</span>
             <span class="ta-ind-name">相對強弱指數 (RSI)</span>
-            <span class="ta-ind-status status-watch">超買警戒區</span>
+            <span class="ta-ind-status status-bear">超買警戒（92.8）</span>
           </div>
           <div class="ta-ind-body">
-            <strong>RSI 的邏輯：</strong>衡量「最近這段時間，上漲的力道 vs 下跌的力道」，化為 0–100 的數字。&gt;70 代表超買（力道過強、不易追貨）、&lt;30 代表超賣、50 是多空分界。<br><br>
-            <strong>NVDA 現況（實際數據）：</strong>RSI 為 <strong style="color:var(--red)">92.8</strong>——這是極度超買的警訊區。略差學中 &gt;70 就算超買，92.8 代表買方累積的熱情已達極限，短期回調風險激増。
-            <div class="ta-tip">📌 <strong>訊號解讀：</strong>RSI 92.8 不代表一定即刻跌，但是在這個區間追貨的風險指數級別最高。區間內幾乎每次 RSI 超過 85 後，均出現印度等對回测。建議：等待 RSI 回落到 70 以下再樹候加碼機會。</div>
+            <strong>怎麼算？</strong>取最近 14 個交易日每日漲跌，分別算「14日平均漲幅」和「14日平均跌幅」——兩者都要除以 14，不管實際有幾天上漲、幾天下跌（這是關鍵！）。<br><br>
+            <strong>公式：</strong>RS = 平均漲幅 ÷ 平均跌幅，RSI = 100 − 100 ÷ (1 + RS)<br><br>
+            <strong>NVDA 實際計算（截至 2026/04/17，近 14 個交易日）：</strong>
+            <div class="ta-calc-box">
+上漲日：<strong>12 天</strong>，合計漲幅 +$37.03<br>
+下跌日：<strong>&ensp;2 天</strong>，合計跌幅 −$2.87<br>
+──────────────────────────────<br>
+平均漲幅 = $37.03 ÷ 14 = <strong>$2.645</strong>（÷14，不是 ÷12）<br>
+平均跌幅 = $2.87 ÷ 14 = <strong>$0.205</strong>（÷14，不是 ÷2）<br>
+RS = $2.645 ÷ $0.205 = <strong>12.90</strong><br>
+RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)">92.8</strong>
+            </div>
+            RSI 92.8 進入強烈超買區（通常 &gt;70 即算超買），代表近 14 天買方力道遠大於賣方，短期過熱明顯。
+            <div class="ta-tip">📌 <strong>實戰建議：</strong>超買不代表立刻下跌，但追高風險極高。建議等 RSI 回落至 70 以下，再評估加碼時機。</div>
           </div>
         </div>
         <div class="ta-ind">
           <div class="ta-ind-header">
             <span class="ta-ind-icon">🎯</span>
-            <span class="ta-ind-name">支撑與壓力（實際價位）</span>
-            <span class="ta-ind-status status-watch">52週 91% 位置</span>
+            <span class="ta-ind-name">52 週位置 ＆ 支撐壓力</span>
+            <span class="ta-ind-status status-watch">52週 91% 高位</span>
           </div>
           <div class="ta-ind-body">
-            <strong>52週位置的意義：</strong>現價在年度最高到最低之間的百分比，91% 代表現在價格已掌高到年度最高附近，追高風險對應增加。<br><br>
+            <strong>52 週位置的意義：</strong>把過去一年的最低點到最高點當作座標系（0%=最低，100%=最高），現價落在幾%，幫助判斷「相對便宜」還是「相對昂貴」。91% 代表現價已接近年度高點附近。<br><br>
             <strong>NVDA 關鍵價位（實際數據）：</strong>
             <ul style="margin:8px 0 8px 18px;line-height:1.9;">
-              <li>現價：<strong>$201.68</strong>&#8192;·&#8192;52週 ATH：<strong>$212.17</strong></li>
-              <li>壓力：<strong>$212</strong>&#8192;（52週高點／屠殺戳）</li>
-              <li>支撑一：<strong>$183–185</strong>&#8192;）60日均線）</li>
-              <li>支撑二：<strong>$180–182</strong>&#8192;）20日均線）</li>
-              <li>強支撑：<strong>$164</strong>&#8192;（近30日印度低點）</li>
+              <li>現價：<strong>$201.68</strong>　·　52週高點（ATH）：<strong>$212.17</strong></li>
+              <li>壓力：<strong>$212</strong>（52週高點，突破則創新高）</li>
+              <li>支撐一：<strong>$183–185</strong>（60日均線）</li>
+              <li>支撐二：<strong>$180–182</strong>（20日均線）</li>
+              <li>強支撐：<strong>$164</strong>（近期波段低點）</li>
             </ul>
-            <div class="ta-tip">📌 <strong>實戰意義：</strong>股價從 $164 低點已回升超過 20%，目前接近 $212 ATH 壓力區。若跌破 $183 市場將再試測 60日年支撑力道；若放量突破 $212 新高，才是真正向上突破的訊號。</div>
+            <div class="ta-tip">📌 <strong>實戰意義：</strong>股價從 $164 低點回升超過 20%，目前接近 $212 ATH 壓力區。跌破 $183 將再測 60日均線支撐力道；放量突破 $212 才是向上突破的訊號。</div>
           </div>
         </div>
       </div>
       <div class="ta-summary">
         <div class="ta-summary-title">🎯 本週總結：NVDA 怎麼看？</div>
         <div class="ta-summary-body">
-          現價：<strong>$201.68</strong> · 均線方向：<strong>價格高於全部均線</strong> · RSI：<strong style="color:var(--red)">92.8（極度超買）</strong> · 52週位置：<strong>91%</strong><br><br>
-          <strong>超買不等於立刻跌，但是追高風險已高。</strong>近期 NVDA 從 $164 印度低點回升逾 20%，動能極強但短期過熱。實操建議：已持有者可繼續持持但少追買；最好等待 RSI 回落到 70 以下、收法跣淫後再考慮建倉機會。如果 RSI 尚未大幅回落就再创新高，佃對於山頂繼續延伸的訊號。
+          現價：<strong>$201.68</strong> · 均線方向：<strong>短期偏多（未完整多頭排列）</strong> · RSI：<strong style="color:var(--red)">92.8（極度超買）</strong> · 52週位置：<strong>91%</strong><br><br>
+          <strong>超買不等於立刻跌，但追高風險已高。</strong>NVDA 從近期 $164 低點回升逾 20%，動能極強但短期過熱。實操建議：已持有者可繼續持有但避免追買；最好等 RSI 回落至 70 以下、均線形成多頭排列後，再考慮加倉機會。若 RSI 尚未大幅回落就再創新高，則是趨勢持續延伸的訊號。
         </div>
       </div>
       <div class="ta-footer">每週一更新 · 2026/04/14 · 美股 1/14 · 下週：TSLA</div>

@@ -97,7 +97,21 @@ def fetch_indicators(stock):
         ma5    = round(sum(closes[-5:]) / 5, 2)
         ma20   = round(sum(closes[-20:]) / 20, 2)
         ma60   = round(sum(closes[-n60:]) / n60, 2)
-        rsi    = calc_rsi(closes)
+        # RSI 14 detailed breakdown
+        period   = 14
+        deltas   = [closes[i] - closes[i-1] for i in range(1, len(closes))]
+        changes  = deltas[-period:]
+        up_days  = sum(1 for d in changes if d > 0)
+        dn_days  = sum(1 for d in changes if d < 0)
+        sum_g    = sum(max(d, 0)      for d in changes)
+        sum_l    = sum(abs(min(d, 0)) for d in changes)
+        avg_g    = sum_g / period
+        avg_l    = sum_l / period
+        rsi_rs   = round(avg_g / avg_l, 2) if avg_l > 0 else 999.0
+        rsi      = round(100 - (100 / (1 + avg_g / avg_l)), 1) if avg_l > 0 else 100.0
+        # MA5 detailed: last 5 trading days with dates
+        dates     = [d.strftime("%m/%d") for d in hist.index]
+        closes_5d = [(dates[-5+i], round(closes[-5+i], 2)) for i in range(5)]
         n252   = min(252, len(closes))
         low52  = round(min(closes[-n252:]), 2)
         high52 = round(max(closes[-n252:]), 2)
@@ -111,7 +125,16 @@ def fetch_indicators(stock):
             "support1":    round(s_sort[2],    2),
             "support2":    round(low52 * 1.01, 2),
             "resistance1": round(h_sort[2],    2),
-            "resistance2": round(high52 * 0.99,2),
+            "resistance2": round(high52 * 0.99, 2),
+            # Detailed calculation data (for educational card)
+            "closes_5d": closes_5d,
+            "rsi_up":    up_days,
+            "rsi_down":  dn_days,
+            "rsi_sum_g": round(sum_g, 2),
+            "rsi_sum_l": round(sum_l, 2),
+            "rsi_avg_g": round(avg_g, 3),
+            "rsi_avg_l": round(avg_l, 3),
+            "rsi_rs":    rsi_rs,
         }
     except Exception as e:
         print(f"  錯誤：{stock['symbol']} 指標抓取失敗：{e}")
@@ -127,6 +150,39 @@ def generate_ta_card(stock, ind, week_num, date_str):
     desc   = stock["desc"]
     mkt    = stock["market"]
     p      = lambda v: fp(v, mkt)
+
+    # MA5 calculation table HTML
+    if ind.get("closes_5d"):
+        _rows = "".join(
+            f'<strong>{d}：</strong>{p(v)}<br>\n'
+            for d, v in ind["closes_5d"]
+        )
+        _sum_5 = round(sum(v for _, v in ind["closes_5d"]), 2)
+        ma5_calc_html = (
+            f'<div class="ta-calc-box">\n'
+            f'{_rows}'
+            f'──────────────────────<br>\n'
+            f'合計 {p(_sum_5)} ÷ 5 日 ＝ <strong style="color:#79c0ff">MA5 {p(ind["ma5"])}</strong>\n'
+            f'</div>\n'
+        )
+    else:
+        ma5_calc_html = ""
+
+    # RSI calculation HTML
+    if ind.get("rsi_avg_g") is not None:
+        rsi_calc_html = (
+            f'<div class="ta-calc-box">\n'
+            f'上漲日：<strong>{ind["rsi_up"]} 天</strong>，合計漲幅 +{p(ind["rsi_sum_g"])}<br>\n'
+            f'下跌日：<strong>{ind["rsi_down"]} 天</strong>，合計跌幅 −{p(ind["rsi_sum_l"])}<br>\n'
+            f'────────────────────────────<br>\n'
+            f'平均漲幅 = {p(ind["rsi_sum_g"])} ÷ 14 = <strong>+{p(ind["rsi_avg_g"])}</strong>（÷14，不是 ÷{ind["rsi_up"]}）<br>\n'
+            f'平均跌幅 = {p(ind["rsi_sum_l"])} ÷ 14 = <strong>{p(ind["rsi_avg_l"])}</strong>（÷14，不是 ÷{ind["rsi_down"]}）<br>\n'
+            f'RS = {p(ind["rsi_avg_g"])} ÷ {p(ind["rsi_avg_l"])} = <strong>{ind["rsi_rs"]}</strong><br>\n'
+            f'RSI = 100 − 100 ÷ (1 + {ind["rsi_rs"]}) = <strong style="color:var(--red)">{ind["rsi"]}</strong>\n'
+            f'</div>\n'
+        )
+    else:
+        rsi_calc_html = ""
 
     # MA
     if ind["ma5"] > ind["ma20"] > ind["ma60"]:
@@ -204,8 +260,11 @@ def generate_ta_card(stock, ind, week_num, date_str):
         f"            <span class=\"ta-ind-status {ma_c}\">{ma_b}</span>\n"
         "          </div>\n"
         "          <div class=\"ta-ind-body\">\n"
-        "            <strong>移動平均線的邏輯：</strong>把過去 N 天的收盤價取平均，平滑掉每日雜訊，讓趨勢方向一目瞭然。5日（週線感）、20日（月線感）、60日（季線感）是最常用的三條。<br><br>\n"
-        f"            <strong>{sym} 現況：</strong>{ma_body}\n"
+        "            <strong>怎麼算？</strong>把過去 N 天的收盤價加總再除以 N。N 越大，線越平滑、越滯後。常用：5日（週線感）、20日（月線感）、60日（季線感）。<br><br>\n"
+        f"            <strong>{sym} MA5 計算過程（最近 5 個交易日）：</strong><br>\n"
+        f"{ma5_calc_html}"
+        f"            <strong>各均線：</strong>MA5 <strong>{p(ind['ma5'])}</strong>、MA20 <strong>{p(ind['ma20'])}</strong>、MA60 <strong>{p(ind['ma60'])}</strong><br>\n"
+        f"            {ma_body}\n"
         f"            <div class=\"ta-tip\">📌 <strong>操作參考：</strong>{ma_tip}</div>\n"
         "          </div>\n"
         "        </div>\n"
@@ -216,7 +275,10 @@ def generate_ta_card(stock, ind, week_num, date_str):
         f"            <span class=\"ta-ind-status {rsi_c}\">{rsi_b}</span>\n"
         "          </div>\n"
         "          <div class=\"ta-ind-body\">\n"
-        "            <strong>RSI 的邏輯：</strong>衡量「最近這段時間，上漲的力道 vs 下跌的力道」，結果化為 0–100 的數字。&gt;70 超買、&lt;30 超賣、50 是多空分界。<br><br>\n"
+        "            <strong>怎麼算？</strong>取最近 14 個交易日每日漲跌，分別算「14日平均漲幅」和「14日平均跌幅」——兩者都要除以 14，不管有幾天上漲、幾天下跌（這是關鍵！）。<br><br>\n"
+        "            <strong>公式：</strong>RS = 平均漲幅 ÷ 平均跌幅，RSI = 100 − 100 ÷ (1 + RS)<br><br>\n"
+        f"            <strong>{sym} 實際計算（近 14 個交易日）：</strong><br>\n"
+        f"{rsi_calc_html}"
         f"            <strong>{sym} 現況：</strong>{rsi_body}\n"
         f"            <div class=\"ta-tip\">📌 <strong>實戰建議：</strong>{rsi_tip}</div>\n"
         "          </div>\n"
