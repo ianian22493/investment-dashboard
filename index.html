@@ -110,38 +110,6 @@
 
     @media(max-width:599px) { .hide-sm { display:none; } }
 
-    /* ── 分析卡片 ── */
-    .analysis-grid {
-      display:grid; gap:14px;
-      grid-template-columns:1fr;
-    }
-    @media(min-width:640px)  { .analysis-grid { grid-template-columns:1fr 1fr; } }
-    @media(min-width:900px)  { .analysis-grid { grid-template-columns:1fr 1fr 1fr; } }
-
-    .analysis-card {
-      background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px;
-    }
-    .ac-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
-    .ac-ticker { font-size:14px; font-weight:700; }
-    .ac-name   { font-size:11px; color:var(--text3); margin-top:2px; }
-    .ac-sentiment {
-      font-size:10px; font-weight:700; border-radius:20px; padding:3px 10px;
-      white-space:nowrap; margin-left:8px;
-    }
-    .sent-bull  { background:rgba(63,185,80,.15);  color:var(--green);  border:1px solid rgba(63,185,80,.3);  }
-    .sent-bear  { background:rgba(248,81,73,.12);  color:var(--red);    border:1px solid rgba(248,81,73,.3);  }
-    .sent-neut  { background:rgba(210,153,34,.12); color:var(--yellow); border:1px solid rgba(210,153,34,.3); }
-    .sent-watch { background:rgba(188,140,255,.12);color:var(--purple); border:1px solid rgba(188,140,255,.3);}
-
-    .ac-body { font-size:13px; line-height:1.75; color:var(--text2); }
-    .ac-body strong { color:var(--text); }
-    .ac-tip {
-      margin-top:12px; padding:10px 12px; border-radius:8px;
-      background:rgba(56,139,253,.08); border-left:3px solid var(--blue);
-      font-size:12px; line-height:1.6; color:var(--text2);
-    }
-    .ac-tip strong { color:var(--blue); }
-    .ac-date { font-size:10px; color:var(--text3); margin-top:10px; }
 
     /* ── 新聞 ── */
     .news-list { display:flex; flex-direction:column; gap:10px; }
@@ -261,6 +229,35 @@
     .wife-value { font-size:22px; font-weight:700; line-height:1.1; }
     .wife-sub   { font-size:12px; color:var(--text2); margin-top:3px; }
 
+    /* -- 新訊卡片 -- */
+    .news-grid { display:grid; gap:12px; grid-template-columns:1fr; }
+    @media(min-width:600px) { .news-grid { grid-template-columns:1fr 1fr; } }
+    @media(min-width:900px) { .news-grid { grid-template-columns:1fr 1fr 1fr; } }
+    .news-card {
+      background:var(--card); border:1px solid var(--border); border-radius:12px;
+      padding:18px; display:flex; flex-direction:column; gap:10px;
+      text-decoration:none; color:inherit; transition:border-color .15s;
+    }
+    .news-card:hover { border-color:rgba(56,139,253,.35); }
+    .news-card-head { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .news-tag {
+      display:inline-block; font-size:10px; font-weight:700; border-radius:4px;
+      padding:2px 7px; background:rgba(56,139,253,.12); color:#79c0ff;
+      white-space:nowrap; flex-shrink:0;
+    }
+    .news-tag.tag-red  { background:rgba(248,81,73,.12);  color:var(--red); }
+    .news-tag.tag-yel  { background:rgba(210,153,34,.12); color:var(--yellow); }
+    .news-tag.tag-ext  { background:rgba(56,139,253,.2);  color:#79c0ff; border:1px dashed rgba(56,139,253,.4); }
+    .news-imp {
+      font-size:9px; font-weight:700; border-radius:3px; padding:2px 6px;
+      letter-spacing:.04em; margin-left:auto; flex-shrink:0;
+    }
+    .imp-high { background:rgba(248,81,73,.1);  color:var(--red); }
+    .imp-mid  { background:rgba(210,153,34,.1); color:var(--yellow); }
+    .imp-low  { background:rgba(110,118,129,.1);color:var(--text3); }
+    .news-title { font-size:13px; font-weight:600; line-height:1.55; color:var(--text); flex:1; }
+    .news-meta  { font-size:11px; color:var(--text3); margin-top:auto; }
+
     .site-footer { text-align:center; padding:32px 16px 0; font-size:12px; color:var(--text3); }
     .site-footer a { color:var(--text3); text-decoration:none; }
   </style>
@@ -339,141 +336,73 @@
     </div>
   </section>
 
-  <!-- ══ 個股分析 ══ -->
-  <section class="section">
-    <div class="section-label">個股分析</div>
-    <div class="analysis-grid">
-
-      <div class="analysis-card">
-        <div class="ac-top">
-          <div><div class="ac-ticker">2330 台積電</div><div class="ac-name">TSMC · 半導體</div></div>
-          <span class="ac-sentiment sent-bull">看多</span>
-        </div>
-        <div class="ac-body">
-          台積電是全球最先進晶片的唯一製造商，AI 時代的<strong>基礎建設核心</strong>。NVDA、AMD、Apple 的高階晶片都需要台積電代工，需求能見度高。
-          <div class="ac-tip"><strong>觀察重點：</strong>每季法說會（CoWoS 封裝供需）、地緣政治風險（美中台關係）。股價目前在歷史相對高位，逢回可分批布局。</div>
-        </div>
-        <div class="ac-date">分析更新：2026/04</div>
-      </div>
-
-      <div class="analysis-card">
-        <div class="ac-top">
-          <div><div class="ac-ticker">NVDA</div><div class="ac-name">NVIDIA · AI 晶片</div></div>
-          <span class="ac-sentiment sent-bull">看多</span>
-        </div>
-        <div class="ac-body">
-          AI 運算的絕對龍頭，H100/B200 GPU 供不應求。CUDA 生態系是最深的護城河，短期競爭者難以撼動。
-          <div class="ac-tip"><strong>觀察重點：</strong>資料中心營收成長率、AMD/Intel 競爭動態、美國對中出口管制是否收緊。高本益比需要持續高成長支撐。</div>
-        </div>
-        <div class="ac-date">分析更新：2026/04</div>
-      </div>
-
-      <div class="analysis-card">
-        <div class="ac-top">
-          <div><div class="ac-ticker">TSLA</div><div class="ac-name">Tesla · 電動車 ／ AI</div></div>
-          <span class="ac-sentiment sent-neut">觀察</span>
-        </div>
-        <div class="ac-body">
-          電動車業務面臨中國競爭壓力，但 Robotaxi 與 FSD 訂閱是下一個成長引擎。Elon Musk 的政治活動帶來品牌風險，需觀察銷量數字。
-          <div class="ac-tip"><strong>觀察重點：</strong>每月交車量、FSD 滲透率、Robotaxi 商業化時間表。短期波動大，適合分批操作。</div>
-        </div>
-        <div class="ac-date">分析更新：2026/04</div>
-      </div>
-
-      <div class="analysis-card">
-        <div class="ac-top">
-          <div><div class="ac-ticker">2536 宏普</div><div class="ac-name">宏普建設 · 建設</div></div>
-          <span class="ac-sentiment sent-bear">留意</span>
-        </div>
-        <div class="ac-body">
-          目前帳面虧損超過 <strong>37%</strong>，是持倉中表現最弱的標的。台灣房市受升息與信用管制影響，建設股整體承壓。
-          <div class="ac-tip"><strong>觀察重點：</strong>央行利率走向、台灣房市成交量、公司新推案去化速度。若基本面持續惡化，需重新評估是否繼續持有。</div>
-        </div>
-        <div class="ac-date">分析更新：2026/04</div>
-      </div>
-
-      <div class="analysis-card">
-        <div class="ac-top">
-          <div><div class="ac-ticker">4588 玖鼎電力</div><div class="ac-name">電力設備</div></div>
-          <span class="ac-sentiment sent-bear">留意</span>
-        </div>
-        <div class="ac-body">
-          帳面虧損約 <strong>34%</strong>，台灣電力設備股受惠於 AI 資料中心用電需求，但個股基本面需獨立評估。
-          <div class="ac-tip"><strong>觀察重點：</strong>公司訂單動態、台電與資料中心投資計畫、是否有具體合約催化劑。</div>
-        </div>
-        <div class="ac-date">分析更新：2026/04</div>
-      </div>
-
-      <div class="analysis-card">
-        <div class="ac-top">
-          <div><div class="ac-ticker">00692 ／ 00915</div><div class="ac-name">配息 ETF 組合</div></div>
-          <span class="ac-sentiment sent-bull">長抱</span>
-        </div>
-        <div class="ac-body">
-          兩支均為<strong>高股息 ETF</strong>，適合長期持有領取現金流。00692 富邦公司治理追蹤治理評分優良企業，00915 凱基高股息30 著重股息殖利率篩選。
-          <div class="ac-tip"><strong>什麼是 ETF？</strong>就像一個「股票籃子」，一次買進就等於同時持有幾十家公司，分散風險。高股息 ETF 的核心邏輯是每年穩定領股息，不需要太多主動操作。</div>
-        </div>
-        <div class="ac-date">分析更新：2026/04</div>
-      </div>
-
-    </div>
-  </section>
 
   <!-- ══ 重大消息 ══ -->
   <section class="section">
     <div class="section-label">重大消息</div>
-    <div class="news-list">
+    <div class="news-grid">
 
-      <a class="news-item" href="https://finance.yahoo.com/news/" target="_blank">
-        <div class="news-dot" style="background:var(--yellow)"></div>
-        <div class="news-content">
-          <div class="news-title">點此查看 Yahoo Finance 最新財經新聞</div>
-          <div class="news-meta">各持股最新消息 · 開啟 Yahoo Finance</div>
+      <!-- Yahoo Finance 快速連結卡 -->
+      <a class="news-card" href="https://finance.yahoo.com/news/" target="_blank" style="border-color:rgba(56,139,253,.25)">
+        <div class="news-card-head">
+          <span class="news-tag tag-ext">外部連結</span>
         </div>
+        <div class="news-title">Yahoo Finance 最新財經新訊 ↗</div>
+        <div class="news-meta">點此開啟 · 各持股最新消息</div>
       </a>
 
-      <div class="news-item" style="cursor:default">
-        <div class="news-dot"></div>
-        <div class="news-content">
-          <div class="news-title">
-            <span class="news-tag">NVDA</span>
-            H200 / Blackwell 晶片出貨強勁，資料中心營收持續創高
-          </div>
-          <div class="news-meta">重要程度：高 · 2026/04 整理</div>
+      <div class="news-card">
+        <div class="news-card-head">
+          <span class="news-tag">NVDA</span>
+          <span class="news-imp imp-high">高</span>
         </div>
+        <div class="news-title">H200 / Blackwell 晶片出貨強勁，資料中心營收持續創高</div>
+        <div class="news-meta">2026/04 整理</div>
       </div>
 
-      <div class="news-item" style="cursor:default">
-        <div class="news-dot"></div>
-        <div class="news-content">
-          <div class="news-title">
-            <span class="news-tag">2330</span>
-            台積電 CoWoS 先進封裝產能持續緊張，AI 客戶搶貨
-          </div>
-          <div class="news-meta">重要程度：高 · 2026/04 整理</div>
+      <div class="news-card">
+        <div class="news-card-head">
+          <span class="news-tag">2330</span>
+          <span class="news-imp imp-high">高</span>
         </div>
+        <div class="news-title">台積電 CoWoS 先進封裝產能持續緊張，AI 客戶搶貨</div>
+        <div class="news-meta">2026/04 整理</div>
       </div>
 
-      <div class="news-item" style="cursor:default">
-        <div class="news-dot" style="background:var(--red)"></div>
-        <div class="news-content">
-          <div class="news-title">
-            <span class="news-tag">TSLA</span>
-            2026 Q1 交車量低於預期，股價承壓；Robotaxi 商業化時程備受關注
-          </div>
-          <div class="news-meta">重要程度：高 · 2026/04 整理</div>
+      <div class="news-card">
+        <div class="news-card-head">
+          <span class="news-tag tag-red">TSLA</span>
+          <span class="news-imp imp-high">高</span>
         </div>
+        <div class="news-title">Q1 交車量低於預期，股價承壓；Robotaxi 商業化時程備受關注</div>
+        <div class="news-meta">2026/04 整理</div>
       </div>
 
-      <div class="news-item" style="cursor:default">
-        <div class="news-dot"></div>
-        <div class="news-content">
-          <div class="news-title">
-            <span class="news-tag">GOOGL</span>
-            Gemini AI 持續迭代，搜尋廣告市佔率穩健；AI 支出加大引發投資人關注
-          </div>
-          <div class="news-meta">重要程度：中 · 2026/04 整理</div>
+      <div class="news-card">
+        <div class="news-card-head">
+          <span class="news-tag">GOOGL</span>
+          <span class="news-imp imp-mid">中</span>
         </div>
+        <div class="news-title">Gemini AI 持續迭代，搜尋廣告市佔率穩健；AI 支出加大引發投資人關注</div>
+        <div class="news-meta">2026/04 整理</div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-card-head">
+          <span class="news-tag">SMR</span>
+          <span class="news-imp imp-mid">中</span>
+        </div>
+        <div class="news-title">美國核能法規憬鬆進，AI 資料中心用電需求對 SMR 行業利多於弊</div>
+        <div class="news-meta">2026/04 整理</div>
+      </div>
+
+      <div class="news-card">
+        <div class="news-card-head">
+          <span class="news-tag">ZS</span>
+          <span class="news-imp imp-mid">中</span>
+        </div>
+        <div class="news-title">企業雲端安全需求持續成長，Zero Trust 架構深入大型封閉場合客戶</div>
+        <div class="news-meta">2026/04 整理</div>
       </div>
 
     </div>
