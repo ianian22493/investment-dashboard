@@ -306,6 +306,12 @@
     .ta-history-empty { padding:20px; text-align:center; font-size:13px; color:var(--text3); }
 
     /* -- 老婆基金 -- */
+    .wife-roi-section {
+      display:flex; align-items:baseline; gap:14px;
+      padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:16px;
+    }
+    .wife-roi-val  { font-size:36px; font-weight:800; line-height:1; }
+    .wife-roi-sub  { font-size:12px; color:var(--text3); margin-top:4px; }
     .wife-card {
       background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px;
     }
@@ -387,6 +393,15 @@
   <section class="section">
     <div class="section-label">老婆基金</div>
     <div class="wife-card">
+      <!-- 投資報酬率 -->
+      <div class="wife-roi-section">
+        <div>
+          <div class="wife-label">累計投資報酬率</div>
+          <div class="wife-roi-val" id="wifeROI">—</div>
+          <div class="wife-roi-sub" id="wifeROISub">計算中…</div>
+        </div>
+      </div>
+
       <div class="wife-row">
         <div class="wife-metric">
           <div class="wife-label">目前市値（美元計）</div>
@@ -849,6 +864,18 @@ function renderWifeFund(usData, usdTwd) {
   document.getElementById('wifeFill').style.background = progressPct >= 100
     ? 'var(--yellow)'
     : 'linear-gradient(90deg,#388bfd,#56d364)';
+
+  // 投資報酬率（大字顯示）
+  const roiEl = document.getElementById('wifeROI');
+  if (roiEl) {
+    roiEl.textContent = plSign + plPct.toFixed(2) + '%';
+    roiEl.className   = 'wife-roi-val ' + plCls;
+  }
+  const roiSub = document.getElementById('wifeROISub');
+  if (roiSub) {
+    roiSub.textContent =
+      `${plSign}NT$${Math.abs(pl).toLocaleString()}（成本 NT$${WIFE_COST_TWD.toLocaleString()}）`;
+  }
 }
 
 // ─────────────────────────────────────────
