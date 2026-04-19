@@ -208,6 +208,13 @@
     .fk-grid { display:grid; gap:12px; grid-template-columns:1fr; margin-bottom:14px; }
     @media(min-width:600px) { .fk-grid { grid-template-columns:1fr 1fr 1fr; } }
     .fk-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; }
+    .fk-period-badge {
+      font-size:11px; font-weight:700; letter-spacing:.05em;
+      color:var(--text3); margin-bottom:14px;
+      padding:5px 12px; background:var(--bg);
+      border-radius:6px; display:inline-block;
+    }
+    .highlight-item { font-size:12px; margin:3px 0; color:var(--text2); }
     .fk-tag   { font-size:10px; font-weight:700; letter-spacing:.05em; color:var(--blue); margin-bottom:6px; }
     .fk-title { font-size:14px; font-weight:700; margin-bottom:6px; }
     .fk-body  { font-size:13px; color:var(--text2); line-height:1.65; }
@@ -666,43 +673,13 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
   <!-- ══ 福岡房市 ══ -->
   <section class="section">
     <div class="section-label">福岡房市分析</div>
-    <div class="fk-grid">
-      <div class="fk-card">
-        <div class="fk-tag">中古屋均價</div>
-        <div class="fk-title">福岡市全區</div>
-        <div class="fk-body">70㎡ 以上中古屋，市區平均行情。</div>
-        <div class="fk-price">約 3,276 萬円</div>
-        <div class="fk-date">2026年2月</div>
-      </div>
-      <div class="fk-card">
-        <div class="fk-tag">中央區（最貴）</div>
-        <div class="fk-title">天神・大濠・六本松</div>
-        <div class="fk-body">福岡市核心地段，步行可達天神商圈。均價 60 萬円／㎡。</div>
-        <div class="fk-price">約 4,215 萬円</div>
-        <div class="fk-date">2026年2月</div>
-      </div>
-      <div class="fk-card">
-        <div class="fk-tag">早良區（性價比）</div>
-        <div class="fk-title">西新・藤崎</div>
-        <div class="fk-body">兼顧價格與便利，地鐵直達天神，目前中古 70㎡ 約 2,500–3,000 萬円。</div>
-        <div class="fk-price">約 2,500–3,000 萬円</div>
-        <div class="fk-date">2026年2月</div>
-      </div>
+    <!-- FK_CARD_START -->
+    <div style="text-align:center;padding:36px;color:var(--text3)">
+      <div style="font-size:36px;margin-bottom:12px">🏠</div>
+      <div style="font-size:15px;font-weight:700;margin-bottom:8px">首篇 AI 分析即將發布</div>
+      <div style="font-size:12px">每兩週一篇 · 預計更新：下週二（2026-04-22）</div>
     </div>
-    <div class="report-card">
-      <div class="report-header">
-        <div class="report-title">📊 第一期市場報告：中央區・早良區</div>
-        <div class="report-date">2026/04</div>
-      </div>
-      <div class="report-body">
-        <strong>為什麼是福岡？</strong>
-        <p>機場距市區僅 10 分鐘地鐵、生活費低、氣候溫和，是近年外國人移居日本的熱門首選。2025 年全日本漲幅最大城市（+21.8%），市場依然活躍。</p>
-        <div class="highlight-box">
-          <strong>建議目標區域</strong>：早良區西新・藤崎地段，中古 70㎡ 約 2,500–3,000 萬円，地鐵直達天神，是性價比最高的選項。中央區生活機能最強但較貴，可作為長期目標。
-        </div>
-        <p>下一期分析（約兩週後）：博多區・東區性價比盤點，含實際建案資料比較。</p>
-      </div>
-    </div>
+    <!-- FK_CARD_END -->
   </section>
 
 </main>

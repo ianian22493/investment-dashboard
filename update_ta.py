@@ -820,7 +820,81 @@ def generate_snapshot(stock, ind, p):
         f'  <div class="ta-snap-grid">\n{grid}\n  </div>\n</div>\n'
     )
 
-def generate_narrative(stock):
+def _gemini_narrative(stock, ind):
+    """用 Gemini API 生成動態多空論點（需環境變數 GEMINI_API_KEY）"""
+    import os, re as _re
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        return None
+    try:
+        import google.generativeai as genai
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        mkt  = stock["market"]
+        p    = lambda v: fp(v, mkt)
+        ma_a = ("多頭排列" if ind["ma5"] > ind["ma20"] > ind["ma60"]
+                else "空頭排列" if ind["ma5"] < ind["ma20"] < ind["ma60"]
+                else "均線糾結")
+        rsi_s = "超買" if ind["rsi"] > 70 else ("超賣" if ind["rsi"] < 30 else "健康")
+        prompt = f"""你是專業投資分析師，為台灣投資人分析持股。
+根據以下最新技術指標，用繁體中文生成投資脈絡分析。
+
+股票：{stock['symbol']} / {stock['name']}（{stock['sector']}）
+說明：{stock['desc']}
+
+技術指標（本週實際數值）：
+均線排列：{ma_a}（MA5 {p(ind['ma5'])} / MA20 {p(ind['ma20'])} / MA60 {p(ind['ma60'])}）
+RSI：{ind['rsi']}（{rsi_s}）　MACD 柱：{ind['hist']:+.3f}　KD：K {ind['kd_k']} / D {ind['kd_d']}
+布林位置：{ind['bb_pos']:.0f}%　52週位置：{ind['w52pct']}%
+
+請輸出以下 7 行，不要任何其他文字：
+多方1：[多方論點，25字內]
+多方2：[多方論點，25字內]
+多方3：[多方論點，25字內]
+空方1：[空方風險，25字內]
+空方2：[空方風險，25字內]
+空方3：[空方風險，25字內]
+本週關注：[本週最重要的關注焦點與催化劑，40字內]"""
+        response = model.generate_content(prompt)
+        lines = {}
+        for line in response.text.strip().split('\n'):
+            if '：' in line:
+                k, v = line.split('：', 1)
+                lines[k.strip()] = v.strip()
+        bull  = [lines.get("多方1","—"), lines.get("多方2","—"), lines.get("多方3","—")]
+        bear  = [lines.get("空方1","—"), lines.get("空方2","—"), lines.get("空方3","—")]
+        watch = lines.get("本週關注", "—")
+        print(f"  ✓ Gemini 敘述生成成功（{stock['symbol']}）")
+        return bull, bear, watch
+    except Exception as e:
+        print(f"  ✗ Gemini 敘述失敗（{stock['symbol']}）：{e}，改用靜態備援")
+        return None
+
+
+def generate_narrative(stock, ind=None):
+    # 優先嘗試 Gemini 動態生成
+    if ind is not None:
+        g = _gemini_narrative(stock, ind)
+        if g:
+            bull, bear, watch = g
+            bull_rows = "\n".join(f'<div class="ta-bb-item">{b}</div>' for b in bull)
+            bear_rows = "\n".join(f'<div class="ta-bb-item">{b}</div>' for b in bear)
+            sym = stock["symbol"]
+            return (
+                f'<div class="ta-ind">\n'
+                f'  <div class="ta-ind-header"><span class="ta-ind-icon">🏢</span>'
+                f'<span class="ta-ind-name">個股脈絡：{sym} · {stock["sector"]}</span></div>\n'
+                f'  <div class="ta-ind-body">\n'
+                f'    <div style="font-size:12px;color:var(--text3);margin-bottom:8px;">{stock["desc"]}</div>\n'
+                f'    <div style="font-size:10px;color:var(--blue);margin-bottom:8px;">🤖 由 Gemini AI 根據本週指標動態生成</div>\n'
+                f'    <div class="ta-bb-grid">\n'
+                f'      <div class="ta-bull-box"><div class="ta-bb-title">多方論點</div>{bull_rows}</div>\n'
+                f'      <div class="ta-bear-box"><div class="ta-bb-title">空方風險</div>{bear_rows}</div>\n'
+                f'    </div>\n'
+                f'    <div class="ta-watch-box"><strong>本週關注：</strong>{watch}</div>\n'
+                f'  </div>\n</div>\n'
+            )
+    # 靜態備援（Gemini 不可用時）
     sym  = stock["symbol"]
     narr = NARRATIVES.get(sym, {})
     bull = narr.get("bull", ["—"])
@@ -879,7 +953,7 @@ def generate_ta_card(stock, ind, week_num, date_str, lesson):
 
     lesson_html   = LESSON_FN[lesson["id"]](stock, ind, p)
     snapshot_html = generate_snapshot(stock, ind, p)
-    narrative_html = generate_narrative(stock)
+    narrative_html = generate_narrative(stock, ind)
 
     # 本週結論（基於技術面綜合）
     if ind["ma5"] > ind["ma20"] > ind["ma60"]:

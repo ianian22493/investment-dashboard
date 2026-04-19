@@ -1,0 +1,40 @@
+name: 每兩週福岡房市 AI 分析
+
+on:
+  # 每週二 08:00 UTC = 台灣時間 16:00 觸發
+  # 腳本內部節流：距上次執行 < 13 天則自動跳過（實現兩週一次）
+  schedule:
+    - cron: '0 8 * * 2'
+  # 手動觸發（測試用，強制執行請修改 fukuoka_state.json 的 last_updated 為舊日期）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-fukuoka:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝依賴
+        run: pip install google-generativeai
+
+      - name: 執行福岡房市分析更新
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python update_fukuoka.py
+
+      - name: Commit 並 Push（若有變更）
+        run: |
+          git config user.email "bot@investment-dashboard"
+          git config user.name "Dashboard Bot"
+          git add index.html fukuoka_state.json
+          git diff --cached --quiet || git commit -m "🏠 第$(python -c "import json; print(json.load(open('fukuoka_state.json'))['period'])")期福岡房市分析 $(date -u +'%Y-%m-%d')"
+          git push

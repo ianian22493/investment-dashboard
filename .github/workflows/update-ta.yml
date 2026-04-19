@@ -23,9 +23,11 @@ jobs:
           python-version: '3.11'
 
       - name: 安裝依賴
-        run: pip install yfinance
+        run: pip install yfinance google-generativeai
 
       - name: 執行每週技術分析更新
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python update_ta.py
 
       - name: Commit 並 Push
