@@ -114,5 +114,6 @@
       "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.1987
+  "jpy_twd": 0.1987,
+  "jpy_taisho_discount": 0.0006
 }

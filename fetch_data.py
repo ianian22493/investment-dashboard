@@ -74,7 +74,10 @@ def fetch_sinopac_jpy():
             "?exchangeType=REMIT&Cross=genREMITResult"
         )
         headers = {"User-Agent": "Mozilla/5.0 (compatible; DashboardBot/1.0)"}
-        res = requests.get(url, timeout=10, headers=headers)
+        # verify=False：永豐 mma.sinopac.com 憑證缺少 Subject Key Identifier，
+        # 新版 OpenSSL 會驗證失敗，但此為已知官方 API，安全性可接受
+        import urllib3; urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        res = requests.get(url, timeout=10, headers=headers, verify=False)
         res.raise_for_status()
 
         # JSONP 格式：genREMITResult({...})
@@ -85,13 +88,18 @@ def fetch_sinopac_jpy():
 
         data = json.loads(match.group(1))
 
-        # 永豐 JSONP 結構：data["Result"] 列表
-        # 欄位名稱從其前端 JS 推斷：
-        #   DataValue2 = 銀行買入匯率
-        #   DataValue3 = 銀行賣出匯率
-        #   DataValue4 = 幣別代碼（如 "JPY"）
+        # 永豐 JSONP 實際結構：
+        #   頂層是 list，第一個元素是 dict，鍵值：
+        #     TitleInfo: 報價時間說明字串
+        #     QueryDate: 查詢時間
+        #     SubInfo:   匯率資料 list
+        #                每筆：DataValue1=幣別名稱, DataValue2=銀行買入,
+        #                      DataValue3=銀行賣出, DataValue4=幣別代碼
+        d = data[0] if isinstance(data, list) else data
+        rate_list = d.get("SubInfo", d.get("Result", []))
+
         jpy_buy = jpy_sell = None
-        for item in data.get("Result", []):
+        for item in (rate_list or []):
             ccy = str(item.get("DataValue4", "")).strip()
             if ccy == "JPY":
                 try:
@@ -101,23 +109,8 @@ def fetch_sinopac_jpy():
                     pass
                 break
 
-        # 若上述欄位名稱不符，試遍歷值找 JPY
-        if jpy_buy is None:
-            for item in data.get("Result", []):
-                vals = list(item.values())
-                for i, v in enumerate(vals):
-                    if str(v).strip() == "JPY" and i >= 2:
-                        try:
-                            jpy_buy  = float(vals[i - 2])
-                            jpy_sell = float(vals[i - 1])
-                        except (IndexError, ValueError):
-                            pass
-                        break
-                if jpy_buy is not None:
-                    break
-
         if jpy_buy is None or jpy_sell is None:
-            raise ValueError("找不到 JPY 欄位，Result 筆數：" + str(len(data.get("Result", []))))
+            raise ValueError(f"找不到 JPY 欄位，rate_list 筆數：{len(rate_list or [])}")
 
         print(f"  ✓ 永豐 JPY 買入:{jpy_buy:.4f}  賣出:{jpy_sell:.4f} TWD")
         return round(jpy_buy, 6), round(jpy_sell, 6)
@@ -170,6 +163,7 @@ def main():
     # 手動欄位（只能由使用者透過 Claude 更新）
     jpy_savings          = old.get("jpy_savings", 600_000)
     jpy_monthly_estimate = old.get("jpy_monthly_estimate", 50_000)
+    jpy_taisho_discount  = old.get("jpy_taisho_discount", 0.0006)  # 大戶優惠：牌告賣出 - 此值
 
     # 匯率歷史：今日記一筆，保留最近 60 天
     history = old.get("jpy_rate_history", [])
@@ -190,6 +184,7 @@ def main():
         "jpy_sell":             jpy_sell,
         "jpy_savings":          jpy_savings,        # 手動更新：告知 Claude 最新餘額
         "jpy_monthly_estimate": jpy_monthly_estimate,  # 手動更新：每月大概存多少
+        "jpy_taisho_discount":  jpy_taisho_discount,       # 手動更新：大戶優惠折扣（牌告賣出 - 此值）
         "jpy_rate_history":     history,            # 自動累積，供走勢分析使用
         "usd_twd":              usd_rate,
     }

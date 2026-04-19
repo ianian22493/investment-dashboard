@@ -949,7 +949,9 @@ function renderTimeline(savings, monthly, sellRate) {
   const timeStr  = years > 0 ? `${years} 年 ${mLeft} 個月` : `${months} 個月`;
   const goalDate = new Date(); goalDate.setMonth(goalDate.getMonth() + months);
   const goalYM   = `${goalDate.getFullYear()} 年 ${goalDate.getMonth()+1} 月`;
-  const twdNeed  = sellRate ? "NT$" + Math.round(remaining * sellRate).toLocaleString() : "—";
+  const discount2 = window.__jpyDiscount || 0;
+  const effRate   = (sellRate && discount2) ? sellRate - discount2 : sellRate;
+  const twdNeed  = effRate ? "NT$" + Math.round(remaining * effRate).toLocaleString() : "—";
 
   el.innerHTML = `<div class="timeline-box">
     <div class="tl-title">📅 預估達標時程（依每月存入估算）</div>
@@ -978,12 +980,18 @@ async function fetchJPY(cachedSell) {
   const savEl = document.getElementById("jpySavingsVal");
   if (savEl) savEl.textContent = `¥${savings.toLocaleString()}`;
   if (sellRate) {
-    document.getElementById("jpyRate").textContent    = `賣出 ${sellRate.toFixed(4)} TWD`;
-    document.getElementById("jpyRateSub").textContent = buyRate
-      ? `買入 ${buyRate.toFixed(4)}　（大戶優惠請洽永豐）`
-      : "永豐銀行牌告匯率";
+    const discount    = window.__jpyDiscount || 0;
+    const taishoRate  = discount > 0 ? sellRate - discount : null;
+    const effectiveR  = taishoRate || sellRate;  // 換算用大戶匯率（如有）
+
+    document.getElementById("jpyRate").textContent =
+      taishoRate ? `${taishoRate.toFixed(4)} TWD` : `${sellRate.toFixed(4)} TWD`;
+    document.getElementById("jpyRateSub").textContent =
+      taishoRate
+        ? `大戶換匯匯率（牌告 ${sellRate.toFixed(4)} - ${discount.toFixed(4)}）`
+        : "永豐銀行牌告匯率";
     document.getElementById("jpyInTwd").textContent   =
-      `換算台幣：NT$${Math.round(savings * sellRate).toLocaleString()}`;
+      `換算台幣：NT$${Math.round(savings * effectiveR).toLocaleString()}`;
   }
 
   renderTrend(sellRate, history);
@@ -1005,7 +1013,8 @@ async function fetchJPY(cachedSell) {
     window.__jpySavings = data.jpy_savings          || 600_000;
     window.__jpyMonthly = data.jpy_monthly_estimate || 50_000;
     window.__jpyHistory = data.jpy_rate_history     || [];
-    window.__jpyBuy     = data.jpy_buy              || null;
+    window.__jpyBuy      = data.jpy_buy              || null;
+    window.__jpyDiscount = data.jpy_taisho_discount   || 0;
     await fetchJPY(data.jpy_sell || data.jpy_twd);
 
     pill.className   = 'pill done';
