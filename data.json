@@ -1,119 +1,103 @@
 {
-  "updated_at": "2026-04-18 09:56",
+  "updated_at": "2026-04-20 15:31",
   "us": {
     "AMZN": {
       "price": 250.56,
       "change": 0.85,
       "pct": 0.34,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "CELH": {
       "price": 35.25,
       "change": 0.25,
       "pct": 0.71,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "GOOGL": {
       "price": 341.68,
       "change": 4.93,
       "pct": 1.46,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "MELI": {
       "price": 1855.83,
       "change": 24.84,
       "pct": 1.36,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "MSFT": {
       "price": 422.79,
       "change": 1.86,
       "pct": 0.44,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "NVDA": {
       "price": 201.68,
       "change": 3.7803,
       "pct": 1.91,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "ONDS": {
       "price": 10.0,
       "change": -0.14,
       "pct": -1.38,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "RBRK": {
       "price": 52.34,
       "change": 0.14,
       "pct": 0.27,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "S": {
       "price": 14.02,
       "change": 0.0636,
       "pct": 0.46,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "SMR": {
       "price": 12.65,
       "change": 1.18,
       "pct": 10.29,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "SOUN": {
       "price": 8.08,
       "change": 0.3301,
       "pct": 4.26,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "TSLA": {
       "price": 400.62,
       "change": 12.4204,
       "pct": 3.2,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "TTD": {
       "price": 22.47,
       "change": -0.24,
       "pct": -1.06,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     },
     "ZS": {
       "price": 134.68,
       "change": -0.0394,
       "pct": -0.03,
-      "low52": null,
-      "high52": null,
       "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.1987,
-  "jpy_taisho_discount": 0.0006
+  "jpy_twd": 0.2004,
+  "jpy_buy": 0.1967,
+  "jpy_sell": 0.2004,
+  "jpy_savings": 600000,
+  "jpy_monthly_estimate": 50000,
+  "jpy_taisho_discount": 0.0006,
+  "jpy_rate_history": [
+    {
+      "date": "2026-04-20",
+      "buy": 0.1967,
+      "sell": 0.2004
+    }
+  ],
+  "usd_twd": 31.493
 }
