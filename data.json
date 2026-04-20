@@ -1,88 +1,88 @@
 {
-  "updated_at": "2026-04-20 15:31",
+  "updated_at": "2026-04-20 19:08",
   "us": {
     "AMZN": {
       "price": 250.56,
-      "change": 0.85,
-      "pct": 0.34,
+      "change": -0.18,
+      "pct": -0.07,
       "state": "CLOSED"
     },
     "CELH": {
       "price": 35.25,
-      "change": 0.25,
-      "pct": 0.71,
+      "change": -0.3,
+      "pct": -0.84,
       "state": "CLOSED"
     },
     "GOOGL": {
       "price": 341.68,
-      "change": 4.93,
-      "pct": 1.46,
+      "change": 1.13,
+      "pct": 0.33,
       "state": "CLOSED"
     },
     "MELI": {
       "price": 1855.83,
-      "change": 24.84,
-      "pct": 1.36,
+      "change": -2.17,
+      "pct": -0.12,
       "state": "CLOSED"
     },
     "MSFT": {
       "price": 422.79,
-      "change": 1.86,
-      "pct": 0.44,
+      "change": 0.43,
+      "pct": 0.1,
       "state": "CLOSED"
     },
     "NVDA": {
       "price": 201.68,
-      "change": 3.7803,
-      "pct": 1.91,
+      "change": 0.72,
+      "pct": 0.36,
       "state": "CLOSED"
     },
     "ONDS": {
       "price": 10.0,
-      "change": -0.14,
-      "pct": -1.38,
+      "change": 0.0,
+      "pct": 0.0,
       "state": "CLOSED"
     },
     "RBRK": {
       "price": 52.34,
-      "change": 0.14,
-      "pct": 0.27,
+      "change": -0.21,
+      "pct": -0.4,
       "state": "CLOSED"
     },
     "S": {
       "price": 14.02,
-      "change": 0.0636,
-      "pct": 0.46,
+      "change": -0.01,
+      "pct": -0.07,
       "state": "CLOSED"
     },
     "SMR": {
       "price": 12.65,
-      "change": 1.18,
-      "pct": 10.29,
+      "change": -0.1306,
+      "pct": -1.02,
       "state": "CLOSED"
     },
     "SOUN": {
       "price": 8.08,
-      "change": 0.3301,
-      "pct": 4.26,
+      "change": -0.0099,
+      "pct": -0.12,
       "state": "CLOSED"
     },
     "TSLA": {
       "price": 400.62,
-      "change": 12.4204,
-      "pct": 3.2,
+      "change": -0.4699,
+      "pct": -0.12,
       "state": "CLOSED"
     },
     "TTD": {
       "price": 22.47,
-      "change": -0.24,
-      "pct": -1.06,
+      "change": -0.09,
+      "pct": -0.4,
       "state": "CLOSED"
     },
     "ZS": {
       "price": 134.68,
-      "change": -0.0394,
-      "pct": -0.03,
+      "change": -0.359,
+      "pct": -0.27,
       "state": "CLOSED"
     }
   },
