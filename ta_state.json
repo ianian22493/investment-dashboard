@@ -1,6 +1,9 @@
 {
-  "week": 1,
-  "covered": ["NVDA"],
-  "lesson_idx": 0,
-  "last_updated": "2026-04-14"
+  "week": 2,
+  "covered": [
+    "NVDA",
+    "TSLA"
+  ],
+  "lesson_idx": 1,
+  "last_updated": "2026-04-20"
 }
