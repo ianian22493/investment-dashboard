@@ -827,9 +827,10 @@ def _gemini_narrative(stock, ind):
     if not api_key:
         return None
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        import time
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=api_key)
         mkt  = stock["market"]
         p    = lambda v: fp(v, mkt)
         ma_a = ("多頭排列" if ind["ma5"] > ind["ma20"] > ind["ma60"]
@@ -855,9 +856,28 @@ RSI：{ind['rsi']}（{rsi_s}）　MACD 柱：{ind['hist']:+.3f}　KD：K {ind['k
 空方2：[空方風險，25字內]
 空方3：[空方風險，25字內]
 本週關注：[本週最重要的關注焦點與催化劑，40字內]"""
-        response = model.generate_content(prompt)
+        # 帶重試的呼叫（503 最多重試3次）
+        response_text = None
+        for attempt in range(3):
+            try:
+                resp = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        thinking_config=types.ThinkingConfig(thinking_budget=0)
+                    )
+                )
+                response_text = resp.text
+                break
+            except Exception as e:
+                if "503" in str(e) and attempt < 2:
+                    time.sleep(20 * (attempt + 1))
+                else:
+                    raise
+        if response_text is None:
+            return None
         lines = {}
-        for line in response.text.strip().split('\n'):
+        for line in response_text.strip().split('\n'):
             if '：' in line:
                 k, v = line.split('：', 1)
                 lines[k.strip()] = v.strip()

@@ -114,9 +114,10 @@ def generate_with_gemini(district, period_num):
         return None
 
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        import time
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=api_key)
 
         prompt = f"""你是為台灣移居者撰寫日本福岡不動產分析的專家。
 目標讀者：台灣人，計畫 5–10 年內在福岡購買自住用中古公寓，總預算約 3,000 萬日圓。
@@ -148,8 +149,26 @@ def generate_with_gemini(district, period_num):
   "next_preview": "下一期預告一句話（15字內）"
 }}"""
 
-        response = model.generate_content(prompt)
-        text = response.text.strip()
+        # 帶重試的呼叫（503 最多重試3次）
+        text = None
+        for attempt in range(3):
+            try:
+                resp = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        thinking_config=types.ThinkingConfig(thinking_budget=0)
+                    )
+                )
+                text = resp.text.strip()
+                break
+            except Exception as e:
+                if "503" in str(e) and attempt < 2:
+                    time.sleep(20 * (attempt + 1))
+                else:
+                    raise
+        if text is None:
+            return None
 
         # 清除可能的 markdown code block 包裝
         text = re.sub(r'^```json\s*', '', text, flags=re.MULTILINE)

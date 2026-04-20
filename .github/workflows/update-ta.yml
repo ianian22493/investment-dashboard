@@ -23,7 +23,7 @@ jobs:
           python-version: '3.11'
 
       - name: 安裝依賴
-        run: pip install yfinance google-generativeai
+        run: pip install yfinance google-genai
 
       - name: 執行每週技術分析更新
         env:
