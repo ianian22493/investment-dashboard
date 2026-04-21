@@ -457,9 +457,7 @@
     <div class="section-label">投組歷史走勢</div>
     <div class="chart-card">
       <div class="chart-meta" id="chartMeta">
-        <div class="chart-meta-item">台股成本 <strong>NT$3,417,241</strong></div>
-        <div class="chart-meta-item">美股成本 <strong>NT$400,000</strong></div>
-        <div class="chart-meta-item">投入總成本 <strong>NT$3,817,241</strong></div>
+        <div class="chart-meta-item">投入成本 <strong>NT$400,000</strong></div>
       </div>
       <div id="chartWrap">
         <div class="chart-placeholder" id="chartMsg">⏳ 累積走勢資料中，首次執行後顯示…</div>
@@ -1108,7 +1106,7 @@ async function fetchJPY(cachedSell) {
 // ─────────────────────────────────────────
 // 投組歷史走勢圖
 // ─────────────────────────────────────────
-const PORTFOLIO_COST = 3_817_241;  // 台股成本 3,417,241 + 美股成本 400,000
+const PORTFOLIO_COST = 400_000;  // 老婆基金投入成本（台幣）
 
 function renderPortfolioChart(history) {
   const msg    = document.getElementById('chartMsg');
@@ -1135,13 +1133,9 @@ function renderPortfolioChart(history) {
     const plPct = (pl / PORTFOLIO_COST * 100).toFixed(2);
     const plCls = pl >= 0 ? 'up' : 'down';
     const sign  = pl >= 0 ? '+' : '';
-    const twFmt = (latest.tw / 10000).toFixed(1);
-    const usFmt = (latest.us / 10000).toFixed(1);
-    const totFmt = (latest.total / 10000).toFixed(1);
+    const usFmt  = (latest.total / 10000).toFixed(1);
     meta.innerHTML = `
-      <div class="chart-meta-item">台股市值 <strong>NT$${twFmt}萬</strong></div>
-      <div class="chart-meta-item">美股市值 <strong>NT$${usFmt}萬</strong></div>
-      <div class="chart-meta-item">合計市值 <strong>NT$${totFmt}萬</strong></div>
+      <div class="chart-meta-item">目前市值 <strong>NT$${usFmt}萬</strong></div>
       <div class="chart-meta-item">投入成本 <strong>NT$${(PORTFOLIO_COST/10000).toFixed(1)}萬</strong></div>
       <div class="chart-meta-item">未實現損益 <strong class="${plCls}">${sign}NT$${(Math.abs(pl)/10000).toFixed(1)}萬（${sign}${plPct}%）</strong></div>`;
   }
@@ -1152,7 +1146,7 @@ function renderPortfolioChart(history) {
       labels,
       datasets: [
         {
-          label: '投組市值（萬）',
+          label: '美股市值（萬台幣）',
           data: totals,
           borderColor: '#388bfd',
           backgroundColor: 'rgba(56,139,253,0.1)',
