@@ -447,8 +447,7 @@
   <!-- ══ 重大消息 ══ -->
   <section class="section">
     <div class="section-label">重大消息</div>
-
-    <!-- 月份分組：2026 / 04 -->
+    <!-- NEWS_START -->
     <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.06em;margin-bottom:10px;">2026 / 04</div>
     <div class="news-grid">
 
@@ -525,7 +524,7 @@
       </div>
 
     </div>
-
+    <!-- NEWS_END -->
   </section>
 
   <!-- ══ 本週技術分析教學 ══ -->
@@ -1013,7 +1012,7 @@ function renderTrend(sellRate, history) {
     <div class="jpy-trend-row">${trendLine}</div>
     ${ref30 ? `<div class="jpy-trend-sub">30 日前賣出：${ref30.sell.toFixed(4)}　→　今日：${sellRate.toFixed(4)}</div>` : ""}
     ${rangeTip ? `<div class="jpy-trend-sub" style="margin-top:2px">${rangeTip}</div>` : ""}
-    ${sells.length >= 2 ? `<div class="jpy-range-bar">
+    ${(sells.length >= 2 && maxR > minR) ? `<div class="jpy-range-bar">
       <span style="font-size:10px;color:var(--text3)">低 ${minR.toFixed(4)}</span>
       <div class="jpy-range-bg"><div class="jpy-range-dot" style="left:${pos}%"></div></div>
       <span style="font-size:10px;color:var(--text3)">高 ${maxR.toFixed(4)}</span>
