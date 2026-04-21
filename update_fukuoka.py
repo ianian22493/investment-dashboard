@@ -173,9 +173,43 @@ def generate_with_gemini(district, period_num):
         # 清除可能的 markdown code block 包裝
         text = re.sub(r'^```json\s*', '', text, flags=re.MULTILINE)
         text = re.sub(r'^```\s*',     '', text, flags=re.MULTILINE)
+        # 移除 Gemini 可能夾帶的引用標記（[1], [2] 等），這些會破壞 JSON
+        text = re.sub(r'\[\d+\]', '', text)
         text = text.strip()
 
-        data = json.loads(text)
+        # 取第一個 JSON 物件（防止前後有多餘文字）
+        m = re.search(r'\{.*\}', text, re.DOTALL)
+        if m:
+            text = m.group()
+
+        try:
+            data = json.loads(text)
+        except json.JSONDecodeError as e:
+            print(f"  ⚠ JSON 解析失敗（{e}），重試一次（加強純 JSON 要求）...")
+            for attempt2 in range(3):
+                try:
+                    resp2 = client.models.generate_content(
+                        model="gemini-2.5-flash",
+                        contents=prompt + "\n\n重要：只輸出純 JSON，不含任何引用標記、括號數字或額外說明。",
+                        config=types.GenerateContentConfig(
+                            thinking_config=types.ThinkingConfig(thinking_budget=0)
+                        )
+                    )
+                    t2 = resp2.text.strip()
+                    t2 = re.sub(r'^```json\s*', '', t2, flags=re.MULTILINE)
+                    t2 = re.sub(r'^```\s*',     '', t2, flags=re.MULTILINE)
+                    t2 = re.sub(r'\[\d+\]',     '', t2)
+                    t2 = t2.strip()
+                    m2 = re.search(r'\{.*\}', t2, re.DOTALL)
+                    if m2:
+                        t2 = m2.group()
+                    data = json.loads(t2)
+                    break
+                except Exception as e2:
+                    if "503" in str(e2) and attempt2 < 2:
+                        time.sleep(20 * (attempt2 + 1))
+                    else:
+                        raise
         print(f"  ✓ Gemini 分析生成成功（{district['name']}）")
         return data
 
