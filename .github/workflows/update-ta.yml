@@ -1,10 +1,10 @@
 name: 每週技術分析教學更新
 
 on:
-  # 每週一 08:00 UTC = 台灣時間 16:00
+  # 週一 08:00 UTC（台灣 16:00）主要觸發；12:00 UTC（台灣 20:00）備用觸發
   schedule:
-    - cron: '0 8 * * 1'
-  # 手動觸發（測試用）
+    - cron: '0 8  * * 1'
+    - cron: '0 12 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -17,20 +17,41 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: 確認本週是否已有技術分析
+        id: check
+        run: |
+          LAST=$(python3 -c "
+          import json, os
+          d = json.load(open('ta_state.json')) if os.path.exists('ta_state.json') else {}
+          print(d.get('last_updated', '2000-01-01'))
+          " 2>/dev/null || echo "2000-01-01")
+          DAYS=$(python3 -c "from datetime import date; print((date.today() - date.fromisoformat('$LAST')).days)")
+          if [ "$DAYS" -lt 6 ]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "✅ 本週技術分析已於 $LAST 執行（${DAYS} 天前），略過重複執行"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "📊 上次執行：$LAST（${DAYS} 天前），開始本週更新"
+          fi
+
       - name: Set up Python
+        if: steps.check.outputs.skip == 'false'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: 安裝依賴
+        if: steps.check.outputs.skip == 'false'
         run: pip install yfinance google-genai
 
       - name: 執行每週技術分析更新
+        if: steps.check.outputs.skip == 'false'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python update_ta.py
 
       - name: Commit 並 Push
+        if: steps.check.outputs.skip == 'false'
         run: |
           git config user.email "bot@investment-dashboard"
           git config user.name "Dashboard Bot"

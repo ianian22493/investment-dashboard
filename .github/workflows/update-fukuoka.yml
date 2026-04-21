@@ -1,11 +1,11 @@
 name: 每兩週福岡房市 AI 分析
 
 on:
-  # 每週二 08:00 UTC = 台灣時間 16:00 觸發
+  # 週二 08:00 UTC（台灣 16:00）主要觸發；12:00 UTC（台灣 20:00）備用觸發
   # 腳本內部節流：距上次執行 < 13 天則自動跳過（實現兩週一次）
   schedule:
-    - cron: '0 8 * * 2'
-  # 手動觸發（測試用，強制執行請修改 fukuoka_state.json 的 last_updated 為舊日期）
+    - cron: '0 8  * * 2'
+    - cron: '0 12 * * 2'
   workflow_dispatch:
 
 permissions:

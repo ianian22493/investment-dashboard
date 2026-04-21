@@ -157,6 +157,7 @@ def generate_with_gemini(district, period_num):
                     model="gemini-2.5-flash",
                     contents=prompt,
                     config=types.GenerateContentConfig(
+                        tools=[types.Tool(google_search=types.GoogleSearch())],
                         thinking_config=types.ThinkingConfig(thinking_budget=0)
                     )
                 )
@@ -192,6 +193,7 @@ def generate_with_gemini(district, period_num):
                         model="gemini-2.5-flash",
                         contents=prompt + "\n\n重要：只輸出純 JSON，不含任何引用標記、括號數字或額外說明。",
                         config=types.GenerateContentConfig(
+                            tools=[types.Tool(google_search=types.GoogleSearch())],
                             thinking_config=types.ThinkingConfig(thinking_budget=0)
                         )
                     )
