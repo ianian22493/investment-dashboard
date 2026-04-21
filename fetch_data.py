@@ -17,6 +17,23 @@ US_STOCKS = [
     "ONDS", "RBRK", "S", "SMR", "SOUN", "TSLA", "TTD", "ZS",
 ]
 
+# 台股持倉：代號 → 股數（有變動時告知 Claude 更新這裡）
+TW_POSITIONS = {
+    "00692": 6618,  "00915": 2000,
+    "1104":  20000, "2211":  3100,
+    "2330":  40,    "2536":  5000,
+    "2834":  13000, "3293":  940,
+    "3661":  10,    "3703":  12000,
+    "4588":  1400,  "4707":  32000,
+}
+
+# 美股持倉：代號 → 股數（需與 index.html WIFE_SHARES 保持一致）
+US_POSITIONS = {
+    "AMZN": 2, "CELH": 4, "GOOGL": 6.00049, "MELI": 1, "MSFT": 5,
+    "NVDA": 4.00006, "ONDS": 7, "RBRK": 9, "S": 1, "SMR": 1,
+    "SOUN": 10, "TSLA": 11, "TTD": 3, "ZS": 11,
+}
+
 # ──────────────────────────────────────────
 # 美股：yfinance
 # ──────────────────────────────────────────
@@ -53,6 +70,33 @@ def fetch_us():
         print(f"  ✓ 取得 {len(result)} 檔美股")
     except Exception as e:
         print(f"  ✗ 美股整批失敗：{e}")
+    return result
+
+
+# ──────────────────────────────────────────
+# 台股：yfinance（.TW 後綴）
+# ──────────────────────────────────────────
+def fetch_tw():
+    """抓取所有台股持倉的最新收盤價，回傳 {代號: 收盤價}"""
+    print("🇹🇼 抓取台股資料...")
+    result = {}
+    try:
+        import yfinance as yf
+        symbols = [f"{code}.TW" for code in TW_POSITIONS]
+        tickers = yf.Tickers(" ".join(symbols))
+        for code in TW_POSITIONS:
+            sym = f"{code}.TW"
+            try:
+                t     = tickers.tickers[sym]
+                info  = t.fast_info
+                price = getattr(info, "last_price", None)
+                if price:
+                    result[code] = round(price, 2)
+            except Exception as e:
+                print(f"  ✗ {code} 失敗：{e}")
+        print(f"  ✓ 取得 {len(result)} 檔台股")
+    except Exception as e:
+        print(f"  ✗ 台股整批失敗：{e}")
     return result
 
 
@@ -144,9 +188,10 @@ def fetch_usd_rate():
 # 主程式：組合並輸出 data.json
 # ──────────────────────────────────────────
 def main():
-    us               = fetch_us()
+    us                = fetch_us()
+    tw                = fetch_tw()
     jpy_buy, jpy_sell = fetch_sinopac_jpy()
-    usd_rate         = fetch_usd_rate()
+    usd_rate          = fetch_usd_rate()
 
     tz_tw      = timezone(timedelta(hours=8))
     now_tw     = datetime.now(tz_tw)
@@ -176,6 +221,24 @@ def main():
         })
         history = sorted(history, key=lambda h: h["date"])[-60:]  # 只保留最近 60 天
 
+    # 投資組合歷史：台股 + 美股市值，今日記一筆，保留最近 90 天
+    tw_value     = sum(TW_POSITIONS[code] * tw[code]
+                       for code in TW_POSITIONS if code in tw)
+    us_value_usd = sum(US_POSITIONS[t] * us[t]["price"]
+                       for t in US_POSITIONS if t in us and us[t].get("price"))
+    us_value_twd = round(us_value_usd * (usd_rate or 32.0))
+
+    port_history = old.get("portfolio_history", [])
+    if tw_value > 0 or us_value_twd > 0:
+        port_history = [h for h in port_history if h.get("date") != today_str]
+        port_history.append({
+            "date":  today_str,
+            "tw":    round(tw_value),
+            "us":    us_value_twd,
+            "total": round(tw_value + us_value_twd),
+        })
+        port_history = sorted(port_history, key=lambda h: h["date"])[-90:]
+
     output = {
         "updated_at":           updated_at,
         "us":                   us,
@@ -187,6 +250,8 @@ def main():
         "jpy_taisho_discount":  jpy_taisho_discount,       # 手動更新：大戶優惠折扣（牌告賣出 - 此值）
         "jpy_rate_history":     history,            # 自動累積，供走勢分析使用
         "usd_twd":              usd_rate,
+        "tw":                   tw,                 # 台股最新收盤價
+        "portfolio_history":    port_history,       # 每日台股+美股市値（自動累積）
     }
 
     with open("data.json", "w", encoding="utf-8") as f:
@@ -195,6 +260,7 @@ def main():
     print(f"\n✅ data.json 已產生，更新時間：{updated_at}")
     print(f"   JPY 歷史紀錄：{len(history)} 筆")
     print(f"   日幣存款：¥{jpy_savings:,}（手動欄位，如需更新請告知 Claude）")
+    print(f"   投組歷史：{len(port_history)} 筆｜今日 台股 NT${tw_value:,.0f} + 美股 NT${us_value_twd:,.0f} = NT${tw_value+us_value_twd:,.0f}")
 
 
 if __name__ == "__main__":
