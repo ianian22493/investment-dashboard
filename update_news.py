@@ -16,7 +16,7 @@ HOLDINGS = {
     "TW": ["00692", "00915", "1104", "2211", "2330", "2536", "2834",
            "3293", "3661", "3703", "4588", "4707"],
     "US": ["AMZN", "CELH", "GOOGL", "MELI", "MSFT", "NVDA",
-           "ONDS", "RBRK", "S", "SMR", "SOUN", "TSLA", "TTD", "ZS"],
+           "ONDS", "RBRK", "S", "SOUN", "TSLA", "ZS"],
 }
 
 # ── 持倉名稱對照（顯示用）──
@@ -31,9 +31,9 @@ NAMES = {
     "GOOGL": "Alphabet",     "MELI":  "MercadoLibre",
     "MSFT":  "Microsoft",    "NVDA":  "NVIDIA",
     "ONDS":  "Ondas",        "RBRK":  "Rubrik",
-    "S":     "SentinelOne",  "SMR":   "NuScale",
+    "S":     "SentinelOne",
     "SOUN":  "SoundHound",   "TSLA":  "Tesla",
-    "TTD":   "The Trade Desk","ZS":   "Zscaler",
+    "ZS":    "Zscaler",
 }
 
 

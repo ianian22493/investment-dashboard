@@ -14,14 +14,15 @@ from datetime import datetime, timezone, timedelta
 # ──────────────────────────────────────────
 US_STOCKS = [
     "AMZN", "CELH", "GOOGL", "MELI", "MSFT", "NVDA",
-    "ONDS", "RBRK", "S", "SMR", "SOUN", "TSLA", "TTD", "ZS",
+    "ONDS", "RBRK", "S", "SOUN", "TSLA", "ZS",
 ]
 
 # 美股持倉：代號 → 股數（需與 index.html WIFE_SHARES 保持一致）
+# 2026-04-23：SMR 1股 $12.54 賣出；TTD 3股 $23.50 賣出；CELH +1股 $33.00 買入（均價 $34.00，共 5 股）
 US_POSITIONS = {
-    "AMZN": 2, "CELH": 4, "GOOGL": 6.00049, "MELI": 1, "MSFT": 5,
-    "NVDA": 4.00006, "ONDS": 7, "RBRK": 9, "S": 1, "SMR": 1,
-    "SOUN": 10, "TSLA": 11, "TTD": 3, "ZS": 11,
+    "AMZN": 2, "CELH": 5, "GOOGL": 6.00049, "MELI": 1, "MSFT": 5,
+    "NVDA": 4.00006, "ONDS": 7, "RBRK": 9, "S": 1,
+    "SOUN": 10, "TSLA": 11, "ZS": 11,
 }
 
 # ──────────────────────────────────────────
