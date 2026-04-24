@@ -120,8 +120,8 @@ def generate_with_gemini(district, period_num):
         client = genai.Client(api_key=api_key)
 
         prompt = f"""你是為台灣移居者撰寫日本福岡不動產分析的專家。
-目標讀者：台灣人，計畫 5–10 年內在福岡購買自住用中古公寓，總預算約 3,000 萬日圓。
-讀者目前在台灣工作，會不定期前往福岡看房，希望了解各區特性後再決定目標區域。
+目標讀者：台灣人，計畫 5–10 年內在福岡購買自住用中古或新築公寓，總預算約 3,000 萬日圓。
+讀者目前在台灣工作，對預售屋（新築分讓マンション）特別有興趣，希望掌握各區預售屋動態。
 
 本期分析：第 {period_num} 期・{district['name']}
 重點地區：{district['areas']}
@@ -132,10 +132,38 @@ def generate_with_gemini(district, period_num):
   "summary": "區域一句話定位（20字內）",
   "feature": "區域特色描述，包含交通、生活機能、特色氛圍（50字內）",
   "spots": [
-    {{"name": "具體地名或站名", "note": "推薦理由（20字內）", "price": "70㎡約X,XXX萬円"}},
-    {{"name": "具體地名或站名", "note": "推薦理由（20字內）", "price": "70㎡約X,XXX萬円"}},
-    {{"name": "具體地名或站名", "note": "推薦理由（20字內）", "price": "70㎡約X,XXX萬円"}}
+    {{"name": "具體地名或站名", "note": "推薦理由（20字內）", "price_70sqm": 2500}},
+    {{"name": "具體地名或站名", "note": "推薦理由（20字內）", "price_70sqm": 2800}},
+    {{"name": "具體地名或站名", "note": "推薦理由（20字內）", "price_70sqm": 3200}}
   ],
+  "price_history": [
+    {{"year": 2020, "avg_sqm": 42}},
+    {{"year": 2021, "avg_sqm": 45}},
+    {{"year": 2022, "avg_sqm": 49}},
+    {{"year": 2023, "avg_sqm": 53}},
+    {{"year": 2024, "avg_sqm": 57}}
+  ],
+  "presale_projects": [
+    {{
+      "name": "具體建案名稱或預計名稱",
+      "location": "最近站名・徒步X分",
+      "price_from": 2800,
+      "price_to": 3500,
+      "delivery": "20XX年XX月預定",
+      "note": "建案特色簡述（25字內）",
+      "status": "銷售中"
+    }},
+    {{
+      "name": "具體建案名稱或預計名稱",
+      "location": "最近站名・徒步X分",
+      "price_from": 2400,
+      "price_to": 3000,
+      "delivery": "20XX年XX月預定",
+      "note": "建案特色簡述（25字內）",
+      "status": "即将登場"
+    }}
+  ],
+  "presale_vs_resale": "該區預售屋目前比中古屋平均貴幾%，值不值得的簡短評估（40字內）",
   "pros": [
     "台灣人角度的優點1（25字內）",
     "台灣人角度的優點2（25字內）",
@@ -145,9 +173,15 @@ def generate_with_gemini(district, period_num):
     "需注意風險1（25字內）",
     "需注意風險2（25字內）"
   ],
-  "budget_advice": "針對預算 3,000 萬円 的具體建議（60字內）",
+  "budget_advice": "針對預算 3,000 萬円 的具體建議，含預售屋建議（60字內）",
   "next_preview": "下一期預告一句話（15字內）"
-}}"""
+}}
+
+重要：
+- price_70sqm、price_from、price_to 均為整數，單位是「萬円」（例：2800 表示 2,800 萬円）
+- price_history 的 avg_sqm 為每平方公尺均價，單位是「萬円」（例：57 表示 57 萬円/㎡）
+- presale_projects 盡量提供真實存在或合理預估的建案資訊，若該區近期無預售案可填預計資訊
+- 所有價格以目前市場行情為基準，供參考用"""
 
         # 帶重試的呼叫（503 最多重試3次）
         text = None
@@ -227,7 +261,6 @@ def build_fk_html(district, analysis, date_str, period_num):
     """生成福岡 section 的完整 HTML（放在 FK_CARD_START/END 之間）"""
 
     if analysis is None:
-        # Gemini 失敗時顯示簡單佔位
         return (
             "<!-- FK_CARD_START -->\n"
             "    <div style=\"text-align:center;padding:36px;color:var(--text3)\">\n"
@@ -240,20 +273,64 @@ def build_fk_html(district, analysis, date_str, period_num):
 
     ym = date_str[:7].replace('-', '/')
 
-    # 地點卡片
+    # ── 推薦地段卡片 ──
+    spots      = (analysis.get("spots") or [])[:3]
+    spot_names = [s.get("name", "") for s in spots]
+    spot_prices = [s.get("price_70sqm", 0) for s in spots]
+
     spots_html = ""
-    for spot in (analysis.get("spots") or [])[:3]:
+    for spot in spots:
+        price_val = spot.get("price_70sqm", 0)
+        price_str = f"70㎡約 {price_val:,} 萬円" if price_val else "—"
         spots_html += (
             f'\n      <div class="fk-card">'
             f'\n        <div class="fk-tag">{spot.get("note", "")}</div>'
             f'\n        <div class="fk-title">{spot.get("name", "")}</div>'
             f'\n        <div class="fk-body">{district["name"]} · 推薦地段</div>'
-            f'\n        <div class="fk-price">{spot.get("price", "—")}</div>'
+            f'\n        <div class="fk-price">{price_str}</div>'
             f'\n        <div class="fk-date">{ym}</div>'
             f'\n      </div>'
         )
 
-    # 優缺點
+    # ── 預售屋項目卡片 ──
+    presale_projects = analysis.get("presale_projects") or []
+    presale_html = ""
+    for proj in presale_projects[:3]:
+        status     = proj.get("status", "")
+        p_from     = proj.get("price_from", 0)
+        p_to       = proj.get("price_to", 0)
+        price_rng  = f"{p_from:,}〜{p_to:,} 萬円" if p_from and p_to else "—"
+        status_cls = "fk-status-sale" if "銷售" in status else "fk-status-soon"
+        presale_html += (
+            f'\n      <div class="fk-presale-card">'
+            f'\n        <div class="fk-presale-header">'
+            f'\n          <span class="fk-presale-name">{proj.get("name", "")}</span>'
+            f'\n          <span class="fk-presale-status {status_cls}">{status}</span>'
+            f'\n        </div>'
+            f'\n        <div class="fk-presale-loc">📍 {proj.get("location", "")}</div>'
+            f'\n        <div class="fk-presale-price">💴 {price_rng}</div>'
+            f'\n        <div class="fk-presale-delivery">🗓 交屋：{proj.get("delivery", "—")}</div>'
+            f'\n        <div class="fk-presale-note">{proj.get("note", "")}</div>'
+            f'\n      </div>'
+        )
+
+    presale_vs_resale = analysis.get("presale_vs_resale", "")
+
+    # ── Chart.js 資料（JSON 字串嵌入 HTML）──
+    import json as _json
+
+    # 圖1：近5年房價走勢（折線圖）
+    price_history  = analysis.get("price_history") or []
+    hist_labels    = _json.dumps([str(h["year"]) for h in price_history])
+    hist_data      = _json.dumps([h["avg_sqm"] for h in price_history])
+    chart_trend_id = f"fkTrendChart{period_num}"
+
+    # 圖2：推薦地段 70㎡ 價格比較（橫向柱狀圖）
+    spot_labels_js = _json.dumps(spot_names)
+    spot_data_js   = _json.dumps(spot_prices)
+    chart_spot_id  = f"fkSpotChart{period_num}"
+
+    # ── 優缺點 ──
     pros_html  = "\n".join(
         f'        <div class="highlight-item">✅ {p}</div>'
         for p in (analysis.get("pros") or [])
@@ -268,7 +345,62 @@ def build_fk_html(district, analysis, date_str, period_num):
     return (
         "<!-- FK_CARD_START -->\n"
         f'    <div class="fk-period-badge">第 {period_num} 期・{district["name"]}・{date_str}</div>\n'
+
+        # 推薦地段卡片
         f'    <div class="fk-grid">{spots_html}\n    </div>\n'
+
+        # 圖表區：走勢 + 地段比較
+        f'    <div class="fk-charts-row">\n'
+        f'      <div class="fk-chart-box">\n'
+        f'        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>\n'
+        f'        <canvas id="{chart_trend_id}" height="180"></canvas>\n'
+        f'      </div>\n'
+        f'      <div class="fk-chart-box">\n'
+        f'        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>\n'
+        f'        <canvas id="{chart_spot_id}" height="180"></canvas>\n'
+        f'      </div>\n'
+        f'    </div>\n'
+        f'    <script>\n'
+        f'    (function(){{\n'
+        f'      var tCtx = document.getElementById("{chart_trend_id}");\n'
+        f'      if (tCtx) new Chart(tCtx, {{\n'
+        f'        type: "line",\n'
+        f'        data: {{ labels: {hist_labels}, datasets: [{{\n'
+        f'          label: "均價（萬円/㎡）", data: {hist_data},\n'
+        f'          borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",\n'
+        f'          tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"\n'
+        f'        }}]}},\n'
+        f'        options: {{ responsive: true, plugins: {{ legend: {{ display: false }} }},\n'
+        f'          scales: {{ x: {{ ticks: {{ color: "#8b949e" }}, grid: {{ color: "rgba(139,148,158,0.15)" }} }},\n'
+        f'                     y: {{ ticks: {{ color: "#8b949e" }}, grid: {{ color: "rgba(139,148,158,0.15)" }}, beginAtZero: false }} }} }}\n'
+        f'      }});\n'
+        f'      var sCtx = document.getElementById("{chart_spot_id}");\n'
+        f'      if (sCtx) new Chart(sCtx, {{\n'
+        f'        type: "bar",\n'
+        f'        data: {{ labels: {spot_labels_js}, datasets: [{{\n'
+        f'          label: "70㎡（萬円）", data: {spot_data_js},\n'
+        f'          backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],\n'
+        f'          borderRadius: 6\n'
+        f'        }}]}},\n'
+        f'        options: {{ responsive: true, plugins: {{ legend: {{ display: false }} }},\n'
+        f'          scales: {{ x: {{ ticks: {{ color: "#8b949e" }}, grid: {{ display: false }} }},\n'
+        f'                     y: {{ ticks: {{ color: "#8b949e" }}, grid: {{ color: "rgba(139,148,158,0.15)" }},\n'
+        f'                           min: Math.max(0, Math.min(...{spot_data_js}) - 500) }} }} }}\n'
+        f'      }});\n'
+        f'    }})();\n'
+        f'    </script>\n'
+
+        # 預售屋專區
+        + (
+            f'    <div class="fk-presale-section">\n'
+            f'      <div class="fk-section-label">🏗 預售屋動態</div>\n'
+            f'      <div class="fk-presale-grid">{presale_html}\n      </div>\n'
+            + (f'      <div class="fk-presale-note-row">💡 {presale_vs_resale}</div>\n' if presale_vs_resale else '')
+            + f'    </div>\n'
+            if presale_html else ''
+        )
+
+        # AI 分析文字
         f'    <div class="report-card">\n'
         f'      <div class="report-header">\n'
         f'        <div class="report-title">🤖 AI 分析：{district["name"]} / {district["areas"]}</div>\n'
