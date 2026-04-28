@@ -342,14 +342,16 @@ def build_fk_html(district, analysis, date_str, period_num):
 
     next_preview = analysis.get("next_preview", "")
 
-    return (
-        "<!-- FK_CARD_START -->\n"
-        f'    <div class="fk-period-badge">第 {period_num} 期・{district["name"]}・{date_str}</div>\n'
+    # 用 list 組裝 HTML，避免混用隱式拼接與 + 運算子造成 SyntaxError
+    parts = []
+    parts.append("<!-- FK_CARD_START -->\n")
+    parts.append(f'    <div class="fk-period-badge">第 {period_num} 期・{district["name"]}・{date_str}</div>\n')
 
-        # 推薦地段卡片
-        f'    <div class="fk-grid">{spots_html}\n    </div>\n'
+    # 推薦地段卡片
+    parts.append(f'    <div class="fk-grid">{spots_html}\n    </div>\n')
 
-        # 圖表區：走勢 + 地段比較
+    # 圖表區：走勢 + 地段比較
+    parts.append(
         f'    <div class="fk-charts-row">\n'
         f'      <div class="fk-chart-box">\n'
         f'        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>\n'
@@ -389,18 +391,19 @@ def build_fk_html(district, analysis, date_str, period_num):
         f'      }});\n'
         f'    }})();\n'
         f'    </script>\n'
+    )
 
-        # 預售屋專區
-        + (
-            f'    <div class="fk-presale-section">\n'
-            f'      <div class="fk-section-label">🏗 預售屋動態</div>\n'
-            f'      <div class="fk-presale-grid">{presale_html}\n      </div>\n'
-            + (f'      <div class="fk-presale-note-row">💡 {presale_vs_resale}</div>\n' if presale_vs_resale else '')
-            + f'    </div>\n'
-            if presale_html else ''
-        )
+    # 預售屋專區（可選）
+    if presale_html:
+        parts.append(f'    <div class="fk-presale-section">\n')
+        parts.append(f'      <div class="fk-section-label">🏗 預售屋動態</div>\n')
+        parts.append(f'      <div class="fk-presale-grid">{presale_html}\n      </div>\n')
+        if presale_vs_resale:
+            parts.append(f'      <div class="fk-presale-note-row">💡 {presale_vs_resale}</div>\n')
+        parts.append(f'    </div>\n')
 
-        # AI 分析文字
+    # AI 分析文字
+    parts.append(
         f'    <div class="report-card">\n'
         f'      <div class="report-header">\n'
         f'        <div class="report-title">🤖 AI 分析：{district["name"]} / {district["areas"]}</div>\n'
@@ -415,12 +418,16 @@ def build_fk_html(district, analysis, date_str, period_num):
         f'{risks_html}\n'
         f'        </div>\n'
         f'        <p><strong>預算 3,000 萬円 建議：</strong>{analysis.get("budget_advice", "—")}</p>\n'
-        + (f'        <p style="color:var(--text3);font-size:12px;margin-top:12px">▶ 下期預告：{next_preview}</p>\n' if next_preview else '')
-        + '        <p style="color:var(--text3);font-size:11px;margin-top:8px">🤖 由 Gemini AI 根據訓練資料生成，房價僅供參考，實際行情請向仲介確認</p>\n'
+    )
+    if next_preview:
+        parts.append(f'        <p style="color:var(--text3);font-size:12px;margin-top:12px">▶ 下期預告：{next_preview}</p>\n')
+    parts.append('        <p style="color:var(--text3);font-size:11px;margin-top:8px">🤖 由 Gemini AI 根據訓練資料生成，房價僅供參考，實際行情請向仲介確認</p>\n')
+    parts.append(
         f'      </div>\n'
         f'    </div>\n'
-        "    <!-- FK_CARD_END -->"
     )
+    parts.append("    <!-- FK_CARD_END -->")
+    return "".join(parts)
 
 
 # ════════════════════════════════════════════════════════════════════
