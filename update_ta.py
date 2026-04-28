@@ -624,9 +624,9 @@ LESSON_FN = {
 # 快照、敘述、情緒、結論生成器
 # ════════════════════════════════════════════════════════════════════
 def _snap(label, val, sub, cls=""):
-    c = f' class="{cls}"' if cls else ''
+    val_cls = f"ta-snap-val {cls}" if cls else "ta-snap-val"
     return (f'<div class="ta-snap-item"><div class="ta-snap-label">{label}</div>'
-            f'<div class="ta-snap-val"{c}>{val}</div>'
+            f'<div class="{val_cls}">{val}</div>'
             f'<div class="ta-snap-sub">{sub}</div></div>')
 
 def generate_snapshot(stock, ind, p):
