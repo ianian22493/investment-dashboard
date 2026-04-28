@@ -284,6 +284,17 @@ def fetch_indicators(stock):
         ret_3m    = round((closes[-1] / closes[-n63] - 1) * 100, 1) if n63 < len(closes) else None
         rs_vs_spy = round(ret_3m - spy_ret, 1) if (ret_3m is not None and spy_ret is not None) else None
 
+        # ── 60 天圖表序列（收盤 + 滾動 MA）──
+        n_chart = min(60, len(closes))
+        chart_dates  = dates[-n_chart:]
+        chart_closes = [round(c, 2) for c in closes[-n_chart:]]
+        chart_ma5, chart_ma20, chart_ma60 = [], [], []
+        for i in range(n_chart):
+            idx = len(closes) - n_chart + i
+            chart_ma5.append( round(sum(closes[idx-4 :idx+1])/5,  2) if idx >= 4  else None)
+            chart_ma20.append(round(sum(closes[idx-19:idx+1])/20, 2) if idx >= 19 else None)
+            chart_ma60.append(round(sum(closes[idx-59:idx+1])/60, 2) if idx >= 59 else None)
+
         return {
             "price": price,
             "ma5": ma5, "ma20": ma20, "ma60": ma60, "closes_5d": closes_5d,
@@ -300,6 +311,9 @@ def fetch_indicators(stock):
             "ohlc_5d": ohlc_5d,
             "fib_high": fib_high, "fib_low": fib_low, "fib_lvls": fib_lvls,
             "ret_3m": ret_3m, "spy_ret": spy_ret, "rs_vs_spy": rs_vs_spy,
+            # 圖表序列
+            "chart_dates": chart_dates, "chart_closes": chart_closes,
+            "chart_ma5": chart_ma5, "chart_ma20": chart_ma20, "chart_ma60": chart_ma60,
         }
     except Exception as e:
         print(f"  錯誤：{stock['symbol']} 指標抓取失敗：{e}")
@@ -630,8 +644,37 @@ def _snap(label, val, sub, cls=""):
             f'<div class="ta-snap-sub">{sub}</div></div>')
 
 def generate_snapshot(stock, ind, p):
+    import json as _json
     mkt   = stock["market"]
     price = ind["price"]
+
+    # ── 折線圖 HTML ──
+    chart_id = f"taLineChart_{stock['symbol'].replace('-','')}"
+    labels   = _json.dumps(ind.get("chart_dates",  []))
+    c_closes = _json.dumps(ind.get("chart_closes", []))
+    c_ma5    = _json.dumps(ind.get("chart_ma5",    []))
+    c_ma20   = _json.dumps(ind.get("chart_ma20",   []))
+    c_ma60   = _json.dumps(ind.get("chart_ma60",   []))
+    chart_html = (
+        f'<div class="ta-chart-wrap">'
+        f'<canvas id="{chart_id}" height="160"></canvas>'
+        f'<script>(function(){{'
+        f'var ctx=document.getElementById("{chart_id}");'
+        f'if(!ctx)return;'
+        f'new Chart(ctx,{{type:"line",data:{{labels:{labels},datasets:['
+        f'{{label:"收盤",data:{c_closes},borderColor:"rgba(200,200,220,.9)",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,order:1}},'
+        f'{{label:"MA5", data:{c_ma5}, borderColor:"#f0c040",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[3,2],spanGaps:true,order:2}},'
+        f'{{label:"MA20",data:{c_ma20},borderColor:"#56d364",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[5,3],spanGaps:true,order:3}},'
+        f'{{label:"MA60",data:{c_ma60},borderColor:"#f85149",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[8,4],spanGaps:true,order:4}}'
+        f']}},options:{{responsive:true,interaction:{{mode:"index",intersect:false}},'
+        f'plugins:{{legend:{{display:true,position:"top",labels:{{color:"#8b949e",font:{{size:10}},boxWidth:16,padding:10}}}},'
+        f'tooltip:{{backgroundColor:"rgba(22,27,34,.95)",titleColor:"#c9d1d9",bodyColor:"#8b949e",padding:8}}}},'
+        f'scales:{{x:{{ticks:{{color:"#8b949e",maxTicksLimit:8,font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}},'
+        f'y:{{ticks:{{color:"#8b949e",font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}}}}}}}});'
+        f'}})();</script></div>\n'
+    )
+
+    # ── 指標格子 ──
     items = []
     items.append(_snap("現價", p(price), f"52週 {ind['w52pct']}% 位置"))
     ma5c  = "snap-bull" if price > ind["ma5"]  else "snap-bear"
@@ -644,23 +687,24 @@ def generate_snapshot(stock, ind, p):
     rsi_sub = "超買警戒" if ind["rsi"] > 70 else ("超賣區間" if ind["rsi"] < 30 else "健康區間" if ind["rsi"] > 50 else "偏弱區間")
     items.append(_snap("RSI(14)", str(ind["rsi"]), rsi_sub, rsic))
     kdc = "snap-bull" if ind["kd_k"] > ind["kd_d"] else "snap-bear"
-    items.append(_snap("KD", f"K {ind['kd_k']} / D {ind['kd_d']}", "K>D 偏多" if ind["kd_k"] > ind["kd_d"] else "K<D 偏空", kdc))
+    items.append(_snap("KD", f"K{ind['kd_k']}/D{ind['kd_d']}", "K>D 偏多" if ind["kd_k"] > ind["kd_d"] else "K<D 偏空", kdc))
     histc = "snap-bull" if ind["hist"] > 0 else "snap-bear"
     items.append(_snap("MACD柱", f"{ind['hist']:+.3f}", "動能向上" if ind["hist"] > 0 else "動能向下", histc))
     bbc = "snap-bear" if ind["bb_pos"] > 85 else ("snap-bull" if ind["bb_pos"] < 15 else "")
     items.append(_snap("布林位置", f"{ind['bb_pos']:.0f}%", "近上軌" if ind["bb_pos"] > 85 else ("近下軌" if ind["bb_pos"] < 15 else "中段"), bbc))
-    items.append(_snap("ATR(14)", p(ind["atr"]), f"±{ind['atr_pct']:.1f}% / 日"))
+    items.append(_snap("ATR(14)", p(ind["atr"]), f"±{ind['atr_pct']:.1f}%/日"))
     rvc = "snap-bull" if ind["rel_vol"] > 1.2 else ("snap-bear" if ind["rel_vol"] < 0.6 else "")
     items.append(_snap("成交量比", f"{ind['rel_vol']}x", "放量" if ind["rel_vol"] > 1.2 else ("縮量" if ind["rel_vol"] < 0.6 else "正常"), rvc))
     rs = ind.get("rs_vs_spy")
     if rs is not None:
         rsc = "snap-bull" if rs > 0 else "snap-bear"
-        items.append(_snap("vs 大盤(3M)", f"{rs:+.1f}%", "跑贏" if rs > 0 else "跑輸", rsc))
+        items.append(_snap("vs大盤(3M)", f"{rs:+.1f}%", "跑贏" if rs > 0 else "跑輸", rsc))
     grid = "\n".join(items)
     return (
         f'<div class="ta-ind">\n'
         f'  <div class="ta-ind-header"><span class="ta-ind-icon">⚡</span>'
         f'<span class="ta-ind-name">技術面快照（全指標一覽）</span></div>\n'
+        f'  {chart_html}'
         f'  <div class="ta-snap-grid">\n{grid}\n  </div>\n</div>\n'
     )
 
