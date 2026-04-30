@@ -1549,6 +1549,10 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 </div>
 
 <script>
+// ─────────────────────────────────────────
+// 【持倉清單】只需要代號和名稱
+// 有新增/賣出時直接告訴 Claude 修改這裡就好
+// ─────────────────────────────────────────
 const TW_HOLDINGS = [
   { code: "00692", name: "富邦公司治理"     },
   { code: "00915", name: "凱基優選高股息30" },
@@ -2009,7 +2013,34 @@ function toggleHistEntry(id) {
   const rows = document.querySelectorAll('.ta-hist-entry').length;
   document.getElementById('histCount').textContent = `共 ${rows} 則`;
 })();
-</script>
+
+// ── Reading Progress Bar ──
+window.addEventListener('scroll', () => {
+  const s = document.documentElement;
+  const pct = (s.scrollTop / (s.scrollHeight - s.clientHeight)) * 100;
+  document.getElementById('rbar').style.width = pct + '%';
+});
+
+// ── Scroll Reveal ──
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '-20px' });
+  els.forEach(el => io.observe(el));
+})();
+
+// ── Tweaks Panel (postMessage) ──
+window.addEventListener('message', e => {
+  const p = document.getElementById('tweaks-panel');
+  if (e.data?.type === '__activate_edit_mode')   p?.classList.add('open');
+  if (e.data?.type === '__deactivate_edit_mode') p?.classList.remove('open');
+});
+
+function setGlow(level, el) {
+  document.querySelectorAll('.tw-opt').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+}
 
 // ── Reading Progress Bar ──
 window.addEventListener('scroll', () => {
