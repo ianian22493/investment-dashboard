@@ -401,6 +401,45 @@
     .chart-placeholder { text-align:center; padding:40px; font-size:13px; color:var(--text3); }
     #portfolioChart { width:100%; }
 
+    /* ── Allocation Chart ── */
+    .alloc-glass { padding:36px 40px; }
+    @media(max-width:640px) { .alloc-glass { padding:24px 20px; } }
+    .alloc-wrap {
+      display:grid; grid-template-columns:260px 1fr; gap:48px; align-items:center;
+    }
+    @media(max-width:760px) { .alloc-wrap { grid-template-columns:1fr; gap:32px; } }
+    .alloc-canvas-wrap { position:relative; width:220px; height:220px; max-width:100%; margin:0 auto; }
+    .alloc-center {
+      position:absolute; inset:0; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; pointer-events:none; text-align:center;
+    }
+    .alloc-center-label { font-size:9px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+    .alloc-center-val {
+      font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; line-height:1;
+      background:linear-gradient(135deg,#e8f0fb,#a0b4cc);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .alloc-center-twd { font-size:10px; color:var(--text3); margin-top:5px; }
+    .alloc-legend { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    @media(max-width:960px) { .alloc-legend { grid-template-columns:1fr; } }
+    .alloc-item {
+      display:grid; grid-template-columns:10px 1fr auto;
+      grid-template-rows:auto auto; align-items:center; gap:8px 10px; padding:12px 14px;
+      border-radius:10px; background:var(--glass-bg); border:1px solid var(--glass-border);
+      transition:background .15s, border-color .15s, transform .18s; cursor:default;
+    }
+    .alloc-item:hover { background:var(--glass-bg2); border-color:var(--glass-border2); transform:translateX(3px); }
+    .alloc-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+    .alloc-info { min-width:0; }
+    .alloc-ticker { font-size:12px; font-weight:700; line-height:1.2; }
+    .alloc-name { font-size:10px; color:var(--text3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
+    .alloc-right { text-align:right; flex-shrink:0; }
+    .alloc-pct { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+    .alloc-val { font-size:10px; color:var(--text3); margin-top:2px; }
+    .alloc-bar-row { grid-column:2/-1; grid-row:2; }
+    .alloc-bar-bg { height:2px; background:rgba(255,255,255,.07); border-radius:100px; overflow:hidden; }
+    .alloc-bar-fill { height:100%; border-radius:100px; transition:width .8s cubic-bezier(.4,0,.2,1); }
+
     /* ── Wife Fund ── */
     .wife-glass {
       background:var(--glass-bg);
@@ -1205,6 +1244,35 @@
           <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">載入中…</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- ══ 持倉配置 ══ -->
+  <section class="section reveal d3" id="alloc-section">
+    <div class="section-head">
+      <div class="sh-dot" style="background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 20px rgba(0,212,255,.4);"></div>
+      <div>
+        <div class="sh-title">持倉配置</div>
+        <div class="sh-sub">Portfolio Allocation · By Market Value</div>
+      </div>
+      <div class="sh-line"></div>
+    </div>
+    <div class="glass alloc-glass">
+      <div class="alloc-wrap">
+        <div class="alloc-canvas-col">
+          <div class="alloc-canvas-wrap">
+            <canvas id="allocChart"></canvas>
+            <div class="alloc-center">
+              <div class="alloc-center-label">Total Value</div>
+              <div class="alloc-center-val" id="allocTotal">—</div>
+              <div class="alloc-center-twd" id="allocTWD">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="alloc-legend" id="allocLegend">
+          <!-- rendered by JS -->
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2047,6 +2115,111 @@ function renderWifeFund(usData, usdTwd) {
 }
 
 // ─────────────────────────────────────────
+// 持倉配置圓餅圖
+// ─────────────────────────────────────────
+function renderAllocationChart(usData, usdTwd) {
+  if (!usData || !usdTwd) return;
+
+  const COLORS = {
+    NVDA:'#00d4ff', TSLA:'#f87171', AMZN:'#34d399',
+    MSFT:'#4d9cf8', GOOGL:'#f0c040', CELH:'#a78bfa',
+    MELI:'#6366f1', ZS:'#fbbf24',   RBRK:'#2dd4bf',
+    SOUN:'#f472b6', ONDS:'#94a3b8', S:'#67e8f9',
+  };
+  const US_NAME = Object.fromEntries(US_HOLDINGS.map(h => [h.ticker, h.name]));
+
+  // 計算每支股票市值
+  const entries = [];
+  let totalUSD = 0;
+  for (const [ticker, shares] of Object.entries(WIFE_SHARES)) {
+    const q = usData[ticker];
+    if (!q?.price) continue;
+    const val = q.price * shares;
+    totalUSD += val;
+    entries.push({ ticker, shares, val, color: COLORS[ticker] || '#4d5a6e' });
+  }
+  if (!totalUSD) return;
+
+  entries.sort((a, b) => b.val - a.val);
+
+  // 中央數字
+  const el = document.getElementById('allocTotal');
+  const elTWD = document.getElementById('allocTWD');
+  if (el) el.textContent = '$' + totalUSD.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  if (elTWD) elTWD.textContent = 'NT$' + Math.round(totalUSD * usdTwd).toLocaleString();
+
+  // Chart.js Donut
+  const ctx = document.getElementById('allocChart')?.getContext('2d');
+  if (!ctx) return;
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: entries.map(e => e.ticker),
+      datasets: [{
+        data: entries.map(e => e.val),
+        backgroundColor: entries.map(e => e.color),
+        hoverBackgroundColor: entries.map(e => e.color),
+        borderWidth: 0,
+        borderRadius: 5,
+        spacing: 3,
+        hoverOffset: 10,
+      }]
+    },
+    options: {
+      cutout: '70%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: ctx => ctx[0].label,
+            label: ctx => {
+              const pct = ((ctx.parsed / totalUSD) * 100).toFixed(1);
+              return ` $${ctx.parsed.toLocaleString('en-US',{maximumFractionDigits:0})}  ·  ${pct}%`;
+            }
+          },
+          backgroundColor: 'rgba(5,8,22,0.94)',
+          borderColor: 'rgba(255,255,255,0.13)',
+          borderWidth: 1,
+          titleColor: '#e8f0fb',
+          bodyColor: '#7b90b4',
+          titleFont: { weight: '700', size: 13 },
+          bodyFont: { size: 12 },
+          padding: 14,
+          cornerRadius: 12,
+        }
+      },
+      animation: { animateRotate: true, duration: 1100, easing: 'easeOutQuart' },
+    }
+  });
+
+  // Legend
+  const legend = document.getElementById('allocLegend');
+  if (!legend) return;
+  legend.innerHTML = entries.map(e => {
+    const pct = ((e.val / totalUSD) * 100).toFixed(1);
+    const valStr = '$' + e.val.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    return `
+      <div class="alloc-item">
+        <div class="alloc-dot" style="background:${e.color};box-shadow:0 0 7px ${e.color}90;"></div>
+        <div class="alloc-info">
+          <div class="alloc-ticker">${e.ticker}</div>
+          <div class="alloc-name">${US_NAME[e.ticker] || ''}</div>
+        </div>
+        <div class="alloc-right">
+          <div class="alloc-pct" style="color:${e.color}">${pct}%</div>
+          <div class="alloc-val">${valStr}</div>
+        </div>
+        <div class="alloc-bar-row">
+          <div class="alloc-bar-bg">
+            <div class="alloc-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${e.color}80,${e.color}30);"></div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────
 // 日幣存款模組
 // ─────────────────────────────────────────
 
@@ -2323,6 +2496,7 @@ if (_pill) _pill.textContent = '連線中…';
     const data = await loadData();
     renderUS(data.us);
     renderWifeFund(data.us, data.usd_twd);
+    renderAllocationChart(data.us, data.usd_twd);
     renderPortfolioChart(data.portfolio_history || []);
     window.__jpySavings = data.jpy_savings          || 800_000;
     window.__jpyMonthly = data.jpy_monthly_estimate || 50_000;
