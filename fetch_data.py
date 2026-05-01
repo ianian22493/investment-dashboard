@@ -27,6 +27,28 @@ US_POSITIONS = {
 }
 
 # ──────────────────────────────────────────
+# 美股市場狀態（時間推算，EDT = UTC-4，EST = UTC-5）
+# fast_info 不含 market_state，改用時間判斷
+# ──────────────────────────────────────────
+def _us_market_state():
+    now_utc = datetime.now(timezone.utc)
+    if now_utc.weekday() >= 5:  # 週六/日
+        return "CLOSED"
+    # 簡化：5月~10月用 EDT（UTC-4），其他月份 EST（UTC-5）
+    offset = 4 if 3 <= now_utc.month <= 10 else 5
+    et_min = (now_utc.hour * 60 + now_utc.minute - offset * 60) % (24 * 60)
+    # 盤前 4:00–9:30 ET = 240–570 分
+    # 開市 9:30–16:00 ET = 570–960 分
+    # 盤後 16:00–20:00 ET = 960–1200 分
+    if 570 <= et_min < 960:
+        return "REGULAR"
+    if 240 <= et_min < 570:
+        return "PRE"
+    if 960 <= et_min < 1200:
+        return "POST"
+    return "CLOSED"
+
+# ──────────────────────────────────────────
 # 美股：yfinance
 # ──────────────────────────────────────────
 def fetch_us():
@@ -54,7 +76,7 @@ def fetch_us():
                     "price":  round(price, 2),
                     "change": change,
                     "pct":    pct,
-                    "state":  "CLOSED",
+                    "state":  _us_market_state(),
                 }
             except Exception as e:
                 print(f"  ✗ {symbol} 失敗：{e}")

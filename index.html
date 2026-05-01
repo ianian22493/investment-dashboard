@@ -1015,7 +1015,7 @@
         </div>
         <div class="hero-metric-cell">
           <div class="hero-metric-label">投入成本</div>
-          <div class="hero-metric-val" style="color:var(--text2)">NT$401,016</div>
+          <div class="hero-metric-val" style="color:var(--text2)">NT$400,000</div>
           <div class="hero-metric-sub">老婆本金</div>
         </div>
         <div class="hero-metric-cell">
@@ -1082,7 +1082,7 @@
           <div class="bar-fill" id="wifeFill" style="width:0%"></div>
         </div>
         <div class="hero-progress-footer">
-          <span>成本 <strong style="color:var(--text)">NT$401,016</strong></span>
+          <span>成本 <strong style="color:var(--text)">NT$400,000</strong></span>
           <span id="goalMetBadge" style="display:none" class="goal-met-badge">🎉 已達標！</span>
           <span>目標 <strong style="color:var(--gold)">NT$420,000</strong></span>
         </div>
@@ -1797,7 +1797,7 @@ const WIFE_SHARES = {
   // CELH +1股 於 2026-04-23 以 $33.00 買入（均價 $34.00，共 5 股）
   // CELH +1股 於 2026-05-01 以 $32.10 買入（共 6 股）
 };
-const WIFE_COST_TWD   = 401_016;  // 400000 + 32.1 USD × 31.6473 ≈ +1016 TWD (2026-05-01)
+const WIFE_COST_TWD   = 400_000;
 const WIFE_TARGET_TWD = 420_000;
 
 // ─────────────────────────────────────────
@@ -1825,7 +1825,9 @@ function stateTag(state) {
 // 核心：從 data.json 讀取股價（GitHub Actions 每日更新）
 // ─────────────────────────────────────────
 async function loadData() {
-  const res = await fetch('./data.json?t=' + Date.now());
+  const ctrl = new AbortController();
+  setTimeout(() => ctrl.abort(), 8000);
+  const res = await fetch('./data.json?t=' + Date.now(), { signal: ctrl.signal });
   if (!res.ok) throw new Error(`data.json ${res.status}`);
   return res.json();
 }
@@ -2043,7 +2045,9 @@ async function fetchJPY(cachedSell) {
   let sellRate = cachedSell;
   if (!sellRate) {
     try {
-      const r = await fetch("https://open.er-api.com/v6/latest/JPY");
+      const ctrl2 = new AbortController();
+      setTimeout(() => ctrl2.abort(), 6000);
+      const r = await fetch("https://open.er-api.com/v6/latest/JPY", { signal: ctrl2.signal });
       sellRate = (await r.json())?.rates?.TWD;
     } catch(e) {}
   }
