@@ -195,7 +195,7 @@
       transition:background .18s;
     }
     td:first-child { text-align:left; }
-    tr:hover td { background:rgba(0,212,255,.03); }
+    tr:hover td { background:rgba(0,212,255,.08); }
     .stock-code { font-size:14px; font-weight:700; letter-spacing:.02em; }
     .stock-name { font-size:11px; color:var(--text3); margin-top:3px; }
     .yf-link {
@@ -625,6 +625,90 @@
       padding:14px 18px; border-radius:0 var(--r-sm) var(--r-sm) 0;
       margin:16px 0; font-size:13px; color:var(--text);
     }
+
+    /* ── Fukuoka Editorial ── */
+    .fk-report-wrap {
+      border:1px solid var(--glass-border); border-radius:var(--r);
+      overflow:hidden; background:rgba(255,255,255,.025);
+      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    }
+    .fk-header {
+      padding:20px 28px 18px; background:rgba(0,0,0,.22);
+      border-bottom:1px solid var(--glass-border);
+      display:flex; align-items:flex-end; justify-content:space-between;
+    }
+    .fk-edition {
+      font-size:9px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+      color:rgba(167,139,250,.7); margin-bottom:6px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .fk-edition::before { content:''; width:20px; height:1px; background:linear-gradient(90deg,rgba(167,139,250,.6),transparent); }
+    .fk-district-name {
+      font-family:'Cormorant Garamond',serif;
+      font-size:26px; font-weight:600; color:var(--text); line-height:1; letter-spacing:.02em;
+    }
+    .fk-header-date { font-size:11px; color:var(--text3); letter-spacing:.04em; padding-bottom:2px; }
+    .fk-spots-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      border-bottom:1px solid var(--glass-border);
+    }
+    @media(max-width:560px) { .fk-spots-grid { grid-template-columns:1fr; } }
+    .fk-spot {
+      padding:26px 28px; border-right:1px solid var(--glass-border);
+      position:relative; transition:background .22s;
+    }
+    .fk-spot:last-child { border-right:none; }
+    @media(max-width:560px) { .fk-spot { border-right:none; border-bottom:1px solid var(--glass-border); } }
+    @media(max-width:560px) { .fk-spot:last-child { border-bottom:none; } }
+    .fk-spot:hover { background:rgba(255,255,255,.03); }
+    .fk-spot-num { font-size:10px; font-weight:700; letter-spacing:.1em; color:var(--text3); margin-bottom:14px; }
+    .fk-spot-name {
+      font-family:'Cormorant Garamond',serif;
+      font-size:30px; font-weight:600; line-height:1.1; color:var(--text);
+      margin-bottom:10px; letter-spacing:.01em;
+    }
+    .fk-spot-note { font-size:12px; color:var(--text2); line-height:1.65; margin-bottom:18px; }
+    .fk-spot-price {
+      font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600;
+      background:linear-gradient(135deg,var(--gold) 0%,#ffe080 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; margin-bottom:4px;
+    }
+    .fk-spot-type { font-size:10px; color:var(--text3); letter-spacing:.05em; }
+    .fk-ai-section { padding:28px 28px 24px; }
+    .fk-ai-lead {
+      font-size:13px; line-height:1.9; color:var(--text2); margin-bottom:22px;
+      padding-bottom:20px; border-bottom:1px solid var(--glass-border);
+    }
+    .fk-pros-cons { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+    @media(max-width:520px) { .fk-pros-cons { grid-template-columns:1fr; } }
+    .fk-pros,.fk-cons { border-radius:var(--r-sm); padding:16px 18px; }
+    .fk-pros { background:rgba(52,211,153,.05); border:1px solid rgba(52,211,153,.18); }
+    .fk-cons { background:rgba(248,113,113,.05); border:1px solid rgba(248,113,113,.18); }
+    .fk-pc-title {
+      font-size:9px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; margin-bottom:12px;
+    }
+    .fk-pros .fk-pc-title { color:var(--green); }
+    .fk-cons .fk-pc-title { color:var(--red); }
+    .fk-item {
+      font-size:12px; color:var(--text2); line-height:1.75;
+      padding:2px 0; display:flex; gap:8px; align-items:flex-start;
+    }
+    .fk-item::before { content:"—"; color:var(--text3); flex-shrink:0; }
+    .fk-budget-box {
+      background:rgba(167,139,250,.05); border-left:2px solid rgba(167,139,250,.45);
+      border-radius:0 var(--r-sm) var(--r-sm) 0;
+      padding:14px 18px; margin-bottom:20px;
+      font-size:13px; line-height:1.8; color:var(--text2);
+    }
+    .fk-budget-box strong { color:var(--purple); }
+    .fk-ai-footer {
+      display:flex; justify-content:space-between; align-items:center;
+      flex-wrap:wrap; gap:8px; padding-top:16px;
+      border-top:1px solid var(--glass-border);
+      font-size:10px; color:var(--text3); letter-spacing:.03em;
+    }
+    .fk-next { font-weight:600; color:rgba(167,139,250,.7); }
 
     /* ── TA Section ── */
     .ta-card { background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:var(--r); overflow:hidden; }
@@ -1683,53 +1767,61 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
       <div class="sh-line"></div>
     </div>
     <!-- FK_CARD_START -->
-<div class="fk-period-badge">第 1 期・中央區・2026-04-21</div>
-    <div class="fk-grid">
-      <div class="fk-card">
-        <div class="fk-tag">九州最大商圈，百貨與美食集中，生活機能絕佳。</div>
-        <div class="fk-title">天神</div>
-        <div class="fk-body">中央區 · 推薦地段</div>
-        <div class="fk-price">70㎡約4,000萬円起 (新大樓)</div>
-        <div class="fk-date">2026/04</div>
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
+      <div class="fk-edition">第 1 期</div>
+      <div class="fk-district-name">中央區</div>
+    </div>
+    <div class="fk-header-date">2026-04-21</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">天神</div>
+      <div class="fk-spot-note">九州最大商圈，百貨與美食集中，生活機能絕佳。</div>
+      <div class="fk-spot-price">4,000万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">大濠公園</div>
+      <div class="fk-spot-note">福岡市綠肺，環境優美，有美術館，生活品質高。</div>
+      <div class="fk-spot-price">3,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">薬院</div>
+      <div class="fk-spot-note">地鐵與西鐵交會，文教氣息濃厚，近年發展迅速。</div>
+      <div class="fk-spot-price">3,000万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">交通便捷，地下鐵、巴士網絡完善，直達機場。商業設施林立，綠地公園多，生活品質極高。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">交通便利，往返機場及市區各處皆便捷順暢。</div>
+        <div class="fk-item">生活機能優越，購物、餐飲、醫療、教育資源豐富。</div>
+        <div class="fk-item">綠地多、環境舒適，大濠公園等提供良好休憩空間。</div>
+        <div class="fk-item">人口持續增長，房產保值性相對較高。</div>
       </div>
-      <div class="fk-card">
-        <div class="fk-tag">福岡市綠肺，環境優美，有美術館，生活品質高。</div>
-        <div class="fk-title">大濠公園</div>
-        <div class="fk-body">中央區 · 推薦地段</div>
-        <div class="fk-price">70㎡約3,500萬円起 (中古屋)</div>
-        <div class="fk-date">2026/04</div>
-      </div>
-      <div class="fk-card">
-        <div class="fk-tag">地鐵與西鐵交會，文教氣息濃厚，近年發展迅速。</div>
-        <div class="fk-title">薬院</div>
-        <div class="fk-body">中央區 · 推薦地段</div>
-        <div class="fk-price">70㎡約3,000萬円起 (中古屋)</div>
-        <div class="fk-date">2026/04</div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">房價相對福岡其他區域高，3,000萬預算選擇有限。</div>
+        <div class="fk-item">屋齡較高的中古公寓可能有較高的修繕費用。</div>
+        <div class="fk-item">部分區域夜間人潮多，需注意生活環境的寧靜度。</div>
       </div>
     </div>
-    <div class="report-card">
-      <div class="report-header">
-        <div class="report-title">🤖 AI 分析：中央區 / 天神・大濠公園・六本松・薬院</div>
-        <div class="report-date">2026/04</div>
-      </div>
-      <div class="report-body">
-        <p>交通便捷，地下鐵、巴士網絡完善，直達機場。商業設施林立，綠地公園多，生活品質極高。</p>
-        <div class="highlight-box">
-          <strong>適合台灣人的優點：</strong>
-        <div class="highlight-item">✅ 交通便利，往返機場及市區各處皆便捷順暢。</div>
-        <div class="highlight-item">✅ 生活機能優越，購物、餐飲、醫療、教育資源豐富。</div>
-        <div class="highlight-item">✅ 綠地多、環境舒適，大濠公園等提供良好休憩空間。</div>
-        <div class="highlight-item">✅ 人口持續增長，房產保值性相對較高。</div>
-          <strong style="margin-top:8px;display:block">需注意的風險：</strong>
-        <div class="highlight-item">⚠️ 房價相對福岡其他區域高，3,000萬預算選擇有限。</div>
-        <div class="highlight-item">⚠️ 屋齡較高的中古公寓可能會有較高的修繕費用。</div>
-        <div class="highlight-item">⚠️ 部分區域夜間人潮多，需注意生活環境的寧靜度。</div>
-        </div>
-        <p><strong>預算 3,000 萬円 建議：</strong>3,000萬日圓預算，建議鎖定屋齡稍長但交通佳的中古公寓，或考量六本松、薬院等區域的物件。</p>
-        <p style="color:var(--text3);font-size:12px;margin-top:12px">▶ 下期預告：下一期：城南區，尋找寧靜宜居的文教區。</p>
-        <p style="color:var(--text3);font-size:11px;margin-top:8px">🤖 由 Gemini AI 根據訓練資料生成，房價僅供參考，實際行情請向仲介確認</p>
-      </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>建議鎖定屋齡稍長但交通佳的中古公寓，或考量六本松、薬院等區域的物件。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>
+      <span class="fk-next">▶ 下期：城南區</span>
     </div>
+  </div>
+</div>
     <!-- FK_CARD_END -->
   </section>
 

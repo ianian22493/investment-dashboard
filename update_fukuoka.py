@@ -279,17 +279,17 @@ def build_fk_html(district, analysis, date_str, period_num):
     spot_prices = [s.get("price_70sqm", 0) for s in spots]
 
     spots_html = ""
-    for spot in spots:
+    for i, spot in enumerate(spots, 1):
         price_val = spot.get("price_70sqm", 0)
-        price_str = f"70㎡約 {price_val:,} 萬円" if price_val else "—"
+        price_display = f"{price_val:,}万円〜" if price_val else "—"
         spots_html += (
-            f'\n      <div class="fk-card">'
-            f'\n        <div class="fk-tag">{spot.get("note", "")}</div>'
-            f'\n        <div class="fk-title">{spot.get("name", "")}</div>'
-            f'\n        <div class="fk-body">{district["name"]} · 推薦地段</div>'
-            f'\n        <div class="fk-price">{price_str}</div>'
-            f'\n        <div class="fk-date">{ym}</div>'
-            f'\n      </div>'
+            f'\n    <div class="fk-spot">'
+            f'\n      <div class="fk-spot-num">0{i}</div>'
+            f'\n      <div class="fk-spot-name">{spot.get("name", "")}</div>'
+            f'\n      <div class="fk-spot-note">{spot.get("note", "")}</div>'
+            f'\n      <div class="fk-spot-price">{price_display}</div>'
+            f'\n      <div class="fk-spot-type">70㎡ 參考價格</div>'
+            f'\n    </div>'
         )
 
     # ── 預售屋項目卡片 ──
@@ -332,11 +332,11 @@ def build_fk_html(district, analysis, date_str, period_num):
 
     # ── 優缺點 ──
     pros_html  = "\n".join(
-        f'        <div class="highlight-item">✅ {p}</div>'
+        f'        <div class="fk-item">{p}</div>'
         for p in (analysis.get("pros") or [])
     )
     risks_html = "\n".join(
-        f'        <div class="highlight-item">⚠️ {r}</div>'
+        f'        <div class="fk-item">{r}</div>'
         for r in (analysis.get("risks") or [])
     )
 
@@ -345,10 +345,19 @@ def build_fk_html(district, analysis, date_str, period_num):
     # 用 list 組裝 HTML，避免混用隱式拼接與 + 運算子造成 SyntaxError
     parts = []
     parts.append("<!-- FK_CARD_START -->\n")
-    parts.append(f'    <div class="fk-period-badge">第 {period_num} 期・{district["name"]}・{date_str}</div>\n')
+    parts.append(f'<div class="fk-report-wrap">\n')
+    parts.append(
+        f'  <div class="fk-header">\n'
+        f'    <div>\n'
+        f'      <div class="fk-edition">第 {period_num} 期</div>\n'
+        f'      <div class="fk-district-name">{district["name"]}</div>\n'
+        f'    </div>\n'
+        f'    <div class="fk-header-date">{date_str}</div>\n'
+        f'  </div>\n'
+    )
 
     # 推薦地段卡片
-    parts.append(f'    <div class="fk-grid">{spots_html}\n    </div>\n')
+    parts.append(f'  <div class="fk-spots-grid">{spots_html}\n  </div>\n')
 
     # 圖表區：走勢 + 地段比較
     parts.append(
@@ -404,27 +413,28 @@ def build_fk_html(district, analysis, date_str, period_num):
 
     # AI 分析文字
     parts.append(
-        f'    <div class="report-card">\n'
-        f'      <div class="report-header">\n'
-        f'        <div class="report-title">🤖 AI 分析：{district["name"]} / {district["areas"]}</div>\n'
-        f'        <div class="report-date">{ym}</div>\n'
-        f'      </div>\n'
-        f'      <div class="report-body">\n'
-        f'        <p>{analysis.get("feature", "")}</p>\n'
-        f'        <div class="highlight-box">\n'
-        f'          <strong>適合台灣人的優點：</strong>\n'
+        f'  <div class="fk-ai-section">\n'
+        f'    <div class="fk-ai-lead">{analysis.get("feature", "")}</div>\n'
+        f'    <div class="fk-pros-cons">\n'
+        f'      <div class="fk-pros">\n'
+        f'        <div class="fk-pc-title">優勢</div>\n'
         f'{pros_html}\n'
-        f'          <strong style="margin-top:8px;display:block">需注意的風險：</strong>\n'
+        f'      </div>\n'
+        f'      <div class="fk-cons">\n'
+        f'        <div class="fk-pc-title">風險</div>\n'
         f'{risks_html}\n'
-        f'        </div>\n'
-        f'        <p><strong>預算 3,000 萬円 建議：</strong>{analysis.get("budget_advice", "—")}</p>\n'
-    )
-    if next_preview:
-        parts.append(f'        <p style="color:var(--text3);font-size:12px;margin-top:12px">▶ 下期預告：{next_preview}</p>\n')
-    parts.append('        <p style="color:var(--text3);font-size:11px;margin-top:8px">🤖 由 Gemini AI 根據訓練資料生成，房價僅供參考，實際行情請向仲介確認</p>\n')
-    parts.append(
         f'      </div>\n'
         f'    </div>\n'
+        f'    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>{analysis.get("budget_advice", "—")}</div>\n'
+        f'    <div class="fk-ai-footer">\n'
+        f'      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>\n'
+    )
+    if next_preview:
+        parts.append(f'      <span class="fk-next">▶ 下期：{next_preview}</span>\n')
+    parts.append(
+        f'    </div>\n'
+        f'  </div>\n'
+        f'</div>\n'
     )
     parts.append("    <!-- FK_CARD_END -->")
     return "".join(parts)
