@@ -2002,7 +2002,7 @@ function renderTrend(sellRate, history) {
 
   el.innerHTML = `<div class="jpy-trend-box">
     <div class="jpy-trend-row">${trendLine}</div>
-    ${ref30 ? `<div class="jpy-trend-sub">30 日前賣出：${ref30.sell.toFixed(4)}　→　今日：${sellRate.toFixed(4)}</div>` : ""}
+    ${(ref30 && sellRate != null) ? `<div class="jpy-trend-sub">30 日前賣出：${ref30.sell.toFixed(4)}　→　今日：${sellRate.toFixed(4)}</div>` : ""}
     ${rangeTip ? `<div class="jpy-trend-sub" style="margin-top:2px">${rangeTip}</div>` : ""}
     ${(sells.length >= 2 && maxR > minR) ? `<div class="jpy-range-bar">
       <span style="font-size:10px;color:var(--text3)">低 ${minR.toFixed(4)}</span>
@@ -2200,9 +2200,8 @@ function setRange(days, el) {
     pill.textContent = data.updated_at ? `✓ 資料更新：${data.updated_at}` : '✓ 已載入';
   } catch(e) {
     console.error('[dashboard] loadData failed:', e);
-    // data.json 尚未存在（首次部署前），顯示友善提示
     renderUS({});
-    await fetchJPY(null);   // 匯率仍可直接打 API
+    try { await fetchJPY(null); } catch(e2) { console.error('[dashboard] fetchJPY failed:', e2); }
     pill.className   = 'pill';
     pill.textContent = '⚠ 股價尚未更新（稍後自動觸發）';
   }
