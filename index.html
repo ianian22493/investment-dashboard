@@ -2533,6 +2533,14 @@ function toggleHistEntry(id) {
   const isOpen = detail.classList.contains('open');
   detail.classList.toggle('open', !isOpen);
   if (toggle) toggle.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    requestAnimationFrame(() => {
+      detail.querySelectorAll('canvas').forEach(c => {
+        const chart = Chart.getChart(c);
+        if (chart) chart.resize();
+      });
+    });
+  }
 }
 
 // 動態顯示歷史則數（計算 ta-hist-row 數量）
