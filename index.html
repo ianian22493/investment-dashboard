@@ -2181,29 +2181,30 @@ function setRange(days, el) {
 // 啟動
 // ─────────────────────────────────────────
 
+// 同步確認 JS 有跑
+const _pill = document.getElementById('updatePill');
+if (_pill) _pill.textContent = '連線中…';
+
 (async () => {
-  const pill = document.getElementById('updatePill');
+  const pill = _pill;
+  const setPill = (cls, txt) => { if (pill) { pill.className = cls; pill.textContent = txt; } };
   try {
     const data = await loadData();
     renderUS(data.us);
     renderWifeFund(data.us, data.usd_twd);
     renderPortfolioChart(data.portfolio_history || []);
-    // 傳入 data.json 的日幣欄位
     window.__jpySavings = data.jpy_savings          || 600_000;
     window.__jpyMonthly = data.jpy_monthly_estimate || 50_000;
     window.__jpyHistory = data.jpy_rate_history     || [];
     window.__jpyBuy      = data.jpy_buy              || null;
     window.__jpyDiscount = data.jpy_taisho_discount   || 0;
     await fetchJPY(data.jpy_sell || data.jpy_twd);
-
-    pill.className   = 'pill done';
-    pill.textContent = data.updated_at ? `✓ 資料更新：${data.updated_at}` : '✓ 已載入';
+    setPill('pill done', data.updated_at ? `✓ 資料更新：${data.updated_at}` : '✓ 已載入');
   } catch(e) {
-    console.error('[dashboard] loadData failed:', e);
-    renderUS({});
-    try { await fetchJPY(null); } catch(e2) { console.error('[dashboard] fetchJPY failed:', e2); }
-    pill.className   = 'pill';
-    pill.textContent = '⚠ 股價尚未更新（稍後自動觸發）';
+    console.error('[dashboard] error:', e);
+    try { renderUS({}); } catch(_) {}
+    try { await fetchJPY(null); } catch(_) {}
+    setPill('pill', '⚠ 股價尚未更新（稍後自動觸發）');
   }
 })();
 
