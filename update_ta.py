@@ -658,10 +658,8 @@ def generate_snapshot(stock, ind, p):
     chart_html = (
         f'<div class="ta-chart-wrap">'
         f'<canvas id="{chart_id}" height="160"></canvas>'
-        f'<script>(function(){{'
-        f'var ctx=document.getElementById("{chart_id}");'
-        f'if(!ctx)return;'
-        f'new Chart(ctx,{{type:"line",data:{{labels:{labels},datasets:['
+        f'<script>window.__taCharts=window.__taCharts||{{}};'
+        f'window.__taCharts["{chart_id}"]={{type:"line",data:{{labels:{labels},datasets:['
         f'{{label:"收盤",data:{c_closes},borderColor:"rgba(200,200,220,.9)",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,order:1}},'
         f'{{label:"MA5", data:{c_ma5}, borderColor:"#f0c040",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[3,2],spanGaps:true,order:2}},'
         f'{{label:"MA20",data:{c_ma20},borderColor:"#56d364",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[5,3],spanGaps:true,order:3}},'
@@ -670,8 +668,8 @@ def generate_snapshot(stock, ind, p):
         f'plugins:{{legend:{{display:true,position:"top",labels:{{color:"#8b949e",font:{{size:10}},boxWidth:16,padding:10}}}},'
         f'tooltip:{{backgroundColor:"rgba(22,27,34,.95)",titleColor:"#c9d1d9",bodyColor:"#8b949e",padding:8}}}},'
         f'scales:{{x:{{ticks:{{color:"#8b949e",maxTicksLimit:8,font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}},'
-        f'y:{{ticks:{{color:"#8b949e",font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}}}}}}}});'
-        f'}})();</script></div>\n'
+        f'y:{{ticks:{{color:"#8b949e",font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}}}}}};'
+        f'</script></div>\n'
     )
 
     # ── 指標格子 ──
@@ -965,10 +963,8 @@ def _build_chart_html(sym, ind):
     return (
         f'<div class="ta-chart-wrap">'
         f'<canvas id="{chart_id}" height="160"></canvas>'
-        f'<script>(function(){{'
-        f'var ctx=document.getElementById("{chart_id}");'
-        f'if(!ctx)return;'
-        f'new Chart(ctx,{{type:"line",data:{{labels:{labels},datasets:['
+        f'<script>window.__taCharts=window.__taCharts||{{}};'
+        f'window.__taCharts["{chart_id}"]={{type:"line",data:{{labels:{labels},datasets:['
         f'{{label:"收盤",data:{c_closes},borderColor:"rgba(200,200,220,.9)",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,order:1}},'
         f'{{label:"MA5", data:{c_ma5}, borderColor:"#f0c040",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[3,2],spanGaps:true,order:2}},'
         f'{{label:"MA20",data:{c_ma20},borderColor:"#56d364",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[5,3],spanGaps:true,order:3}},'
@@ -977,8 +973,8 @@ def _build_chart_html(sym, ind):
         f'plugins:{{legend:{{display:true,position:"top",labels:{{color:"#8b949e",font:{{size:10}},boxWidth:16,padding:10}}}},'
         f'tooltip:{{backgroundColor:"rgba(22,27,34,.95)",titleColor:"#c9d1d9",bodyColor:"#8b949e",padding:8}}}},'
         f'scales:{{x:{{ticks:{{color:"#8b949e",maxTicksLimit:8,font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}},'
-        f'y:{{ticks:{{color:"#8b949e",font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}}}}}}}}}});'
-        f'}})();</script></div>\n  '
+        f'y:{{ticks:{{color:"#8b949e",font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}}}}}};'
+        f'</script></div>\n  '
     )
 
 
