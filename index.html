@@ -1651,7 +1651,7 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
           </div>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);">
-          <span>目前 <strong style="color:var(--text)">¥600,000</strong></span>
+          <span>目前 <strong style="color:var(--text)" id="jpyProgressLabel">¥800,000</strong></span>
           <span>目標 <strong style="color:var(--text)">¥30,000,000</strong></span>
         </div>
       </div>
@@ -2083,6 +2083,16 @@ async function fetchJPY(cachedSell) {
   // 基本數字
   const savEl = document.getElementById("jpySavingsVal");
   if (savEl) savEl.textContent = `¥${savings.toLocaleString()}`;
+
+  // 福岡購屋進度條
+  const JPY_GOAL = 30_000_000;
+  const jpyPct   = Math.min(100, (savings / JPY_GOAL) * 100);
+  const pctEl2   = document.getElementById('progressPct');
+  const fillEl2  = document.getElementById('progressFill');
+  if (pctEl2)  pctEl2.textContent  = jpyPct.toFixed(2) + '%';
+  if (fillEl2) fillEl2.style.width = jpyPct + '%';
+  const lblEl = document.getElementById('jpyProgressLabel');
+  if (lblEl) lblEl.textContent = `¥${savings.toLocaleString()}`;
   if (sellRate) {
     const discount    = window.__jpyDiscount || 0;
     const taishoRate  = discount > 0 ? sellRate - discount : null;
