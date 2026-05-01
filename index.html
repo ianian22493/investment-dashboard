@@ -1095,7 +1095,35 @@
     </div>
   </section>
 
-  <!-- ══ 個股分析 ══ --><!-- ══ 個股分析 ══ -->
+  <!-- ══ 美股持倉 ══ -->
+  <section class="section holdings-section reveal d2">
+    <div class="section-head">
+      <div class="sh-dot" style="background:var(--green);box-shadow:0 0 10px var(--green),0 0 20px rgba(52,211,153,.4);"></div>
+      <div>
+        <div class="sh-title">美股持倉</div>
+        <div class="sh-sub">US Holdings · Real-time Quotes</div>
+      </div>
+      <div class="sh-line"></div>
+    </div>
+    <div class="table-wrap">
+      <table class="us-table">
+        <thead>
+          <tr>
+            <th>代碼 / 名稱</th>
+            <th>最新價</th>
+            <th>漲跌</th>
+            <th>漲幅</th>
+            <th class="hide-sm">狀態</th>
+          </tr>
+        </thead>
+        <tbody id="usBody">
+          <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">載入中…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══ 個股分析 ══ -->
   <section class="section reveal d4">
     <div class="section-head">
       <div class="sh-dot" style="background:var(--purple);box-shadow:0 0 10px var(--purple),0 0 20px rgba(167,139,250,.4);"></div>
@@ -1590,7 +1618,7 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
       <div class="jpy-grid">
         <div class="jpy-cell">
           <div class="jpy-label">目前存款</div>
-          <div class="jpy-value" id="jpySavingsVal">¥600,000</div>
+          <div class="jpy-value" id="jpySavingsVal">¥800,000</div>
           <div class="jpy-sub" id="jpyInTwd">換算台幣：載入中</div>
         </div>
         <div class="jpy-cell">
@@ -2037,7 +2065,7 @@ function renderTimeline(savings, monthly, sellRate) {
 
 async function fetchJPY(cachedSell) {
   // 從 data.json 讀取（主流程傳入），fallback 打 API
-  const savings = window.__jpySavings || 600_000;
+  const savings = window.__jpySavings || 800_000;
   const monthly = window.__jpyMonthly || 50_000;
   const history = window.__jpyHistory || [];
   const buyRate = window.__jpyBuy;
@@ -2193,7 +2221,7 @@ if (_pill) _pill.textContent = '連線中…';
     renderUS(data.us);
     renderWifeFund(data.us, data.usd_twd);
     renderPortfolioChart(data.portfolio_history || []);
-    window.__jpySavings = data.jpy_savings          || 600_000;
+    window.__jpySavings = data.jpy_savings          || 800_000;
     window.__jpyMonthly = data.jpy_monthly_estimate || 50_000;
     window.__jpyHistory = data.jpy_rate_history     || [];
     window.__jpyBuy      = data.jpy_buy              || null;

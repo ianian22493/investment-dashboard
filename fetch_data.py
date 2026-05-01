@@ -192,7 +192,7 @@ def main():
         old = {}
 
     # 手動欄位（只能由使用者透過 Claude 更新）
-    jpy_savings          = old.get("jpy_savings", 600_000)
+    jpy_savings          = old.get("jpy_savings", 800_000)
     jpy_monthly_estimate = old.get("jpy_monthly_estimate", 50_000)
     jpy_taisho_discount  = old.get("jpy_taisho_discount", 0.0006)  # 大戶優惠：牌告賣出 - 此值
 
