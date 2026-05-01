@@ -977,12 +977,12 @@
 
 <main class="page">
 
-  <!-- ══ 又瑄の金庫 ══ -->
+  <!-- ══ 老婆基金 ══ -->
   <section class="section hero-section reveal d1">
     <div class="section-head">
       <div class="sh-dot" style="background:var(--gold);box-shadow:0 0 10px var(--gold),0 0 24px rgba(240,192,64,.5);"></div>
       <div>
-        <div class="sh-title">又瑄の金庫</div>
+        <div class="sh-title">老婆基金</div>
         <div class="sh-sub">Portfolio Overview · Since 2026/03</div>
       </div>
       <div class="sh-line"></div>
@@ -1015,7 +1015,7 @@
         </div>
         <div class="hero-metric-cell">
           <div class="hero-metric-label">投入成本</div>
-          <div class="hero-metric-val" style="color:var(--text2)">NT$400,000</div>
+          <div class="hero-metric-val" style="color:var(--text2)">NT$401,016</div>
           <div class="hero-metric-sub">老婆本金</div>
         </div>
         <div class="hero-metric-cell">
@@ -1082,7 +1082,7 @@
           <div class="bar-fill" id="wifeFill" style="width:0%"></div>
         </div>
         <div class="hero-progress-footer">
-          <span>成本 <strong style="color:var(--text)">NT$400,000</strong></span>
+          <span>成本 <strong style="color:var(--text)">NT$401,016</strong></span>
           <span id="goalMetBadge" style="display:none" class="goal-met-badge">🎉 已達標！</span>
           <span>目標 <strong style="color:var(--gold)">NT$420,000</strong></span>
         </div>
@@ -1789,14 +1789,15 @@ const US_HOLDINGS = [
 // 有變動時請告知 Claude 更新這裡
 // -----------------------------------------
 const WIFE_SHARES = {
-  AMZN: 2, CELH: 5, GOOGL: 6.00049, MELI: 1, MSFT: 5,
+  AMZN: 2, CELH: 6, GOOGL: 6.00049, MELI: 1, MSFT: 5,
   NVDA: 4.00006, ONDS: 7, RBRK: 9, S: 1,
   SOUN: 10, TSLA: 11, ZS: 11,
   // SMR 1股 已於 2026-04-23 以 $12.54 賣出
   // TTD 3股 已於 2026-04-23 以 $23.50 賣出
   // CELH +1股 於 2026-04-23 以 $33.00 買入（均價 $34.00，共 5 股）
+  // CELH +1股 於 2026-05-01 以 $32.10 買入（共 6 股）
 };
-const WIFE_COST_TWD   = 400_000;
+const WIFE_COST_TWD   = 401_016;  // 400000 + 32.1 USD × 31.6473 ≈ +1016 TWD (2026-05-01)
 const WIFE_TARGET_TWD = 420_000;
 
 // ─────────────────────────────────────────
@@ -1824,7 +1825,7 @@ function stateTag(state) {
 // 核心：從 data.json 讀取股價（GitHub Actions 每日更新）
 // ─────────────────────────────────────────
 async function loadData() {
-  const res = await fetch('./data.json');
+  const res = await fetch('./data.json?t=' + Date.now());
   if (!res.ok) throw new Error(`data.json ${res.status}`);
   return res.json();
 }
@@ -1913,7 +1914,7 @@ function renderWifeFund(usData, usdTwd) {
   const roiEl = document.getElementById('wifeROI');
   if (roiEl) {
     roiEl.textContent = plSign + plPct.toFixed(2) + '%';
-    roiEl.className   = 'wife-roi-val ' + plCls;
+    roiEl.className   = 'hero-roi ' + plCls;
   }
   const roiSub = document.getElementById('wifeROISub');
   if (roiSub) {
@@ -2194,6 +2195,7 @@ function setRange(days, el) {
     pill.className   = 'pill done';
     pill.textContent = data.updated_at ? `✓ 資料更新：${data.updated_at}` : '✓ 已載入';
   } catch(e) {
+    console.error('[dashboard] loadData failed:', e);
     // data.json 尚未存在（首次部署前），顯示友善提示
     renderUS({});
     await fetchJPY(null);   // 匯率仍可直接打 API
