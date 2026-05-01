@@ -1,0 +1,35 @@
+name: 補生成歷史記錄折線圖
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝依賴
+        run: pip install yfinance
+
+      - name: 執行 backfill
+        env:
+          BACKFILL_CHARTS: "true"
+        run: python update_ta.py
+
+      - name: Commit 並 Push
+        run: |
+          git config user.email "bot@investment-dashboard"
+          git config user.name "Dashboard Bot"
+          git add index.html
+          git diff --cached --quiet || git commit -m "📈 補生成歷史技術分析折線圖 $(date -u +'%Y-%m-%d')"
+          git push

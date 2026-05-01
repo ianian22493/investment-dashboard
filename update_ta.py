@@ -952,9 +952,111 @@ def update_html(new_card_html, hist_row_html):
 
 
 # ════════════════════════════════════════════════════════════════════
+# Backfill：為舊版歷史記錄補上折線圖
+# ════════════════════════════════════════════════════════════════════
+def _build_chart_html(sym, ind):
+    import json as _json
+    chart_id = f"taLineChart_{sym.replace('-', '')}_bf"
+    labels   = _json.dumps(ind.get("chart_dates",  []))
+    c_closes = _json.dumps(ind.get("chart_closes", []))
+    c_ma5    = _json.dumps(ind.get("chart_ma5",    []))
+    c_ma20   = _json.dumps(ind.get("chart_ma20",   []))
+    c_ma60   = _json.dumps(ind.get("chart_ma60",   []))
+    return (
+        f'<div class="ta-chart-wrap">'
+        f'<canvas id="{chart_id}" height="160"></canvas>'
+        f'<script>(function(){{'
+        f'var ctx=document.getElementById("{chart_id}");'
+        f'if(!ctx)return;'
+        f'new Chart(ctx,{{type:"line",data:{{labels:{labels},datasets:['
+        f'{{label:"收盤",data:{c_closes},borderColor:"rgba(200,200,220,.9)",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,order:1}},'
+        f'{{label:"MA5", data:{c_ma5}, borderColor:"#f0c040",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[3,2],spanGaps:true,order:2}},'
+        f'{{label:"MA20",data:{c_ma20},borderColor:"#56d364",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[5,3],spanGaps:true,order:3}},'
+        f'{{label:"MA60",data:{c_ma60},borderColor:"#f85149",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[8,4],spanGaps:true,order:4}}'
+        f']}},options:{{responsive:true,interaction:{{mode:"index",intersect:false}},'
+        f'plugins:{{legend:{{display:true,position:"top",labels:{{color:"#8b949e",font:{{size:10}},boxWidth:16,padding:10}}}},'
+        f'tooltip:{{backgroundColor:"rgba(22,27,34,.95)",titleColor:"#c9d1d9",bodyColor:"#8b949e",padding:8}}}},'
+        f'scales:{{x:{{ticks:{{color:"#8b949e",maxTicksLimit:8,font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}},'
+        f'y:{{ticks:{{color:"#8b949e",font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}}}}}}}}}});'
+        f'}})();</script></div>\n  '
+    )
+
+
+def backfill_charts():
+    """為歷史記錄中缺少折線圖的 TA 卡片補上 Chart.js 圖表"""
+    with open(INDEX_FILE, encoding="utf-8") as f:
+        html = f.read()
+
+    # 找所有 hist-entry 的位置（倒序處理，避免字串位移）
+    entry_pat = re.compile(r'<div class="ta-hist-entry" id="(hist-\d+)">')
+    matches   = list(entry_pat.finditer(html))
+    if not matches:
+        print("無歷史記錄，無需 backfill")
+        return
+
+    modified = False
+    for i in range(len(matches) - 1, -1, -1):
+        m     = matches[i]
+        eid   = m.group(1)
+        start = m.start()
+        end   = matches[i + 1].start() if i + 1 < len(matches) else len(html)
+        block = html[start:end]
+
+        if "ta-chart-wrap" in block:
+            print(f"  {eid}: 已有圖表，略過")
+            continue
+
+        sym_m = re.search(r'class="ta-ticker">(\S+)\s*<span', block)
+        if not sym_m:
+            print(f"  {eid}: 找不到代號，略過")
+            continue
+        sym   = sym_m.group(1)
+        stock = next((s for s in ROTATION if s["symbol"] == sym), None)
+        if not stock:
+            print(f"  {eid}: {sym} 不在輪替清單，略過")
+            continue
+
+        print(f"  {eid}: 為 {sym} 抓取數據...")
+        ind = fetch_indicators(stock)
+        if ind is None:
+            print(f"  {eid}: 無法取得指標，略過")
+            continue
+
+        chart_html = _build_chart_html(sym, ind)
+
+        # 在「技術面快照」的 ta-ind-header 後、ta-snap-grid 前插入圖表
+        new_block = re.sub(
+            r'(技術面快照（全指標一覽）</span></div>)\n(\s*<div class="ta-snap-grid">)',
+            lambda mo: mo.group(1) + "\n  " + chart_html + mo.group(2),
+            block,
+            count=1
+        )
+
+        if new_block != block:
+            html = html[:start] + new_block + html[end:]
+            print(f"  {eid}: ✓ {sym} 圖表注入成功")
+            modified = True
+        else:
+            print(f"  {eid}: ⚠ 找不到注入位置，略過")
+
+    if modified:
+        with open(INDEX_FILE, "w", encoding="utf-8") as f:
+            f.write(html)
+        print("✅ index.html 已更新（backfill 完成）")
+    else:
+        print("✅ 所有歷史記錄均已有圖表，無需更新")
+
+
+# ════════════════════════════════════════════════════════════════════
 # 主程式
 # ════════════════════════════════════════════════════════════════════
 def main():
+    import os
+    if os.environ.get("BACKFILL_CHARTS") == "true":
+        print("🔄 BACKFILL_CHARTS 模式：補生成歷史記錄圖表")
+        backfill_charts()
+        return
+
     state    = load_state()
     next_stk = get_next_stock(state["covered"])
     week_num = state["week"] + 1
