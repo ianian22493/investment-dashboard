@@ -770,6 +770,169 @@
       background:rgba(0,212,255,.1); border-color:rgba(0,212,255,.3);
       color:var(--cyan); box-shadow:0 0 10px rgba(0,212,255,.15);
     }
+
+    /* ══ Hero Section ══ */
+    .hero-section { margin-bottom: 96px; }
+    .hero-glass {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(24px) saturate(1.3);
+      -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--r);
+      overflow: hidden;
+    }
+    .hero-top { padding: 44px 44px 36px; border-bottom: 1px solid var(--glass-border); }
+    .hero-header-row {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; flex-wrap: wrap; gap: 20px;
+    }
+    .hero-eyebrow {
+      font-size: 9px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .hero-eyebrow::before {
+      content: ''; width: 22px; height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+    .hero-roi {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 84px; font-weight: 600; line-height: 1; letter-spacing: -.02em;
+    }
+    .hero-roi.up {
+      background: linear-gradient(135deg, var(--green) 0%, #6ee7b7 50%, var(--green) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 32px rgba(52,211,153,.7));
+    }
+    .hero-roi.down {
+      background: linear-gradient(135deg, var(--red), #fca5a5);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-roi-sub { font-size: 13px; color: var(--text2); margin-top: 14px; line-height: 1.6; }
+    @media(max-width:599px) { .hero-roi { font-size: 56px; } .hero-top { padding: 28px 24px 24px; } }
+
+    /* Metrics strip */
+    .hero-metrics-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--glass-border);
+    }
+    @media(max-width:620px) { .hero-metrics-strip { grid-template-columns: 1fr 1fr; } }
+    .hero-metric-cell {
+      padding: 22px 28px;
+      border-right: 1px solid var(--glass-border);
+    }
+    .hero-metric-cell:last-child { border-right: none; }
+    @media(max-width:620px) { .hero-metric-cell:nth-child(2) { border-right: none; } }
+    .hero-metric-label {
+      font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase;
+      color: var(--text3); margin-bottom: 8px;
+    }
+    .hero-metric-val { font-size: 18px; font-weight: 700; line-height: 1.2; }
+    .hero-metric-sub { font-size: 11px; color: var(--text2); margin-top: 4px; }
+
+    /* Chart area with Y-axis */
+    .hero-chart-area { display: flex; align-items: stretch; padding: 28px 0 0; }
+    .y-axis {
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 4px 12px 4px 24px;
+      font-size: 9px; color: var(--text3); text-align: right;
+      width: 70px; flex-shrink: 0;
+      font-variant-numeric: tabular-nums; letter-spacing: .03em;
+    }
+    .chart-svg-wrap { flex: 1; position: relative; }
+
+    /* Progress area */
+    .hero-progress-area {
+      padding: 32px 44px;
+      border-top: 1px solid var(--glass-border);
+    }
+    @media(max-width:599px) { .hero-progress-area { padding: 24px; } }
+    .hero-progress-header {
+      display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px;
+    }
+    .hero-pct-badge {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 40px; font-weight: 600; line-height: 1;
+      background: linear-gradient(135deg, var(--gold), #ffe080);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 14px rgba(240,192,64,.45));
+    }
+    .hero-progress-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 16px; font-size: 11px; color: var(--text2);
+    }
+    .goal-met-badge {
+      font-size: 12px; font-weight: 700; color: var(--green);
+      background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.3);
+      border-radius: 20px; padding: 4px 14px;
+      box-shadow: 0 0 16px rgba(52,211,153,.35);
+      animation: pulseBadge 2s ease infinite;
+    }
+    @keyframes pulseBadge {
+      0%, 100% { box-shadow: 0 0 16px rgba(52,211,153,.35); }
+      50% { box-shadow: 0 0 28px rgba(52,211,153,.6); }
+    }
+    .hero-footnote {
+      padding: 13px 44px;
+      border-top: 1px solid var(--glass-border);
+      font-size: 10px; color: var(--text3); letter-spacing: .06em;
+    }
+
+    /* ══ Animated progress bar ══ */
+    @keyframes flowGrad {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .bar-bg {
+      background: rgba(255,255,255,.06); border-radius: 100px; height: 8px;
+      overflow: visible; position: relative;
+    }
+    .bar-fill {
+      background: linear-gradient(90deg, var(--gold), var(--green), #00d4ff, var(--gold));
+      background-size: 300% 100%;
+      animation: flowGrad 4s ease infinite;
+      height: 100%; border-radius: 100px;
+      transition: width 2s cubic-bezier(.4,0,.2,1);
+      position: relative;
+      box-shadow: 0 0 18px rgba(240,192,64,.5), 0 0 36px rgba(52,211,153,.3);
+    }
+    .bar-fill::after {
+      content: ''; position: absolute; right: -1px; top: 50%;
+      transform: translateY(-50%);
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 14px rgba(240,192,64,.9), 0 0 28px rgba(52,211,153,.6);
+    }
+    .bar-fill.goal-met {
+      background: linear-gradient(90deg, var(--green), #6ee7b7, var(--gold), var(--green));
+      background-size: 300% 100%;
+      animation: flowGrad 2.5s ease infinite;
+      box-shadow: 0 0 24px rgba(52,211,153,.8), 0 0 50px rgba(240,192,64,.5);
+    }
+    .bar-fill.goal-met::after {
+      background: var(--green);
+      box-shadow: 0 0 20px rgba(52,211,153,1), 0 0 40px rgba(240,192,64,.7);
+    }
+
+    /* ══ Visual hierarchy scale ══ */
+    .section { margin-bottom: 80px; }
+    .hero-section { margin-bottom: 96px; }
+
+    /* Larger section-head for non-hero */
+    .sh-title { font-size: 20px; }
+
+    /* Holdings table — medium weight */
+    .table-wrap { opacity: 1; }
+
+    /* Other sections slightly muted */
+    .section:not(.hero-section):not(.holdings-section) .section-head .sh-title {
+      font-size: 18px;
+    }
+
   </style>
 </head>
 <body>
@@ -814,151 +977,125 @@
 
 <main class="page">
 
-  <!-- ══ 投組歷史走勢 ══ -->
-  <section class="section reveal d1">
+  <!-- ══ 又瑄の金庫 ══ -->
+  <section class="section hero-section reveal d1">
     <div class="section-head">
-      <div class="sh-dot" style="background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 20px rgba(0,212,255,.4);"></div>
+      <div class="sh-dot" style="background:var(--gold);box-shadow:0 0 10px var(--gold),0 0 24px rgba(240,192,64,.5);"></div>
       <div>
-        <div class="sh-title">投組歷史走勢</div>
-        <div class="sh-sub">Portfolio Performance</div>
+        <div class="sh-title">又瑄の金庫</div>
+        <div class="sh-sub">Portfolio Overview · Since 2026/03</div>
       </div>
       <div class="sh-line"></div>
     </div>
-    <div class="chart-glass">
-      <div class="chart-header">
-        <div class="chart-kpi-row" id="chartMeta">
+
+    <div class="hero-glass">
+      <!-- ▸ ROI 大字 + 時段按鈕 -->
+      <div class="hero-top">
+        <div class="hero-header-row">
           <div>
-            <div class="chart-kpi-label">老婆基金市值</div>
-            <div class="chart-kpi-val cyan-glow" id="chartVal">—</div>
+            <div class="hero-eyebrow">累計投資報酬率</div>
+            <div class="hero-roi" id="wifeROI">—</div>
+            <div class="hero-roi-sub" id="wifeROISub">計算中…</div>
           </div>
-          <div id="chartReturnWrap" style="display:none">
-            <div class="chart-kpi-label">損益</div>
-            <div class="chart-kpi-val" id="chartReturn">—</div>
+          <div class="chart-time-btns" style="margin-top:8px;">
+            <button class="t-btn" onclick="setRange(7,this)">7D</button>
+            <button class="t-btn active" onclick="setRange(30,this)">1M</button>
+            <button class="t-btn" onclick="setRange(90,this)">3M</button>
+            <button class="t-btn" onclick="setRange(180,this)">6M</button>
           </div>
         </div>
-        <div class="chart-time-btns">
-          <button class="t-btn" onclick="setRange(7,this)">7D</button>
-          <button class="t-btn active" onclick="setRange(30,this)">1M</button>
-          <button class="t-btn" onclick="setRange(90,this)">3M</button>
-          <button class="t-btn" onclick="setRange(180,this)">6M</button>
-        </div>
       </div>
-      <svg id="portfolioSVG" height="180" viewBox="0 0 1024 180" preserveAspectRatio="none" style="width:100%;display:block;margin-top:4px;">
-        <defs>
-          <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stop-color="#00d4ff"/>
-            <stop offset="50%"  stop-color="#6366f1"/>
-            <stop offset="100%" stop-color="#a78bfa"/>
-          </linearGradient>
-          <linearGradient id="fillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%"   stop-color="#00d4ff" stop-opacity="0.18"/>
-            <stop offset="60%"  stop-color="#6366f1" stop-opacity="0.06"/>
-            <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
-          </linearGradient>
-          <filter id="lineGlow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <line x1="0" y1="45"  x2="1024" y2="45"  stroke="rgba(255,255,255,.04)" stroke-width="1"/>
-          <line x1="0" y1="90"  x2="1024" y2="90"  stroke="rgba(255,255,255,.04)" stroke-width="1"/>
-          <line x1="0" y1="135" x2="1024" y2="135" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
-        </defs>
-        <line x1="0" y1="45"  x2="1024" y2="45"  stroke="rgba(255,255,255,.04)" stroke-width="1"/>
-        <line x1="0" y1="90"  x2="1024" y2="90"  stroke="rgba(255,255,255,.04)" stroke-width="1"/>
-        <line x1="0" y1="135" x2="1024" y2="135" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
-        <path id="chartFill" fill="url(#fillGrad)"/>
-        <path id="chartGlow" fill="none" stroke="url(#lineGrad)" stroke-width="6" stroke-linejoin="round" opacity="0.25"/>
-        <path id="chartLine" fill="none" stroke="url(#lineGrad)" stroke-width="2.5" stroke-linejoin="round" filter="url(#lineGlow)"/>
-      </svg>
-      <div id="chartMsg" style="display:none;text-align:center;padding:40px;font-size:13px;color:var(--text3)">⏳ 累積走勢資料中，首次執行後顯示…</div>
-    </div>
-  </section>
 
-  <!-- ══ 美股持股 ══ -->
-  <section class="section reveal d2">
-    <div class="section-head">
-      <div class="sh-dot" style="background:var(--green);box-shadow:0 0 10px var(--green),0 0 20px rgba(52,211,153,.4);"></div>
-      <div>
-        <div class="sh-title">美股持股</div>
-        <div class="sh-sub">US Equities · Firstrade</div>
-      </div>
-      <div class="sh-line"></div>
-    </div>
-    <div class="table-wrap">
-      <div class="table-head">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="t-name">美國上市</span>
-          <span class="badge badge-us">Firstrade</span>
+      <!-- ▸ 指標格 -->
+      <div class="hero-metrics-strip">
+        <div class="hero-metric-cell">
+          <div class="hero-metric-label">目前市值（USD）</div>
+          <div class="hero-metric-val" id="wifeUSD">—</div>
+          <div class="hero-metric-sub">台幣：<span id="wifeTWD">—</span></div>
+        </div>
+        <div class="hero-metric-cell">
+          <div class="hero-metric-label">投入成本</div>
+          <div class="hero-metric-val" style="color:var(--text2)">NT$400,000</div>
+          <div class="hero-metric-sub">老婆本金</div>
+        </div>
+        <div class="hero-metric-cell">
+          <div class="hero-metric-label">年化目標 +5%</div>
+          <div class="hero-metric-val" style="color:var(--gold)">NT$420,000</div>
+          <div class="hero-metric-sub">+NT$20,000</div>
+        </div>
+        <div class="hero-metric-cell">
+          <div class="hero-metric-label">目前損益</div>
+          <div class="hero-metric-val" id="wifePL">—</div>
+          <div class="hero-metric-sub" id="wifePLPct">—</div>
         </div>
       </div>
-      <div class="t-scroll">
-        <table>
-          <thead><tr>
-            <th>股票</th><th>現價</th><th>今日漲跌</th><th>漲跌幅</th>
-            <th class="hide-sm">盤別</th>
-          </tr></thead>
-          <tbody id="usBody">
-            <tr><td colspan="5" style="text-align:center;padding:36px;color:var(--text3);font-size:12px;letter-spacing:.08em">載入中…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
 
-  <!-- ══ 老婆基金 ══ -->
-  <section class="section reveal d3">
-    <div class="section-head">
-      <div class="sh-dot" style="background:var(--gold);box-shadow:0 0 10px var(--gold),0 0 20px rgba(240,192,64,.4);"></div>
-      <div>
-        <div class="sh-title">老婆基金</div>
-        <div class="sh-sub">Wife Fund · US Portfolio</div>
-      </div>
-      <div class="sh-line"></div>
-    </div>
-    <div class="wife-glass">
-      <!-- ROI 大字 -->
-      <div style="padding-bottom:20px;border-bottom:1px solid var(--glass-border);margin-bottom:24px;">
-        <div class="wife-kpi-label">累計投資報酬率</div>
-        <div class="wife-roi-val" id="wifeROI">—</div>
-        <div class="wife-roi-sub" id="wifeROISub">計算中…</div>
-      </div>
-      <!-- 指標格 -->
-      <div class="wife-metrics">
-        <div class="wife-metric">
-          <div class="wife-label">目前市值（美元計）</div>
-          <div class="wife-value" id="wifeUSD">—</div>
-          <div class="wife-sub">換算台幣：<span id="wifeTWD">—</span></div>
+      <!-- ▸ 走勢圖（Y 軸 + SVG） -->
+      <div class="hero-chart-area">
+        <div class="y-axis" id="yAxis">
+          <span id="yTop">—</span>
+          <span id="yMid">—</span>
+          <span id="yBot">—</span>
         </div>
-        <div class="wife-metric">
-          <div class="wife-label">投入成本</div>
-          <div class="wife-value" style="color:var(--text2)">NT$400,000</div>
-          <div class="wife-sub">老婆本金</div>
-        </div>
-        <div class="wife-metric">
-          <div class="wife-label">年化目標（+5%）</div>
-          <div class="wife-value" style="color:var(--gold)">NT$420,000</div>
-          <div class="wife-sub">+NT$20,000</div>
-        </div>
-        <div class="wife-metric">
-          <div class="wife-label">目前損益</div>
-          <div class="wife-value" id="wifePL">—</div>
-          <div class="wife-sub" id="wifePLPct">—</div>
+        <div class="chart-svg-wrap">
+          <svg id="portfolioSVG" height="220" viewBox="0 0 1024 220" preserveAspectRatio="none" style="width:100%;display:block;">
+            <defs>
+              <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stop-color="#00d4ff"/>
+                <stop offset="50%"  stop-color="#6366f1"/>
+                <stop offset="100%" stop-color="#a78bfa"/>
+              </linearGradient>
+              <linearGradient id="fillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%"   stop-color="#00d4ff" stop-opacity="0.22"/>
+                <stop offset="55%"  stop-color="#6366f1" stop-opacity="0.08"/>
+                <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+              </linearGradient>
+              <filter id="lineGlow">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <!-- 極細格線 -->
+            <line x1="0" y1="55"  x2="1024" y2="55"  stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            <line x1="0" y1="110" x2="1024" y2="110" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            <line x1="0" y1="165" x2="1024" y2="165" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+            <path id="chartFill" fill="url(#fillGrad)"/>
+            <path id="chartGlow" fill="none" stroke="url(#lineGrad)" stroke-width="10" stroke-linejoin="round" opacity="0.18"/>
+            <path id="chartLine" fill="none" stroke="url(#lineGrad)" stroke-width="3.5" stroke-linejoin="round" filter="url(#lineGlow)"/>
+          </svg>
+          <div id="chartMsg" style="display:none;text-align:center;padding:48px 24px;font-size:13px;color:var(--text3)">
+            ⏳ 累積走勢資料中，首次執行後顯示…
+          </div>
         </div>
       </div>
-      <!-- 進度條 -->
-      <div class="wife-progress-top">
-        <span>🎯 目標達成進度（NT$40萬 → NT$42萬）</span>
-        <span class="progress-pct" id="wifePct">—</span>
+
+      <!-- ▸ 目標進度條 -->
+      <div class="hero-progress-area">
+        <div class="hero-progress-header">
+          <div>
+            <div style="font-size:14px;font-weight:700;">目標達成進度</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:4px;">NT$40萬 → NT$42萬（年化 +5%）</div>
+          </div>
+          <div class="hero-pct-badge" id="wifePct">—</div>
+        </div>
+        <div class="bar-bg">
+          <div class="bar-fill" id="wifeFill" style="width:0%"></div>
+        </div>
+        <div class="hero-progress-footer">
+          <span>成本 <strong style="color:var(--text)">NT$400,000</strong></span>
+          <span id="goalMetBadge" style="display:none" class="goal-met-badge">🎉 已達標！</span>
+          <span>目標 <strong style="color:var(--gold)">NT$420,000</strong></span>
+        </div>
       </div>
-      <div class="bar-bg"><div class="bar-fill" id="wifeFill" style="width:0%"></div></div>
-      <div class="progress-bottom">
-        <span>成本 <strong style="color:var(--text)">NT$400,000</strong></span>
-        <span>目標 <strong style="color:var(--gold)">NT$420,000</strong></span>
+
+      <!-- ▸ 頁腳注釋 -->
+      <div class="hero-footnote">
+        📅 資料從 2026 年 3 月開始記錄 · 每個交易日收盤後自動更新
       </div>
     </div>
   </section>
 
-  <!-- ══ 個股分析 ══ -->
+  <!-- ══ 個股分析 ══ --><!-- ══ 個股分析 ══ -->
   <section class="section reveal d4">
     <div class="section-head">
       <div class="sh-dot" style="background:var(--purple);box-shadow:0 0 10px var(--purple),0 0 20px rgba(167,139,250,.4);"></div>
@@ -1757,12 +1894,20 @@ function renderWifeFund(usData, usdTwd) {
   document.getElementById('wifeTWD').textContent = 'NT$' + totalTWD.toLocaleString();
   document.getElementById('wifePL').innerHTML    = `<span class="${plCls}">${plSign}NT$${Math.abs(pl).toLocaleString()}</span>`;
   document.getElementById('wifePLPct').innerHTML = `<span class="${plCls}">${plSign}${plPct.toFixed(2)}%</span>`;
-  document.getElementById('wifePct').textContent  = progressPct.toFixed(1) + '%';
-  document.getElementById('wifeFill').style.width = barWidth + '%';
-  // 超過目標時進度條變金色，表示超达
-  document.getElementById('wifeFill').style.background = progressPct >= 100
-    ? 'var(--yellow)'
-    : 'linear-gradient(90deg,#388bfd,#56d364)';
+  const pctEl = document.getElementById('wifePct');
+  if (pctEl) pctEl.textContent = progressPct.toFixed(1) + '%';
+  const fillEl = document.getElementById('wifeFill');
+  if (fillEl) {
+    fillEl.style.width = barWidth + '%';
+    fillEl.style.background = '';  // let CSS animation handle it
+    if (progressPct >= 100) {
+      fillEl.classList.add('goal-met');
+      const badge = document.getElementById('goalMetBadge');
+      if (badge) badge.style.display = '';
+    } else {
+      fillEl.classList.remove('goal-met');
+    }
+  }
 
   // 投資報酬率（大字顯示）
   const roiEl = document.getElementById('wifeROI');
@@ -1933,26 +2078,44 @@ const PORTFOLIO_COST = 400_000;
 // 全域存放完整歷史，供 setRange 切換
 let _chartHistory = [];
 
-// 將數值陣列轉成 SVG cubic-bezier path
+// 將數值陣列轉成 SVG cubic-bezier path (H=220)
+let _lastMn = 0, _lastMx = 1;
 function _buildPath(pts) {
-  const W = 1024, H = 180, pad = 6;
+  const W = 1024, H = 220, pad = 6;
   const mn = Math.min(...pts) - pad, mx = Math.max(...pts) + pad;
+  _lastMn = mn; _lastMx = mx;
   const x = i => (i / (pts.length - 1)) * W;
-  const y = v => H - ((v - mn) / (mx - mn)) * (H - 8) - 4;
+  const y = v => H - ((v - mn) / (mx - mn)) * (H - 10) - 5;
   let d = `M${x(0)},${y(pts[0])}`;
   for (let i = 1; i < pts.length; i++) {
     const cx = (x(i - 1) + x(i)) / 2;
     d += ` C${cx},${y(pts[i-1])} ${cx},${y(pts[i])} ${x(i)},${y(pts[i])}`;
   }
-  return { d, W, H, endY: y(pts[pts.length - 1]) };
+  return { d, W, H };
 }
 
-// 把 path 寫入三個 SVG 元素
+// 把 path 寫入三個 SVG 元素，並更新 Y 軸刻度
+function _fmtTWD(v) {
+  if (Math.abs(v) >= 10000) return (v/10000).toFixed(1) + '萬';
+  return Math.round(v).toLocaleString();
+}
 function _applySVGPath(pts) {
   const { d, W, H } = _buildPath(pts);
   document.getElementById('chartLine').setAttribute('d', d);
   document.getElementById('chartGlow').setAttribute('d', d);
   document.getElementById('chartFill').setAttribute('d', d + ` L${W},${H} L0,${H} Z`);
+  // Y-axis labels at grid lines y=55(top), y=110(mid), y=165(bot)
+  // value = mn + (mx-mn) * (1 - (yPx - 5) / (H-10))
+  const range = _lastMx - _lastMn;
+  const vTop = _lastMn + range * (1 - (55  - 5) / (H - 10));
+  const vMid = _lastMn + range * (1 - (110 - 5) / (H - 10));
+  const vBot = _lastMn + range * (1 - (165 - 5) / (H - 10));
+  const yTop = document.getElementById('yTop');
+  const yMid = document.getElementById('yMid');
+  const yBot = document.getElementById('yBot');
+  if (yTop) yTop.textContent = _fmtTWD(vTop);
+  if (yMid) yMid.textContent = _fmtTWD(vMid);
+  if (yBot) yBot.textContent = _fmtTWD(vBot);
 }
 
 // 更新 KPI 顯示
@@ -1991,21 +2154,19 @@ function renderPortfolioChart(history) {
   if (svg) svg.style.display = 'block';
 
   // 預設顯示 1M（最近 30 筆）
-  const pts = history.slice(-30).map(h => h.total);
-  _applySVGPath(pts);
+  const pts30 = history.slice(-30).map(h => h.total);
+  _applySVGPath(pts30.length >= 2 ? pts30 : history.map(h => h.total));
   _updateKPI(history);
 }
 
 function setRange(days, el) {
   document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
-
   if (_chartHistory.length >= 2) {
-    // 有真實資料：截取對應天數
     const pts = _chartHistory.slice(-days).map(h => h.total);
-    if (pts.length >= 2) { _applySVGPath(pts); return; }
+    if (pts.length >= 2) { _applySVGPath(pts); _updateKPI(_chartHistory.slice(-days)); return; }
   }
-  // 無資料：模擬走勢
+  // 無資料時：模擬走勢（示意用）
   let v = 400000, pts = [];
   for (let i = 0; i < days; i++) { v += (Math.random() - 0.46) * 3000; pts.push(Math.max(320000, v)); }
   _applySVGPath(pts);
