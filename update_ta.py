@@ -639,6 +639,7 @@ LESSON_FN = {
 # ════════════════════════════════════════════════════════════════════
 def _snap(label, val, sub, cls=""):
     val_cls = f"ta-snap-val {cls}" if cls else "ta-snap-val"
+    sub = sub.replace("<", "&lt;").replace(">", "&gt;")
     return (f'<div class="ta-snap-item"><div class="ta-snap-label">{label}</div>'
             f'<div class="{val_cls}">{val}</div>'
             f'<div class="ta-snap-sub">{sub}</div></div>')
