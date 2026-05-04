@@ -1377,24 +1377,14 @@ def retheme_charts():
 # ════════════════════════════════════════════════════════════════════
 # 個股分析卡片（每月 Gemini 自動更新）
 # ════════════════════════════════════════════════════════════════════
-ANALYSIS_CARDS = [
-    {"ticker_display": "2330 台積電",     "a_name": "TSMC · 半導體",      "yf": "2330.TW", "symbol": "2330",  "market": "TW", "sector": "半導體",    "desc": "全球最先進晶片的唯一製造商，AI 時代最核心的科技基礎建設"},
-    {"ticker_display": "NVDA",           "a_name": "NVIDIA · AI 晶片",   "yf": "NVDA",     "symbol": "NVDA",  "market": "US", "sector": "AI 晶片",   "desc": "全球 AI 運算龍頭，CUDA 生態系護城河極深，H 系列 GPU 供不應求"},
-    {"ticker_display": "TSLA",           "a_name": "Tesla · 電動車／AI",  "yf": "TSLA",     "symbol": "TSLA",  "market": "US", "sector": "電動車",    "desc": "電動車品牌先驅，FSD 自駕與 Robotaxi 商業化是下一個成長引擎"},
-    {"ticker_display": "2536 宏普",      "a_name": "宏普建設 · 建設",     "yf": "2536.TW",  "symbol": "2536",  "market": "TW", "sector": "建設",      "desc": "台灣建設股，受央行利率政策與房市景氣影響明顯"},
-    {"ticker_display": "4588 玖鼎",      "a_name": "玖鼎電力 · 電力設備", "yf": "4588.TW",  "symbol": "4588",  "market": "TW", "sector": "電力設備",  "desc": "電力設備製造商，受惠 AI 資料中心與電網升級帶來的用電需求"},
-    {"ticker_display": "00692 ／ 00915", "a_name": "配息 ETF 組合",       "yf": None,       "symbol": "ETF",   "market": "TW", "sector": "ETF",       "desc": "高股息 ETF 組合，適合長期持有領取現金流"},
-]
-
 _SENT_MAP = {
     "看多": ("bull", "↑ 看多", "var(--green)"),
     "觀察": ("neut", "◎ 觀察", "var(--amber)"),
     "留意": ("bear", "↓ 留意", "var(--red)"),
-    "長抱": ("long", "● 長抱", "var(--blue)"),
 }
 
 
-def _gemini_acard(card, ind):
+def _gemini_acard(stock, ind):
     """用 Gemini 生成個股分析卡片內容，返回 (sentiment, body, tip) 或 None"""
     import os, time
     api_key = os.environ.get("GEMINI_API_KEY")
@@ -1404,16 +1394,17 @@ def _gemini_acard(card, ind):
         from google import genai
         from google.genai import types
         client = genai.Client(api_key=api_key)
-        mkt = card["market"]
+        mkt = stock["market"]
         p = lambda v: fp(v, mkt)
+        ticker = stock["symbol"] if mkt == "US" else f"{stock['symbol']} {stock['name']}"
         ma_a = ("多頭排列" if ind["ma5"] > ind["ma20"] > ind["ma60"]
                 else "空頭排列" if ind["ma5"] < ind["ma20"] < ind["ma60"]
                 else "均線糾結")
         prompt = f"""你是專業投資分析師，為台灣個人投資人分析持股狀況。
 根據以下最新技術指標，用繁體中文生成投資看法卡片。
 
-股票：{card['ticker_display']}（{card['sector']}）
-說明：{card['desc']}
+股票：{ticker}（{stock['sector']}）
+說明：{stock['desc']}
 
 技術指標（本月數值）：
 現價：{p(ind['price'])}　均線排列：{ma_a}
@@ -1448,17 +1439,20 @@ RSI：{ind['rsi']}　MACD柱：{ind['hist']:+.3f}　KD：K{ind['kd_k']}/D{ind['k
         sentiment = lines.get("情緒", "觀察")
         if sentiment not in _SENT_MAP:
             sentiment = "觀察"
-        body = lines.get("分析", card["desc"])
+        body = lines.get("分析", stock["desc"])
         tip  = lines.get("觀察重點", "")
-        print(f"  ✓ Gemini 個股分析生成成功（{card['symbol']}）：{sentiment}")
+        print(f"  ✓ Gemini 個股分析生成成功（{stock['symbol']}）：{sentiment}")
         return sentiment, body, tip
     except Exception as e:
-        print(f"  ✗ Gemini 個股分析失敗（{card['symbol']}）：{e}")
+        print(f"  ✗ Gemini 個股分析失敗（{stock['symbol']}）：{e}")
         return None
 
 
-def _build_acard_html(card, sentiment, body, tip, date_str):
+def _build_acard_html(stock, sentiment, body, tip, date_str):
     sc, sent_foot, color = _SENT_MAP[sentiment]
+    mkt = stock["market"]
+    ticker_display = stock["symbol"] if mkt == "US" else f"{stock['symbol']} {stock['name']}"
+    a_name = f"{stock['name']} · {stock['sector']}"
     tip_html = (f'\n            <div class="a-tip"><strong>觀察重點：</strong>{tip}</div>'
                 if tip else "")
     return (
@@ -1466,8 +1460,8 @@ def _build_acard_html(card, sentiment, body, tip, date_str):
         f'        <div class="a-bar {sc}"></div>\n'
         f'        <div class="a-inner">\n'
         f'          <div class="a-head">\n'
-        f'            <div><div class="a-ticker">{card["ticker_display"]}</div>'
-        f'<div class="a-name">{card["a_name"]}</div></div>\n'
+        f'            <div><div class="a-ticker">{ticker_display}</div>'
+        f'<div class="a-name">{a_name}</div></div>\n'
         f'            <span class="a-sent s-{sc}">{sentiment}</span>\n'
         f'          </div>\n'
         f'          <div class="a-body">{body}{tip_html}\n'
@@ -1480,33 +1474,24 @@ def _build_acard_html(card, sentiment, body, tip, date_str):
 
 
 def update_stock_analysis():
-    """每月更新個股分析卡片（Gemini AI 生成分析內容）"""
+    """每月更新個股分析卡片（Gemini AI 生成分析內容，涵蓋全部個股）"""
     with open(INDEX_FILE, encoding="utf-8") as f:
         html = f.read()
 
     date_str = datetime.now(TZ_TW).strftime("%Y/%m")
     new_cards = []
+    stocks = [s for s in ROTATION if s["sector"] != "ETF"]
 
-    for card in ANALYSIS_CARDS:
-        sym = card["symbol"]
+    for stock in stocks:
+        sym = stock["symbol"]
         print(f"處理 {sym}...")
 
-        if card["yf"] is None:
-            new_cards.append(_build_acard_html(
-                card, "長抱",
-                "兩支均為<strong>高股息 ETF</strong>，適合長期持有領取現金流。分散風險、每年穩定領息，不需要太多主動操作。",
-                "ETF 是什麼？像一個「股票籃子」，一次買進就同時持有幾十家公司。核心邏輯是穩定現金流。",
-                date_str
-            ))
-            print(f"  ETF：保留靜態內容，更新日期")
-            continue
-
-        ind = fetch_indicators(card)
+        ind = fetch_indicators(stock)
         if ind is None:
             print(f"  {sym}：無法取得指標，略過")
             continue
 
-        result = _gemini_acard(card, ind)
+        result = _gemini_acard(stock, ind)
         if result:
             sentiment, body, tip = result
         else:
@@ -1518,10 +1503,10 @@ def update_stock_analysis():
             if ind["kd_k"] > ind["kd_d"]: score += 1
             else: score -= 1
             sentiment = "看多" if score >= 3 else "觀察" if score >= 0 else "留意"
-            body = card["desc"]
+            body = stock["desc"]
             tip = f"RSI {ind['rsi']}，布林位置 {ind['bb_pos']:.0f}%"
 
-        new_cards.append(_build_acard_html(card, sentiment, body, tip, date_str))
+        new_cards.append(_build_acard_html(stock, sentiment, body, tip, date_str))
 
     if not new_cards:
         print("無卡片更新")
