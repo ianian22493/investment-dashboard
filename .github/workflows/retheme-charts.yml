@@ -1,0 +1,35 @@
+name: 替換所有卡片為主題圖表
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  retheme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝依賴
+        run: pip install yfinance
+
+      - name: 執行 retheme
+        env:
+          RETHEME_CHARTS: "true"
+        run: python update_ta.py
+
+      - name: Commit 並 Push
+        run: |
+          git config user.email "bot@investment-dashboard"
+          git config user.name "Dashboard Bot"
+          git add index.html
+          git diff --cached --quiet || git commit -m "🎨 替換歷史與本週卡片為主題圖表 $(date -u +'%Y-%m-%d')"
+          git push

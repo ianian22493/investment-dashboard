@@ -1278,6 +1278,103 @@ def backfill_charts():
 
 
 # ════════════════════════════════════════════════════════════════════
+# Retheme：為所有卡片（含本週）替換成對應主題圖表
+# ════════════════════════════════════════════════════════════════════
+def retheme_charts():
+    """用正確的 lesson 主題圖表取代所有歷史與本週的 MA 圖。"""
+    with open(INDEX_FILE, encoding="utf-8") as f:
+        html = f.read()
+
+    modified = False
+
+    def _new_chart_html(chart_id, sym, ind, lesson_id):
+        cfg = _chart_config(chart_id, lesson_id, ind, sym)
+        return (
+            f'<div class="ta-chart-wrap">'
+            f'<canvas id="{chart_id}" height="160"></canvas>'
+            f'<script>window.__taCharts=window.__taCharts||{{}};'
+            f'window.__taCharts["{chart_id}"]={cfg}; '
+            f'</script></div>\n  '
+        )
+
+    def _replace_chart(block, new_chart):
+        """Replace existing ta-chart-wrap or insert before ta-snap-grid."""
+        if "ta-chart-wrap" in block:
+            return re.sub(
+                r'<div class="ta-chart-wrap">.*?</script></div>\n?\s*',
+                new_chart, block, count=1, flags=re.DOTALL)
+        return re.sub(
+            r'(技術面快照（全指標一覽）</span></div>)\n(\s*<div class="ta-snap-grid">)',
+            lambda mo: mo.group(1) + "\n  " + new_chart + mo.group(2),
+            block, count=1)
+
+    # ── 歷史記錄 ──
+    entry_pat = re.compile(r'<div class="ta-hist-entry" id="(hist-\d+)">')
+    matches   = list(entry_pat.finditer(html))
+    for i in range(len(matches) - 1, -1, -1):
+        m        = matches[i]
+        eid      = m.group(1)
+        week_num = int(eid.split('-')[1])
+        start    = m.start()
+        end      = matches[i+1].start() if i+1 < len(matches) else len(html)
+        block    = html[start:end]
+
+        sym_m = re.search(r'class="ta-ticker">(\S+)\s*<span', block)
+        if not sym_m: continue
+        sym   = sym_m.group(1)
+        stock = next((s for s in ROTATION if s["symbol"] == sym), None)
+        if not stock: continue
+
+        lesson_idx = min(week_num - 1, len(CURRICULUM) - 1)
+        lesson_id  = CURRICULUM[lesson_idx]["id"]
+        print(f"  {eid} {sym} (第{week_num}週 / {lesson_id}): 抓取中...")
+        ind = fetch_indicators(stock)
+        if not ind: continue
+
+        chart_id  = f"taLineChart_{sym.replace('-','')}_bf"
+        new_chart = _new_chart_html(chart_id, sym, ind, lesson_id)
+        new_block = _replace_chart(block, new_chart)
+        if new_block != block:
+            html = html[:start] + new_block + html[end:]
+            print(f"  {eid}: ✓")
+            modified = True
+        else:
+            print(f"  {eid}: ⚠ 找不到注入位置")
+
+    # ── 本週卡片 ──
+    card_m = re.search(r'(<!-- TA_CARD_START -->)(.*?)(<!-- TA_CARD_END -->)',
+                       html, re.DOTALL)
+    if card_m:
+        card    = card_m.group(2)
+        week_m  = re.search(r'ta-week-badge">第 (\d+) 週', card)
+        tick_m  = re.search(r'ta-ticker">(\S+) <span', card)
+        if week_m and tick_m:
+            week_num   = int(week_m.group(1))
+            sym        = tick_m.group(1)
+            lesson_idx = min(week_num - 1, len(CURRICULUM) - 1)
+            lesson_id  = CURRICULUM[lesson_idx]["id"]
+            stock      = next((s for s in ROTATION if s["symbol"] == sym), None)
+            if stock:
+                print(f"  本週 {sym} (第{week_num}週 / {lesson_id}): 抓取中...")
+                ind = fetch_indicators(stock)
+                if ind:
+                    chart_id  = f"taLineChart_{sym.replace('-','')}"
+                    new_chart = _new_chart_html(chart_id, sym, ind, lesson_id)
+                    new_card  = _replace_chart(card, new_chart)
+                    if new_card != card:
+                        html = html[:card_m.start(2)] + new_card + html[card_m.end(2):]
+                        print(f"  本週卡片: ✓")
+                        modified = True
+
+    if modified:
+        with open(INDEX_FILE, "w", encoding="utf-8") as f:
+            f.write(html)
+        print("index.html 已更新（retheme 完成）")
+    else:
+        print("無需更新")
+
+
+# ════════════════════════════════════════════════════════════════════
 # 主程式
 # ════════════════════════════════════════════════════════════════════
 def main():
@@ -1285,6 +1382,10 @@ def main():
     if os.environ.get("BACKFILL_CHARTS") == "true":
         print("🔄 BACKFILL_CHARTS 模式：補生成歷史記錄圖表")
         backfill_charts()
+        return
+    if os.environ.get("RETHEME_CHARTS") == "true":
+        print("🎨 RETHEME_CHARTS 模式：替換所有卡片為主題圖表")
+        retheme_charts()
         return
 
     state    = load_state()
