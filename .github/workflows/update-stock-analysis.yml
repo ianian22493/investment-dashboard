@@ -1,0 +1,38 @@
+name: 每月更新個股分析
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 1 * *'  # 每月 1 日 09:00 台灣時間
+
+permissions:
+  contents: write
+
+jobs:
+  update-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝依賴
+        run: pip install yfinance google-genai
+
+      - name: 執行個股分析更新
+        env:
+          UPDATE_STOCK_ANALYSIS: "true"
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python update_ta.py
+
+      - name: Commit 並 Push
+        run: |
+          git config user.email "bot@investment-dashboard"
+          git config user.name "Dashboard Bot"
+          git add index.html
+          git diff --cached --quiet || git commit -m "📊 每月更新個股分析卡片 $(date -u +'%Y-%m')"
+          git push

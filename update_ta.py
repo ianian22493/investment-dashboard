@@ -1375,6 +1375,175 @@ def retheme_charts():
 
 
 # ════════════════════════════════════════════════════════════════════
+# 個股分析卡片（每月 Gemini 自動更新）
+# ════════════════════════════════════════════════════════════════════
+ANALYSIS_CARDS = [
+    {"ticker_display": "2330 台積電",     "a_name": "TSMC · 半導體",      "yf": "2330.TW", "symbol": "2330",  "market": "TW", "sector": "半導體",    "desc": "全球最先進晶片的唯一製造商，AI 時代最核心的科技基礎建設"},
+    {"ticker_display": "NVDA",           "a_name": "NVIDIA · AI 晶片",   "yf": "NVDA",     "symbol": "NVDA",  "market": "US", "sector": "AI 晶片",   "desc": "全球 AI 運算龍頭，CUDA 生態系護城河極深，H 系列 GPU 供不應求"},
+    {"ticker_display": "TSLA",           "a_name": "Tesla · 電動車／AI",  "yf": "TSLA",     "symbol": "TSLA",  "market": "US", "sector": "電動車",    "desc": "電動車品牌先驅，FSD 自駕與 Robotaxi 商業化是下一個成長引擎"},
+    {"ticker_display": "2536 宏普",      "a_name": "宏普建設 · 建設",     "yf": "2536.TW",  "symbol": "2536",  "market": "TW", "sector": "建設",      "desc": "台灣建設股，受央行利率政策與房市景氣影響明顯"},
+    {"ticker_display": "4588 玖鼎",      "a_name": "玖鼎電力 · 電力設備", "yf": "4588.TW",  "symbol": "4588",  "market": "TW", "sector": "電力設備",  "desc": "電力設備製造商，受惠 AI 資料中心與電網升級帶來的用電需求"},
+    {"ticker_display": "00692 ／ 00915", "a_name": "配息 ETF 組合",       "yf": None,       "symbol": "ETF",   "market": "TW", "sector": "ETF",       "desc": "高股息 ETF 組合，適合長期持有領取現金流"},
+]
+
+_SENT_MAP = {
+    "看多": ("bull", "↑ 看多", "var(--green)"),
+    "觀察": ("neut", "◎ 觀察", "var(--amber)"),
+    "留意": ("bear", "↓ 留意", "var(--red)"),
+    "長抱": ("long", "● 長抱", "var(--blue)"),
+}
+
+
+def _gemini_acard(card, ind):
+    """用 Gemini 生成個股分析卡片內容，返回 (sentiment, body, tip) 或 None"""
+    import os, time
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        return None
+    try:
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=api_key)
+        mkt = card["market"]
+        p = lambda v: fp(v, mkt)
+        ma_a = ("多頭排列" if ind["ma5"] > ind["ma20"] > ind["ma60"]
+                else "空頭排列" if ind["ma5"] < ind["ma20"] < ind["ma60"]
+                else "均線糾結")
+        prompt = f"""你是專業投資分析師，為台灣個人投資人分析持股狀況。
+根據以下最新技術指標，用繁體中文生成投資看法卡片。
+
+股票：{card['ticker_display']}（{card['sector']}）
+說明：{card['desc']}
+
+技術指標（本月數值）：
+現價：{p(ind['price'])}　均線排列：{ma_a}
+RSI：{ind['rsi']}　MACD柱：{ind['hist']:+.3f}　KD：K{ind['kd_k']}/D{ind['kd_d']}
+布林位置：{ind['bb_pos']:.0f}%　52週位置：{ind['w52pct']}%
+
+請輸出以下 3 行，不要任何其他文字：
+情緒：[看多 或 觀察 或 留意]
+分析：[2-3句，描述這支股票目前狀況與投資邏輯，60字內，可用<strong>強調關鍵字</strong>]
+觀察重點：[1句，最重要的觀察重點或操作建議，50字內]"""
+        for attempt in range(3):
+            try:
+                resp = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        thinking_config=types.ThinkingConfig(thinking_budget=0)
+                    )
+                )
+                text = resp.text
+                break
+            except Exception as e:
+                if "503" in str(e) and attempt < 2:
+                    time.sleep(20 * (attempt + 1))
+                else:
+                    raise
+        lines = {}
+        for line in text.strip().split('\n'):
+            if '：' in line:
+                k, v = line.split('：', 1)
+                lines[k.strip()] = v.strip()
+        sentiment = lines.get("情緒", "觀察")
+        if sentiment not in _SENT_MAP:
+            sentiment = "觀察"
+        body = lines.get("分析", card["desc"])
+        tip  = lines.get("觀察重點", "")
+        print(f"  ✓ Gemini 個股分析生成成功（{card['symbol']}）：{sentiment}")
+        return sentiment, body, tip
+    except Exception as e:
+        print(f"  ✗ Gemini 個股分析失敗（{card['symbol']}）：{e}")
+        return None
+
+
+def _build_acard_html(card, sentiment, body, tip, date_str):
+    sc, sent_foot, color = _SENT_MAP[sentiment]
+    tip_html = (f'\n            <div class="a-tip"><strong>觀察重點：</strong>{tip}</div>'
+                if tip else "")
+    return (
+        f'      <div class="a-card {sc}">\n'
+        f'        <div class="a-bar {sc}"></div>\n'
+        f'        <div class="a-inner">\n'
+        f'          <div class="a-head">\n'
+        f'            <div><div class="a-ticker">{card["ticker_display"]}</div>'
+        f'<div class="a-name">{card["a_name"]}</div></div>\n'
+        f'            <span class="a-sent s-{sc}">{sentiment}</span>\n'
+        f'          </div>\n'
+        f'          <div class="a-body">{body}{tip_html}\n'
+        f'          </div>\n'
+        f'        </div>\n'
+        f'        <div class="a-foot"><span>更新：{date_str}</span>'
+        f'<span style="color:{color};font-weight:600">{sent_foot}</span></div>\n'
+        f'      </div>'
+    )
+
+
+def update_stock_analysis():
+    """每月更新個股分析卡片（Gemini AI 生成分析內容）"""
+    with open(INDEX_FILE, encoding="utf-8") as f:
+        html = f.read()
+
+    date_str = datetime.now(TZ_TW).strftime("%Y/%m")
+    new_cards = []
+
+    for card in ANALYSIS_CARDS:
+        sym = card["symbol"]
+        print(f"處理 {sym}...")
+
+        if card["yf"] is None:
+            new_cards.append(_build_acard_html(
+                card, "長抱",
+                "兩支均為<strong>高股息 ETF</strong>，適合長期持有領取現金流。分散風險、每年穩定領息，不需要太多主動操作。",
+                "ETF 是什麼？像一個「股票籃子」，一次買進就同時持有幾十家公司。核心邏輯是穩定現金流。",
+                date_str
+            ))
+            print(f"  ETF：保留靜態內容，更新日期")
+            continue
+
+        ind = fetch_indicators(card)
+        if ind is None:
+            print(f"  {sym}：無法取得指標，略過")
+            continue
+
+        result = _gemini_acard(card, ind)
+        if result:
+            sentiment, body, tip = result
+        else:
+            score = 0
+            if ind["ma5"] > ind["ma20"] > ind["ma60"]: score += 2
+            elif ind["ma5"] < ind["ma20"] < ind["ma60"]: score -= 2
+            if ind["hist"] > 0: score += 1
+            else: score -= 1
+            if ind["kd_k"] > ind["kd_d"]: score += 1
+            else: score -= 1
+            sentiment = "看多" if score >= 3 else "觀察" if score >= 0 else "留意"
+            body = card["desc"]
+            tip = f"RSI {ind['rsi']}，布林位置 {ind['bb_pos']:.0f}%"
+
+        new_cards.append(_build_acard_html(card, sentiment, body, tip, date_str))
+
+    if not new_cards:
+        print("無卡片更新")
+        return
+
+    new_grid_content = "\n".join(new_cards)
+    new_html = re.sub(
+        r'(<div class="analysis-grid">)(.*?)(    </div>\n  </section>)',
+        lambda mo: mo.group(1) + "\n" + new_grid_content + "\n" + mo.group(3),
+        html, count=1, flags=re.DOTALL
+    )
+
+    if new_html == html:
+        print("⚠ 找不到 analysis-grid，略過")
+        return
+
+    with open(INDEX_FILE, "w", encoding="utf-8") as f:
+        f.write(new_html)
+    print(f"✅ 個股分析已更新（{len(new_cards)} 張卡片，{date_str}）")
+
+
+# ════════════════════════════════════════════════════════════════════
 # 主程式
 # ════════════════════════════════════════════════════════════════════
 def main():
@@ -1386,6 +1555,10 @@ def main():
     if os.environ.get("RETHEME_CHARTS") == "true":
         print("🎨 RETHEME_CHARTS 模式：替換所有卡片為主題圖表")
         retheme_charts()
+        return
+    if os.environ.get("UPDATE_STOCK_ANALYSIS") == "true":
+        print("📊 UPDATE_STOCK_ANALYSIS 模式：每月更新個股分析卡片")
+        update_stock_analysis()
         return
 
     state    = load_state()
