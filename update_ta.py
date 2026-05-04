@@ -1302,7 +1302,7 @@ def retheme_charts():
         if "ta-chart-wrap" in block:
             return re.sub(
                 r'<div class="ta-chart-wrap">.*?</script></div>\n?\s*',
-                new_chart, block, count=1, flags=re.DOTALL)
+                lambda _: new_chart, block, count=1, flags=re.DOTALL)
         return re.sub(
             r'(技術面快照（全指標一覽）</span></div>)\n(\s*<div class="ta-snap-grid">)',
             lambda mo: mo.group(1) + "\n  " + new_chart + mo.group(2),
