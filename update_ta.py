@@ -1473,16 +1473,26 @@ def _build_acard_html(stock, sentiment, body, tip, date_str):
     )
 
 
+ANALYSIS_BATCH_SIZE = 6
+
+
 def update_stock_analysis():
-    """每月更新個股分析卡片（Gemini AI 生成分析內容，涵蓋全部個股）"""
+    """每月更新個股分析卡片：從 ROTATION 個股依序取 6 支，每月輪播一批"""
     with open(INDEX_FILE, encoding="utf-8") as f:
         html = f.read()
 
+    state    = load_state()
+    offset   = state.get("analysis_offset", 0)
     date_str = datetime.now(TZ_TW).strftime("%Y/%m")
     new_cards = []
-    stocks = [s for s in ROTATION if s["sector"] != "ETF"]
 
-    for stock in stocks:
+    all_stocks = [s for s in ROTATION if s["sector"] != "ETF"]
+    total      = len(all_stocks)
+    batch      = [all_stocks[(offset + i) % total] for i in range(ANALYSIS_BATCH_SIZE)]
+
+    print(f"本月個股分析批次（offset={offset}）：{[s['symbol'] for s in batch]}")
+
+    for stock in batch:
         sym = stock["symbol"]
         print(f"處理 {sym}...")
 
@@ -1507,6 +1517,10 @@ def update_stock_analysis():
             tip = f"RSI {ind['rsi']}，布林位置 {ind['bb_pos']:.0f}%"
 
         new_cards.append(_build_acard_html(stock, sentiment, body, tip, date_str))
+
+    # 更新 offset（下次從下一批開始）
+    state["analysis_offset"] = (offset + ANALYSIS_BATCH_SIZE) % total
+    save_state(state)
 
     if not new_cards:
         print("無卡片更新")
