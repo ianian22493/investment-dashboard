@@ -152,6 +152,40 @@ def calc_kd(hist, period=9):
         d = d * 2/3 + k * 1/3
     return round(k, 1), round(d, 1)
 
+def calc_rsi_series(closes, period=14):
+    """Wilder-smoothed RSI for every data point; returns list of len(closes)."""
+    if len(closes) <= period:
+        return [None] * len(closes)
+    deltas = [closes[i] - closes[i-1] for i in range(1, len(closes))]
+    gains  = [max(d, 0) for d in deltas]
+    losses = [max(-d, 0) for d in deltas]
+    avg_g  = sum(gains[:period]) / period
+    avg_l  = sum(losses[:period]) / period
+    result = [None] * period
+    result.append(round(100 - 100 / (1 + avg_g / avg_l), 1) if avg_l > 0 else 100.0)
+    for i in range(period, len(deltas)):
+        avg_g = (avg_g * (period - 1) + gains[i]) / period
+        avg_l = (avg_l * (period - 1) + losses[i]) / period
+        result.append(round(100 - 100 / (1 + avg_g / avg_l), 1) if avg_l > 0 else 100.0)
+    return result
+
+def calc_kd_series_full(hist, period=9):
+    """Rolling K/D for every data point; returns (k_list, d_list) of len closes."""
+    highs  = list(hist["High"])
+    lows   = list(hist["Low"])
+    closes = list(hist["Close"])
+    k, d   = 50.0, 50.0
+    k_s, d_s = [None] * (period - 1), [None] * (period - 1)
+    for i in range(period - 1, len(closes)):
+        h9  = max(highs[i-period+1:i+1])
+        l9  = min(lows[i-period+1:i+1])
+        rng = h9 - l9
+        rsv = ((closes[i] - l9) / rng * 100) if rng > 0 else 50.0
+        k = k * 2/3 + rsv * 1/3
+        d = d * 2/3 + k * 1/3
+        k_s.append(round(k, 1)); d_s.append(round(d, 1))
+    return k_s, d_s
+
 def calc_atr(hist, period=14):
     highs  = list(hist["High"])
     lows   = list(hist["Low"])
@@ -295,6 +329,48 @@ def fetch_indicators(stock):
             chart_ma20.append(round(sum(closes[idx-19:idx+1])/20, 2) if idx >= 19 else None)
             chart_ma60.append(round(sum(closes[idx-59:idx+1])/60, 2) if idx >= 59 else None)
 
+        # ── 主題圖表附加序列 ──
+        # MACD（直接切片已算好的全長序列）
+        chart_macd_hist = [round(macd_line[i] - signal[i], 3) for i in range(len(closes))][-n_chart:]
+        chart_macd_line = [round(v, 3) for v in macd_line[-n_chart:]]
+        chart_signal    = [round(v, 3) for v in signal[-n_chart:]]
+
+        # 布林通道（滾動 20 日）
+        chart_bb_up_s, chart_bb_lo_s = [], []
+        for i in range(n_chart):
+            idx = len(closes) - n_chart + i
+            if idx >= 19:
+                m20_i = sum(closes[idx-19:idx+1]) / 20
+                std_i = (sum((c - m20_i)**2 for c in closes[idx-19:idx+1]) / 20) ** 0.5
+                chart_bb_up_s.append(round(m20_i + 2*std_i, 2))
+                chart_bb_lo_s.append(round(m20_i - 2*std_i, 2))
+            else:
+                chart_bb_up_s.append(None); chart_bb_lo_s.append(None)
+
+        # RSI 與 KD 時間序列
+        rsi_full      = calc_rsi_series(closes)
+        chart_rsi_s   = rsi_full[-n_chart:]
+        k_full, d_full = calc_kd_series_full(hist)
+        chart_k_s     = k_full[-n_chart:]
+        chart_d_s     = d_full[-n_chart:]
+
+        # 成交量（百萬）、ATR 帶、日高低
+        chart_vol_s    = [round(v / 1_000_000, 2) for v in volumes[-n_chart:]]
+        chart_atr_up_s = [round(c + atr, 2) for c in chart_closes]
+        chart_atr_lo_s = [round(c - atr, 2) for c in chart_closes]
+        offset = len(closes) - n_chart
+        chart_highs_s  = [round(float(hist["High"].iloc[offset + i]), 2) for i in range(n_chart)]
+        chart_lows_s   = [round(float(hist["Low"].iloc[offset + i]),  2) for i in range(n_chart)]
+
+        # 相對強弱 vs SPY（雙方 indexed to 100 at chart start）
+        spy_cl = list(spy_hist["Close"]) if not spy_hist.empty else []
+        spy_n  = min(n_chart, len(spy_cl))
+        spy_sl = spy_cl[-spy_n:]
+        spy_b  = spy_sl[0] if spy_sl else 1
+        chart_spy_norm   = [None]*(n_chart - spy_n) + [round(c/spy_b*100, 2) for c in spy_sl]
+        stock_b          = chart_closes[0] if chart_closes else 1
+        chart_price_norm = [round(c/stock_b*100, 2) if c else None for c in chart_closes]
+
         return {
             "price": price,
             "ma5": ma5, "ma20": ma20, "ma60": ma60, "closes_5d": closes_5d,
@@ -311,9 +387,18 @@ def fetch_indicators(stock):
             "ohlc_5d": ohlc_5d,
             "fib_high": fib_high, "fib_low": fib_low, "fib_lvls": fib_lvls,
             "ret_3m": ret_3m, "spy_ret": spy_ret, "rs_vs_spy": rs_vs_spy,
-            # 圖表序列
+            # 基本圖表序列
             "chart_dates": chart_dates, "chart_closes": chart_closes,
             "chart_ma5": chart_ma5, "chart_ma20": chart_ma20, "chart_ma60": chart_ma60,
+            # 主題圖表序列
+            "chart_macd_hist": chart_macd_hist, "chart_macd_line": chart_macd_line,
+            "chart_signal": chart_signal,
+            "chart_bb_up": chart_bb_up_s, "chart_bb_lo": chart_bb_lo_s,
+            "chart_rsi": chart_rsi_s, "chart_k": chart_k_s, "chart_d": chart_d_s,
+            "chart_vol": chart_vol_s,
+            "chart_atr_up": chart_atr_up_s, "chart_atr_lo": chart_atr_lo_s,
+            "chart_highs": chart_highs_s, "chart_lows": chart_lows_s,
+            "chart_spy_norm": chart_spy_norm, "chart_price_norm": chart_price_norm,
         }
     except Exception as e:
         print(f"  錯誤：{stock['symbol']} 指標抓取失敗：{e}")
@@ -644,32 +729,194 @@ def _snap(label, val, sub, cls=""):
             f'<div class="{val_cls}">{val}</div>'
             f'<div class="ta-snap-sub">{sub}</div></div>')
 
-def generate_snapshot(stock, ind, p):
-    import json as _json
+def _chart_config(chart_id, lesson_id, ind, sym=""):
+    """Build Chart.js config for the given lesson; returns JSON string."""
+    dates  = ind.get("chart_dates",  [])
+    closes = ind.get("chart_closes", [])
+    ma5    = ind.get("chart_ma5",    [])
+    ma20   = ind.get("chart_ma20",   [])
+    ma60   = ind.get("chart_ma60",   [])
+    n      = len(dates)
+
+    def _line(label, data, color, dash=None, order=1, y="y", fill=False, width=1.5):
+        ds = {"label": label, "type": "line", "data": data,
+              "borderColor": color, "borderWidth": width,
+              "pointRadius": 0, "tension": 0.3, "fill": fill,
+              "spanGaps": True, "order": order, "yAxisID": y}
+        if dash: ds["borderDash"] = dash
+        return ds
+
+    def _bar(label, data, colors, order=1, y="y"):
+        return {"label": label, "type": "bar", "data": data,
+                "backgroundColor": colors, "borderWidth": 0,
+                "order": order, "yAxisID": y}
+
+    # ── 通用 options ──
+    x_scale = {"ticks": {"color": "#8b949e", "maxTicksLimit": 8, "font": {"size": 10}},
+               "grid":  {"color": "rgba(139,148,158,.1)"}}
+    y_scale = {"ticks": {"color": "#8b949e", "font": {"size": 10}},
+               "grid":  {"color": "rgba(139,148,158,.1)"}}
+    y1_scale = {"position": "right",
+                "ticks": {"color": "#8b949e", "font": {"size": 10}},
+                "grid": {"drawOnChartArea": False}}
+    base_opts = {
+        "responsive": True,
+        "interaction": {"mode": "index", "intersect": False},
+        "plugins": {
+            "legend": {"display": True, "position": "top",
+                       "labels": {"color": "#8b949e", "font": {"size": 10}, "boxWidth": 16, "padding": 10}},
+            "tooltip": {"backgroundColor": "rgba(22,27,34,.95)", "titleColor": "#c9d1d9",
+                        "bodyColor": "#8b949e", "padding": 8}
+        },
+        "scales": {"x": x_scale, "y": y_scale}
+    }
+
+    def _opts(y_min=None, y_max=None, dual=False):
+        import copy
+        o = copy.deepcopy(base_opts)
+        if y_min is not None: o["scales"]["y"]["min"] = y_min
+        if y_max is not None: o["scales"]["y"]["max"] = y_max
+        if dual: o["scales"]["y1"] = copy.deepcopy(y1_scale)
+        return o
+
+    # ── 各主題圖表 ──
+    if lesson_id == "ma":
+        datasets = [
+            _line("收盤", closes, "rgba(200,200,220,.9)", order=1),
+            _line("MA5",  ma5,    "#f0c040", [3,2], order=2),
+            _line("MA20", ma20,   "#56d364", [5,3], order=3),
+            _line("MA60", ma60,   "#f85149", [8,4], order=4),
+        ]
+        opts = _opts()
+
+    elif lesson_id == "volume":
+        vols = ind.get("chart_vol", [])
+        vol_colors = ["rgba(86,211,100,.5)" if i==0 or (closes[i] or 0) >= (closes[i-1] or 0)
+                      else "rgba(248,81,73,.5)" for i in range(len(closes))]
+        datasets = [
+            _line("收盤", closes, "rgba(200,200,220,.9)", order=1, y="y"),
+            _bar("成交量(M)", vols, vol_colors, order=10, y="y1"),
+        ]
+        opts = _opts(dual=True)
+
+    elif lesson_id == "macd":
+        mh = ind.get("chart_macd_hist", [])
+        ml = ind.get("chart_macd_line", [])
+        ms = ind.get("chart_signal",    [])
+        hist_colors = ["rgba(86,211,100,.7)" if (v or 0) >= 0 else "rgba(248,81,73,.7)" for v in mh]
+        datasets = [
+            _line("收盤",   closes, "rgba(200,200,220,.9)", order=1, y="y"),
+            _bar("MACD柱",  mh,   hist_colors, order=10, y="y1"),
+            _line("MACD",   ml,   "#79c0ff",           order=2, y="y1"),
+            _line("Signal", ms,   "#f0c040", [3,2],    order=3, y="y1"),
+        ]
+        opts = _opts(dual=True)
+
+    elif lesson_id == "bollinger":
+        bu = ind.get("chart_bb_up", [])
+        bl = ind.get("chart_bb_lo", [])
+        datasets = [
+            _line("布林上軌",   bu,     "rgba(248,81,73,.65)",  [4,2], order=3),
+            _line("MA20(中軌)", ma20,   "#56d364",              [5,3], order=2),
+            _line("布林下軌",   bl,     "rgba(86,211,100,.65)", [4,2], order=4),
+            _line("收盤",       closes, "rgba(200,200,220,.9)", order=1),
+        ]
+        opts = _opts()
+
+    elif lesson_id == "rsi_kd":
+        rsi_s = ind.get("chart_rsi", [])
+        k_s   = ind.get("chart_k",   [])
+        d_s   = ind.get("chart_d",   [])
+        datasets = [
+            _line("RSI(14)", rsi_s, "#79c0ff",              order=1),
+            _line("K值",     k_s,   "#f0c040",  [3,2],      order=2),
+            _line("D值",     d_s,   "#f85149",  [5,3],      order=3),
+            _line("超買(70)",[70]*n,"rgba(248,81,73,.35)",  [4,4], order=9),
+            _line("超賣(30)",[30]*n,"rgba(86,211,100,.35)", [4,4], order=10),
+        ]
+        opts = _opts(y_min=0, y_max=100)
+
+    elif lesson_id == "candle":
+        highs = ind.get("chart_highs", closes)
+        lows  = ind.get("chart_lows",  closes)
+        datasets = [
+            _line("日高", highs,  "rgba(248,81,73,.35)",  order=4, width=1),
+            _line("收盤", closes, "rgba(200,200,220,.9)", order=1),
+            _line("日低", lows,   "rgba(86,211,100,.35)", order=5, width=1),
+            _line("MA20", ma20,   "#56d364", [5,3],       order=2),
+        ]
+        opts = _opts()
+
+    elif lesson_id == "sr":
+        sup = ind.get("support1", 0)
+        res = ind.get("resistance1", 0)
+        datasets = [
+            _line("收盤",                   closes,    "rgba(200,200,220,.9)",         order=1),
+            _line(f"支撐 {sup}",            [sup]*n,   "rgba(86,211,100,.7)",  [6,3],  order=2),
+            _line(f"壓力 {res}",            [res]*n,   "rgba(248,81,73,.7)",   [6,3],  order=3),
+        ]
+        opts = _opts()
+
+    elif lesson_id == "fibo":
+        fib = ind.get("fib_lvls", {})
+        datasets = [
+            _line("收盤",      closes,                  "rgba(200,200,220,.9)",        order=1),
+            _line("23.6%",     [fib.get("23.6%")]*n,   "#79c0ff",  [4,2],             order=2),
+            _line("38.2%",     [fib.get("38.2%")]*n,   "#d2a8ff",  [4,2],             order=3),
+            _line("50%",       [fib.get("50%")]*n,      "#f0c040",  [4,2],             order=4),
+            _line("61.8%",     [fib.get("61.8%")]*n,   "#ffa657",  [4,2],             order=5),
+        ]
+        opts = _opts()
+
+    elif lesson_id == "rs":
+        pn  = ind.get("chart_price_norm", [])
+        sn  = ind.get("chart_spy_norm",   [])
+        lbl = sym if sym else "股票"
+        datasets = [
+            _line(lbl,         pn,    "#79c0ff",                    order=1),
+            _line("SPY(標普)", sn,    "#f0c040",  [5,3],            order=2),
+            _line("基準100",   [100]*n,"rgba(139,148,158,.3)",[3,3],order=9),
+        ]
+        opts = _opts()
+
+    elif lesson_id == "atr":
+        au = ind.get("chart_atr_up", [])
+        al = ind.get("chart_atr_lo", [])
+        datasets = [
+            _line("ATR上軌", au,     "rgba(248,81,73,.5)",  [4,3], order=3),
+            _line("收盤",    closes, "rgba(200,200,220,.9)",        order=1),
+            _line("ATR下軌", al,     "rgba(86,211,100,.5)", [4,3], order=4),
+        ]
+        opts = _opts()
+
+    else:  # toolbox or fallback
+        bu = ind.get("chart_bb_up", [])
+        bl = ind.get("chart_bb_lo", [])
+        datasets = [
+            _line("BB上軌", bu,     "rgba(248,81,73,.4)",  [4,2], order=5),
+            _line("MA20",   ma20,   "#56d364",             [5,3], order=3),
+            _line("BB下軌", bl,     "rgba(86,211,100,.4)", [4,2], order=6),
+            _line("收盤",   closes, "rgba(200,200,220,.9)",        order=1),
+            _line("MA5",    ma5,    "#f0c040",             [3,2], order=4),
+        ]
+        opts = _opts()
+
+    config = {"type": "line", "data": {"labels": dates, "datasets": datasets}, "options": opts}
+    return json.dumps(config)
+
+
+def generate_snapshot(stock, ind, p, lesson_id="ma"):
     mkt   = stock["market"]
     price = ind["price"]
 
     # ── 折線圖 HTML ──
-    chart_id = f"taLineChart_{stock['symbol'].replace('-','')}"
-    labels   = _json.dumps(ind.get("chart_dates",  []))
-    c_closes = _json.dumps(ind.get("chart_closes", []))
-    c_ma5    = _json.dumps(ind.get("chart_ma5",    []))
-    c_ma20   = _json.dumps(ind.get("chart_ma20",   []))
-    c_ma60   = _json.dumps(ind.get("chart_ma60",   []))
+    chart_id   = f"taLineChart_{stock['symbol'].replace('-','')}"
+    cfg_json   = _chart_config(chart_id, lesson_id, ind, stock["symbol"])
     chart_html = (
         f'<div class="ta-chart-wrap">'
         f'<canvas id="{chart_id}" height="160"></canvas>'
         f'<script>window.__taCharts=window.__taCharts||{{}};'
-        f'window.__taCharts["{chart_id}"]={{type:"line",data:{{labels:{labels},datasets:['
-        f'{{label:"收盤",data:{c_closes},borderColor:"rgba(200,200,220,.9)",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,order:1}},'
-        f'{{label:"MA5", data:{c_ma5}, borderColor:"#f0c040",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[3,2],spanGaps:true,order:2}},'
-        f'{{label:"MA20",data:{c_ma20},borderColor:"#56d364",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[5,3],spanGaps:true,order:3}},'
-        f'{{label:"MA60",data:{c_ma60},borderColor:"#f85149",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[8,4],spanGaps:true,order:4}}'
-        f']}},options:{{responsive:true,interaction:{{mode:"index",intersect:false}},'
-        f'plugins:{{legend:{{display:true,position:"top",labels:{{color:"#8b949e",font:{{size:10}},boxWidth:16,padding:10}}}},'
-        f'tooltip:{{backgroundColor:"rgba(22,27,34,.95)",titleColor:"#c9d1d9",bodyColor:"#8b949e",padding:8}}}},'
-        f'scales:{{x:{{ticks:{{color:"#8b949e",maxTicksLimit:8,font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}},'
-        f'y:{{ticks:{{color:"#8b949e",font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}}}}}}}}; '
+        f'window.__taCharts["{chart_id}"]={cfg_json}; '
         f'</script></div>\n'
     )
 
@@ -859,7 +1106,7 @@ def generate_ta_card(stock, ind, week_num, date_str, lesson):
     next_sym = get_preview_name(sym)
 
     lesson_html   = LESSON_FN[lesson["id"]](stock, ind, p)
-    snapshot_html = generate_snapshot(stock, ind, p)
+    snapshot_html = generate_snapshot(stock, ind, p, lesson["id"])
     narrative_html = generate_narrative(stock, ind)
 
     # 本週結論（基於技術面綜合）
@@ -954,27 +1201,13 @@ def update_html(new_card_html, hist_row_html):
 # Backfill：為舊版歷史記錄補上折線圖
 # ════════════════════════════════════════════════════════════════════
 def _build_chart_html(sym, ind):
-    import json as _json
     chart_id = f"taLineChart_{sym.replace('-', '')}_bf"
-    labels   = _json.dumps(ind.get("chart_dates",  []))
-    c_closes = _json.dumps(ind.get("chart_closes", []))
-    c_ma5    = _json.dumps(ind.get("chart_ma5",    []))
-    c_ma20   = _json.dumps(ind.get("chart_ma20",   []))
-    c_ma60   = _json.dumps(ind.get("chart_ma60",   []))
+    cfg_json = _chart_config(chart_id, "ma", ind, sym)
     return (
         f'<div class="ta-chart-wrap">'
         f'<canvas id="{chart_id}" height="160"></canvas>'
         f'<script>window.__taCharts=window.__taCharts||{{}};'
-        f'window.__taCharts["{chart_id}"]={{type:"line",data:{{labels:{labels},datasets:['
-        f'{{label:"收盤",data:{c_closes},borderColor:"rgba(200,200,220,.9)",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,order:1}},'
-        f'{{label:"MA5", data:{c_ma5}, borderColor:"#f0c040",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[3,2],spanGaps:true,order:2}},'
-        f'{{label:"MA20",data:{c_ma20},borderColor:"#56d364",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[5,3],spanGaps:true,order:3}},'
-        f'{{label:"MA60",data:{c_ma60},borderColor:"#f85149",borderWidth:1.5,pointRadius:0,tension:.3,fill:false,borderDash:[8,4],spanGaps:true,order:4}}'
-        f']}},options:{{responsive:true,interaction:{{mode:"index",intersect:false}},'
-        f'plugins:{{legend:{{display:true,position:"top",labels:{{color:"#8b949e",font:{{size:10}},boxWidth:16,padding:10}}}},'
-        f'tooltip:{{backgroundColor:"rgba(22,27,34,.95)",titleColor:"#c9d1d9",bodyColor:"#8b949e",padding:8}}}},'
-        f'scales:{{x:{{ticks:{{color:"#8b949e",maxTicksLimit:8,font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}},'
-        f'y:{{ticks:{{color:"#8b949e",font:{{size:10}}}},grid:{{color:"rgba(139,148,158,.1)"}}}}}}}}}}; '
+        f'window.__taCharts["{chart_id}"]={cfg_json}; '
         f'</script></div>\n  '
     )
 
