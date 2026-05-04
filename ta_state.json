@@ -1,10 +1,11 @@
 {
-  "week": 3,
+  "week": 4,
   "covered": [
     "NVDA",
     "TSLA",
-    "MSFT"
+    "MSFT",
+    "GOOGL"
   ],
-  "lesson_idx": 2,
-  "last_updated": "2026-04-27"
+  "lesson_idx": 3,
+  "last_updated": "2026-05-04"
 }
