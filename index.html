@@ -1927,55 +1927,129 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
-      <div class="fk-edition">第 1 期</div>
-      <div class="fk-district-name">中央區</div>
+      <div class="fk-edition">第 2 期</div>
+      <div class="fk-district-name">早良區</div>
     </div>
-    <div class="fk-header-date">2026-04-21</div>
+    <div class="fk-header-date">2026-05-05</div>
   </div>
   <div class="fk-spots-grid">
     <div class="fk-spot">
       <div class="fk-spot-num">01</div>
-      <div class="fk-spot-name">天神</div>
-      <div class="fk-spot-note">九州最大商圈，百貨與美食集中，生活機能絕佳。</div>
-      <div class="fk-spot-price">4,000万円〜</div>
+      <div class="fk-spot-name">西新</div>
+      <div class="fk-spot-note">早良區門戶，商業繁榮，學區優。</div>
+      <div class="fk-spot-price">5,748万円〜</div>
       <div class="fk-spot-type">70㎡ 參考價格</div>
     </div>
     <div class="fk-spot">
       <div class="fk-spot-num">02</div>
-      <div class="fk-spot-name">大濠公園</div>
-      <div class="fk-spot-note">福岡市綠肺，環境優美，有美術館，生活品質高。</div>
-      <div class="fk-spot-price">3,500万円〜</div>
+      <div class="fk-spot-name">藤崎</div>
+      <div class="fk-spot-note">生活機能佳，離地鐵站近，鬧中取靜。</div>
+      <div class="fk-spot-price">4,414万円〜</div>
       <div class="fk-spot-type">70㎡ 參考價格</div>
     </div>
     <div class="fk-spot">
       <div class="fk-spot-num">03</div>
-      <div class="fk-spot-name">薬院</div>
-      <div class="fk-spot-note">地鐵與西鐵交會，文教氣息濃厚，近年發展迅速。</div>
-      <div class="fk-spot-price">3,000万円〜</div>
+      <div class="fk-spot-name">百道</div>
+      <div class="fk-spot-note">海濱高級住宅區，公園綠地多，環境宜人。</div>
+      <div class="fk-spot-price">5,322万円〜</div>
       <div class="fk-spot-type">70㎡ 參考價格</div>
     </div>
   </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart2" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart2" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var tCtx = document.getElementById("fkTrendChart2");
+      if (tCtx) new Chart(tCtx, {
+        type: "line",
+        data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+          label: "均價（萬円/㎡）", data: [41, 40, 41, 44, 45],
+          borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+          tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+        }]},
+        options: { responsive: true, plugins: { legend: { display: false } },
+          scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                     y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+      });
+      var sCtx = document.getElementById("fkSpotChart2");
+      if (sCtx) new Chart(sCtx, {
+        type: "bar",
+        data: { labels: ["\u897f\u65b0", "\u85e4\u5d0e", "\u767e\u9053"], datasets: [{
+          label: "70㎡（萬円）", data: [5748, 4414, 5322],
+          backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+          borderRadius: 6
+        }]},
+        options: { responsive: true, plugins: { legend: { display: false } },
+          scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                     y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                           min: Math.max(0, Math.min(...[5748, 4414, 5322]) - 500) } } }
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">ザ・サンパーク西新</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 西新・徒步7分</div>
+        <div class="fk-presale-price">💴 5,500〜7,000 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2026年5月預定</div>
+        <div class="fk-presale-note">西新站旁，生活機能與學區兼具。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">リビオ西新二丁目</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 西新・徒步6分</div>
+        <div class="fk-presale-price">💴 4,700〜5,600 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2027年2月預定</div>
+        <div class="fk-presale-note">近西新商店街，生活便利性高。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">アルファステイツ室見河畔</span>
+          <span class="fk-presale-status fk-status-soon">分讓預定</span>
+        </div>
+        <div class="fk-presale-loc">📍 室見・徒步23分</div>
+        <div class="fk-presale-price">💴 3,500〜4,500 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：未定</div>
+        <div class="fk-presale-note">近室見川，享河畔景觀，價格較實惠。</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 預售屋價格略高於中古屋，但考量新屋品質與設計，仍具吸引力。</div>
+    </div>
   <div class="fk-ai-section">
-    <div class="fk-ai-lead">交通便捷，地下鐵、巴士網絡完善，直達機場。商業設施林立，綠地公園多，生活品質極高。</div>
+    <div class="fk-ai-lead">地鐵空港線直達天神僅10分鐘。文教氣息濃厚，生活機能完善，適合重視學區與通勤便利的家庭。</div>
     <div class="fk-pros-cons">
       <div class="fk-pros">
         <div class="fk-pc-title">優勢</div>
-        <div class="fk-item">交通便利，往返機場及市區各處皆便捷順暢。</div>
-        <div class="fk-item">生活機能優越，購物、餐飲、醫療、教育資源豐富。</div>
-        <div class="fk-item">綠地多、環境舒適，大濠公園等提供良好休憩空間。</div>
-        <div class="fk-item">人口持續增長，房產保值性相對較高。</div>
+        <div class="fk-item">地鐵空港線直達天神，交通便捷。</div>
+        <div class="fk-item">知名文教區，有多所優質學校。</div>
+        <div class="fk-item">生活機能完善，購物、餐飲選擇豐富。</div>
+        <div class="fk-item">區域發展穩定，不動產保值性高。</div>
       </div>
       <div class="fk-cons">
         <div class="fk-pc-title">風險</div>
-        <div class="fk-item">房價相對福岡其他區域高，3,000萬預算選擇有限。</div>
-        <div class="fk-item">屋齡較高的中古公寓可能有較高的修繕費用。</div>
-        <div class="fk-item">部分區域夜間人潮多，需注意生活環境的寧靜度。</div>
+        <div class="fk-item">部分區域預售屋價格已達高點，需仔細評估。</div>
+        <div class="fk-item">熱門學區物件競爭激烈，入手難度增加。</div>
       </div>
     </div>
-    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>建議鎖定屋齡稍長但交通佳的中古公寓，或考量六本松、薬院等區域的物件。</div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓預算可考慮室見或藤崎的預售屋，或西新、百道屋齡稍大的中古屋。建議關注早良區預售屋動態，提早規劃。</div>
     <div class="fk-ai-footer">
       <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>
-      <span class="fk-next">▶ 下期：城南區</span>
+      <span class="fk-next">▶ 下期：下一期預告：福岡市南區 - 交通便利、生活機能成熟</span>
     </div>
   </div>
 </div>
