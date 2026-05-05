@@ -2798,7 +2798,7 @@ function toggleHistory() {
 }
 
 // 每一筆歷史紀錄：點擊展開完整分析
-function toggleFkHist(id) {
+function _toggleDetail(id, chartStore) {
   const detail = document.getElementById(id + '-detail');
   const toggle = document.getElementById(id + '-toggle');
   if (!detail) return;
@@ -2808,25 +2808,8 @@ function toggleFkHist(id) {
   if (!isOpen) {
     requestAnimationFrame(() => {
       detail.querySelectorAll('canvas').forEach(c => {
-        const chart = Chart.getChart(c);
-        if (chart) chart.resize();
-      });
-    });
-  }
-}
-
-function toggleHistEntry(id) {
-  const detail = document.getElementById(id + '-detail');
-  const toggle = document.getElementById(id + '-toggle');
-  if (!detail) return;
-  const isOpen = detail.classList.contains('open');
-  detail.classList.toggle('open', !isOpen);
-  if (toggle) toggle.classList.toggle('open', !isOpen);
-  if (!isOpen) {
-    requestAnimationFrame(() => {
-      detail.querySelectorAll('canvas').forEach(c => {
-        if (!Chart.getChart(c) && window.__taCharts && window.__taCharts[c.id]) {
-          new Chart(c, window.__taCharts[c.id]);
+        if (!Chart.getChart(c) && chartStore && chartStore[c.id]) {
+          new Chart(c, chartStore[c.id]);
         }
         const chart = Chart.getChart(c);
         if (chart) chart.resize();
@@ -2834,6 +2817,8 @@ function toggleHistEntry(id) {
     });
   }
 }
+function toggleFkHist(id)    { _toggleDetail(id, window.__fkCharts); }
+function toggleHistEntry(id) { _toggleDetail(id, window.__taCharts); }
 
 // 動態顯示歷史則數（計算 ta-hist-row 數量）
 (function updateHistCount() {

@@ -68,8 +68,14 @@ CURRICULUM = [
 # ════════════════════════════════════════════════════════════════════
 # 個股敘述（多空論點 / 關注焦點 / 催化劑）— 資料存於 narratives.json
 # ════════════════════════════════════════════════════════════════════
-with open("narratives.json", encoding="utf-8") as _f:
-    NARRATIVES = json.load(_f)
+_NARRATIVES_CACHE = None
+
+def _get_narratives():
+    global _NARRATIVES_CACHE
+    if _NARRATIVES_CACHE is None:
+        with open("narratives.json", encoding="utf-8") as _f:
+            _NARRATIVES_CACHE = json.load(_f)
+    return _NARRATIVES_CACHE
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -954,14 +960,33 @@ def generate_snapshot(stock, ind, p, lesson_id="ma"):
         f'  <div class="ta-snap-grid">\n{grid}\n  </div>\n</div>\n'
     )
 
+def _gemini_call(client, types, prompt):
+    """Gemini API 呼叫，帶 503 重試（最多 3 次）"""
+    import time
+    for attempt in range(3):
+        try:
+            resp = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    thinking_config=types.ThinkingConfig(thinking_budget=0)
+                )
+            )
+            return resp.text
+        except Exception as e:
+            if "503" in str(e) and attempt < 2:
+                time.sleep(20 * (attempt + 1))
+            else:
+                raise
+
+
 def _gemini_narrative(stock, ind):
     """用 Gemini API 生成動態多空論點（需環境變數 GEMINI_API_KEY）"""
-    import os, re as _re
+    import os
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return None
     try:
-        import time
         from google import genai
         from google.genai import types
         client = genai.Client(api_key=api_key)
@@ -990,26 +1015,7 @@ RSI：{ind['rsi']}（{rsi_s}）　MACD 柱：{ind['hist']:+.3f}　KD：K {ind['k
 空方2：[空方風險，25字內]
 空方3：[空方風險，25字內]
 本週關注：[本週最重要的關注焦點與催化劑，40字內]"""
-        # 帶重試的呼叫（503 最多重試3次）
-        response_text = None
-        for attempt in range(3):
-            try:
-                resp = client.models.generate_content(
-                    model="gemini-2.5-flash",
-                    contents=prompt,
-                    config=types.GenerateContentConfig(
-                        thinking_config=types.ThinkingConfig(thinking_budget=0)
-                    )
-                )
-                response_text = resp.text
-                break
-            except Exception as e:
-                if "503" in str(e) and attempt < 2:
-                    time.sleep(20 * (attempt + 1))
-                else:
-                    raise
-        if response_text is None:
-            return None
+        response_text = _gemini_call(client, types, prompt)
         lines = {}
         for line in response_text.strip().split('\n'):
             if '：' in line:
@@ -1050,7 +1056,7 @@ def generate_narrative(stock, ind=None):
             )
     # 靜態備援（Gemini 不可用時）
     sym  = stock["symbol"]
-    narr = NARRATIVES.get(sym, {})
+    narr = _get_narratives().get(sym, {})
     bull = narr.get("bull", ["—"])
     bear = narr.get("bear", ["—"])
     watch = narr.get("watch", "—")
@@ -1415,22 +1421,7 @@ RSI：{ind['rsi']}　MACD柱：{ind['hist']:+.3f}　KD：K{ind['kd_k']}/D{ind['k
 情緒：[看多 或 觀察 或 留意]
 分析：[2-3句，描述這支股票目前狀況與投資邏輯，60字內，可用<strong>強調關鍵字</strong>]
 觀察重點：[1句，最重要的觀察重點或操作建議，50字內]"""
-        for attempt in range(3):
-            try:
-                resp = client.models.generate_content(
-                    model="gemini-2.5-flash",
-                    contents=prompt,
-                    config=types.GenerateContentConfig(
-                        thinking_config=types.ThinkingConfig(thinking_budget=0)
-                    )
-                )
-                text = resp.text
-                break
-            except Exception as e:
-                if "503" in str(e) and attempt < 2:
-                    time.sleep(20 * (attempt + 1))
-                else:
-                    raise
+        text = _gemini_call(client, types, prompt)
         lines = {}
         for line in text.strip().split('\n'):
             if '：' in line:
