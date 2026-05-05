@@ -24,7 +24,7 @@ jobs:
       - name: 執行 retheme
         env:
           RETHEME_CHARTS: "true"
-        run: python update_ta.py
+        run: python scripts/update_ta.py
 
       - name: Commit 並 Push
         run: |

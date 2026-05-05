@@ -27,7 +27,7 @@ jobs:
         env:
           UPDATE_STOCK_ANALYSIS: "true"
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python update_ta.py
+        run: python scripts/update_ta.py
 
       - name: Commit 並 Push
         run: |

@@ -29,7 +29,7 @@ jobs:
       - name: 執行福岡房市分析更新
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python update_fukuoka.py
+        run: python scripts/update_fukuoka.py
 
       - name: Commit 並 Push（若有變更）
         run: |

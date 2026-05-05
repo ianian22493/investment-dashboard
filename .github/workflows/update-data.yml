@@ -27,7 +27,7 @@ jobs:
         run: pip install requests yfinance
 
       - name: 執行資料抓取腳本
-        run: python fetch_data.py
+        run: python scripts/fetch_data.py
 
       - name: Commit 並 Push data.json
         run: |

@@ -48,13 +48,13 @@ jobs:
         if: steps.check.outputs.skip == 'false'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python update_ta.py
+        run: python scripts/update_ta.py
 
       - name: 執行每週重大消息更新
         if: steps.check.outputs.skip == 'false'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python update_news.py
+        run: python scripts/update_news.py
 
       - name: Commit 並 Push
         if: steps.check.outputs.skip == 'false'
