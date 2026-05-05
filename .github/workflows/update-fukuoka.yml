@@ -37,4 +37,5 @@ jobs:
           git config user.name "Dashboard Bot"
           git add index.html fukuoka_state.json
           git diff --cached --quiet || git commit -m "🏠 第$(python -c "import json; print(json.load(open('fukuoka_state.json'))['period'])")期福岡房市分析 $(date -u +'%Y-%m-%d')"
+          git pull --rebase
           git push

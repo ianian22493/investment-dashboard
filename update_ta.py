@@ -45,8 +45,9 @@ ROTATION = [
 US_TOTAL   = sum(1 for s in ROTATION if s["market"] == "US")
 TW_TOTAL   = sum(1 for s in ROTATION if s["market"] == "TW")
 TZ_TW      = timezone(timedelta(hours=8))
-STATE_FILE = "ta_state.json"
-INDEX_FILE = "index.html"
+STATE_FILE          = "ta_state.json"
+ANALYSIS_STATE_FILE = "analysis_state.json"
+INDEX_FILE          = "index.html"
 
 # ════════════════════════════════════════════════════════════════════
 # 教學課程（lesson_idx 0–9 學習期，10+ 工具箱永久模式）
@@ -94,6 +95,15 @@ def load_state():
 
 def save_state(state):
     with open(STATE_FILE, "w") as f: json.dump(state, f, ensure_ascii=False, indent=2)
+
+def load_analysis_state():
+    try:
+        with open(ANALYSIS_STATE_FILE) as f: return json.load(f)
+    except FileNotFoundError:
+        return {"analysis_offset": 0}
+
+def save_analysis_state(state):
+    with open(ANALYSIS_STATE_FILE, "w") as f: json.dump(state, f, ensure_ascii=False, indent=2)
 
 def get_next_stock(covered):
     for s in ROTATION:
@@ -1472,7 +1482,7 @@ def update_stock_analysis():
     with open(INDEX_FILE, encoding="utf-8") as f:
         html = f.read()
 
-    state    = load_state()
+    state    = load_analysis_state()
     offset   = state.get("analysis_offset", 0)
     date_str = datetime.now(TZ_TW).strftime("%Y/%m")
     new_cards = []
@@ -1511,7 +1521,7 @@ def update_stock_analysis():
 
     # 更新 offset（下次從下一批開始）
     state["analysis_offset"] = (offset + ANALYSIS_BATCH_SIZE) % total
-    save_state(state)
+    save_analysis_state(state)
 
     if not new_cards:
         print("無卡片更新")

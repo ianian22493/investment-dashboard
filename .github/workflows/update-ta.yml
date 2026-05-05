@@ -63,4 +63,5 @@ jobs:
           git config user.name "Dashboard Bot"
           git add index.html ta_state.json
           git diff --cached --quiet || git commit -m "📊 第$(python -c "import json; print(json.load(open('ta_state.json'))['week'])")週技術分析＋重大消息更新 $(date -u +'%Y-%m-%d')"
+          git pull --rebase
           git push
