@@ -447,6 +447,38 @@ def update_index_html(fk_html):
     with open(INDEX_FILE, 'r', encoding='utf-8') as f:
         html = f.read()
 
+    # 把現有卡片存進 history
+    old_m = re.search(r'<!-- FK_CARD_START -->(.*?)<!-- FK_CARD_END -->', html, re.DOTALL)
+    if old_m:
+        old_content = old_m.group(1).strip()
+        period_m   = re.search(r'第 (\d+) 期', old_content)
+        district_m = re.search(r'class="fk-district-name">([^<]+)<', old_content)
+        date_m     = re.search(r'class="fk-header-date">([^<]+)<', old_content)
+        if period_m and district_m:
+            p_num  = period_m.group(1)
+            d_name = district_m.group(1)
+            d_date = date_m.group(1) if date_m else "—"
+            eid    = f"fk-hist-{p_num}"
+            hist_entry = (
+                f'\n      <div class="fk-hist-entry" id="{eid}">\n'
+                f'        <div class="fk-hist-compact" onclick="toggleFkHist(\'{eid}\')">\n'
+                f'          <span class="fk-hist-edition">第 {p_num} 期</span>\n'
+                f'          <span class="fk-hist-name">{d_name}</span>\n'
+                f'          <span class="fk-hist-date">{d_date}</span>\n'
+                f'          <span class="fk-hist-toggle" id="{eid}-toggle">▶</span>\n'
+                f'        </div>\n'
+                f'        <div class="fk-hist-detail" id="{eid}-detail">\n'
+                f'{old_content}\n'
+                f'        </div>\n'
+                f'      </div>'
+            )
+            html = html.replace(
+                '      <!-- FK_HIST_START -->',
+                f'      <!-- FK_HIST_START -->{hist_entry}',
+                1
+            )
+
+    # 替換本期卡片
     pattern = r'<!-- FK_CARD_START -->.*?<!-- FK_CARD_END -->'
     new_html, count = re.subn(pattern, lambda _: fk_html, html, flags=re.DOTALL)
 
