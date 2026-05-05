@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-05-05 16:37",
+  "updated_at": "2026-05-05 19:06",
   "us": {
     "AMZN": {
       "price": 272.05,
-      "change": -0.0636,
-      "pct": -0.02,
+      "change": -0.07,
+      "pct": -0.03,
       "state": "PRE"
     },
     "CELH": {
@@ -15,7 +15,7 @@
     },
     "GOOGL": {
       "price": 383.25,
-      "change": 0.345,
+      "change": 0.35,
       "pct": 0.09,
       "state": "PRE"
     },
@@ -39,8 +39,8 @@
     },
     "ONDS": {
       "price": 9.73,
-      "change": 0.0602,
-      "pct": 0.62,
+      "change": 0.07,
+      "pct": 0.72,
       "state": "PRE"
     },
     "RBRK": {
@@ -51,8 +51,8 @@
     },
     "S": {
       "price": 15.6,
-      "change": 0.0,
-      "pct": 0.0,
+      "change": 0.0918,
+      "pct": 0.59,
       "state": "PRE"
     },
     "SOUN": {
@@ -63,7 +63,7 @@
     },
     "TSLA": {
       "price": 392.51,
-      "change": 0.62,
+      "change": 0.6165,
       "pct": 0.16,
       "state": "PRE"
     },
