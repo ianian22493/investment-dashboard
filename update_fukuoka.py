@@ -448,7 +448,7 @@ def update_index_html(fk_html):
         html = f.read()
 
     pattern = r'<!-- FK_CARD_START -->.*?<!-- FK_CARD_END -->'
-    new_html, count = re.subn(pattern, fk_html, html, flags=re.DOTALL)
+    new_html, count = re.subn(pattern, lambda _: fk_html, html, flags=re.DOTALL)
 
     if count == 0:
         print("  ✗ 找不到 FK_CARD_START / FK_CARD_END 標記，無法更新")
