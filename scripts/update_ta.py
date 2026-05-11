@@ -1202,7 +1202,7 @@ def update_html(new_card_html, hist_row_html):
     with open(INDEX_FILE, encoding="utf-8") as f:
         html = f.read()
     old_pat = r'    <!-- TA_CARD_START -->.*?    <!-- TA_CARD_END -->\n'
-    html = re.sub(old_pat, new_card_html, html, flags=re.DOTALL)
+    html = re.sub(old_pat, lambda m: new_card_html, html, flags=re.DOTALL)
     html = html.replace(
         '      <!-- HIST_ROWS_START -->',
         f'      <!-- HIST_ROWS_START -->\n{hist_row_html}'
