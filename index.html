@@ -2123,6 +2123,138 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
+      <div class="fk-edition">第 3 期</div>
+      <div class="fk-district-name">博多區</div>
+    </div>
+    <div class="fk-header-date">2026-05-19</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">博多站</div>
+      <div class="fk-spot-note">交通核心，商業設施密集，生活機能極佳。</div>
+      <div class="fk-spot-price">4,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">東比恵</div>
+      <div class="fk-spot-note">機場與博多站之間，地鐵便利，房價相對親民。</div>
+      <div class="fk-spot-price">3,800万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">住吉</div>
+      <div class="fk-spot-note">近博多站，生活便利，中古屋選擇多，保值性佳。</div>
+      <div class="fk-spot-price">3,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart3" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart3" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart3"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [42, 45, 49, 53, 57],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart3"] = {
+      type: "bar",
+      data: { labels: ["\u535a\u591a\u7ad9", "\u6771\u6bd4\u6075", "\u4f4f\u5409"], datasets: [{
+        label: "70㎡（萬円）", data: [4500, 3800, 3500],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[4500, 3800, 3500]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart3", "fkSpotChart3"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">プレサンス ロジェ 博多ステーション ノース</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 博多駅・徒步11分</div>
+        <div class="fk-presale-price">💴 3,680〜6,080 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2026年5月預定</div>
+        <div class="fk-presale-note">近博多站，交通便利，多種房型選擇。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">オーヴィジョン博多パピヨン通り</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 千代県庁口駅・徒步5分</div>
+        <div class="fk-presale-price">💴 4,190〜6,500 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2028年8月預定</div>
+        <div class="fk-presale-note">近車站，周邊生活機能完善，潛力佳。</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 該區預售屋較中古屋平均貴約20-30%，考量新築品質與再開發潛力，值得評估。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">博多區是福岡的交通門戶，新幹線、機場與地鐵匯聚。商業設施林立，生活機能完善，適合追求便利的自住者。近年再開發活絡，區域價值持續提升。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">交通極度便利，往返機場或九州各地皆方便。</div>
+        <div class="fk-item">商業設施完善，購物、餐飲、娛樂選擇豐富。</div>
+        <div class="fk-item">福岡市人口持續增長，房產具保值與增值潛力。</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">部分區域地價較高，總預算可能需向上調整。</div>
+        <div class="fk-item">預售屋供給量多，需仔細比較各建案優劣。</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓預算在博多區可考慮東比惠、住吉一帶的預售屋，或博多站稍遠的中古屋，建議鎖定2LDK以下房型。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>
+      <span class="fk-next">▶ 下期：下一期・福岡市中央區</span>
+    </div>
+  </div>
+</div>
+    <!-- FK_CARD_END -->
+    <div class="fk-history">
+      <!-- FK_HIST_START -->
+      <div class="fk-hist-entry" id="fk-hist-2">
+        <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-2')">
+          <span class="fk-hist-edition">第 2 期</span>
+          <span class="fk-hist-name">早良區</span>
+          <span class="fk-hist-date">2026-05-05</span>
+          <span class="fk-hist-toggle" id="fk-hist-2-toggle">▶</span>
+        </div>
+        <div class="fk-hist-detail" id="fk-hist-2-detail">
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
       <div class="fk-edition">第 2 期</div>
       <div class="fk-district-name">早良區</div>
     </div>
@@ -2249,9 +2381,8 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
     </div>
   </div>
 </div>
-    <!-- FK_CARD_END -->
-    <div class="fk-history">
-      <!-- FK_HIST_START -->
+        </div>
+      </div>
       <div class="fk-hist-entry" id="fk-hist-1">
         <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-1')">
           <span class="fk-hist-edition">第 1 期</span>
