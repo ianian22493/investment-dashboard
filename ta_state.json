@@ -1,13 +1,14 @@
 {
-  "week": 6,
+  "week": 7,
   "covered": [
     "NVDA",
     "TSLA",
     "MSFT",
     "GOOGL",
     "AMZN",
-    "CELH"
+    "CELH",
+    "MELI"
   ],
-  "lesson_idx": 5,
-  "last_updated": "2026-05-18"
+  "lesson_idx": 6,
+  "last_updated": "2026-05-25"
 }
