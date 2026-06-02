@@ -2292,6 +2292,151 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
+      <div class="fk-edition">第 4 期</div>
+      <div class="fk-district-name">東区</div>
+    </div>
+    <div class="fk-header-date">2026-06-02</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">千早</div>
+      <div class="fk-spot-note">交通樞紐，生活機能完善，新開發案多。</div>
+      <div class="fk-spot-price">3,200万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">香椎</div>
+      <div class="fk-spot-note">商業設施集中，學區氛圍濃，生活便利性高。</div>
+      <div class="fk-spot-price">2,800万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">名島</div>
+      <div class="fk-spot-note">近車站，未來發展可期，海景物件具吸引力。</div>
+      <div class="fk-spot-price">2,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart4" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart4" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart4"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [42, 45, 49, 53, 57],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart4"] = {
+      type: "bar",
+      data: { labels: ["\u5343\u65e9", "\u9999\u690e", "\u540d\u5cf6"], datasets: [{
+        label: "70㎡（萬円）", data: [3200, 2800, 2500],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[3200, 2800, 2500]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart4", "fkSpotChart4"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">エイルマンション名島駅前</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 名島・徒步2分</div>
+        <div class="fk-presale-price">💴 4,080〜8,950 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2026年9月預定</div>
+        <div class="fk-presale-note">近車站、全邸南西向，地段優越生活機能佳。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">イノバス香椎駅前</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 西鐵香椎・徒步8分</div>
+        <div class="fk-presale-price">💴 3,580〜8,050 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2027年9月下旬預定</div>
+        <div class="fk-presale-note">雙車站步行可達，近商業區，生活便利。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">プレサンス ロジェ 箱崎レジデンス</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 貝塚・徒步10分</div>
+        <div class="fk-presale-price">💴 3,590〜5,490 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2027年8月預定</div>
+        <div class="fk-presale-note">近地鐵站，規劃完善，適合家庭。</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 東區預售屋較中古屋平均貴約10-15%，考量新屋品質與增值潛力，值得評估。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">交通便利，JR、西鐵、地下鐵三線交匯。生活機能佳，商場、公園、學校完善，適合家庭居住，享海灣景觀。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">房價相對福岡市中心親民，適合首購族群。</div>
+        <div class="fk-item">交通網絡完善，多條路線通往市區，通勤便利。</div>
+        <div class="fk-item">生活機能佳，商業設施、學校、公園等資源豐富。</div>
+        <div class="fk-item">區域開發潛力大，未來可望有更多生活設施進駐。</div>
+        <div class="fk-item">部分區域擁海灣景觀，居住舒適度高。</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">部分區域離市中心較遠，通勤時間相對較長。</div>
+        <div class="fk-item">新開發區域生活機能仍在發展中，初期可能不夠完善。</div>
+        <div class="fk-item">大規模開發案可能帶來交通擁塞或施工噪音。</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓預算在東區可鎖定香椎、名島的預售或中古公寓，千早亦有機會。建議優先考慮預售屋，提早入場享未來增值。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>
+      <span class="fk-next">▶ 下期：下一期：城南區・文教氣息濃厚的宜居住宅區</span>
+    </div>
+  </div>
+</div>
+    <!-- FK_CARD_END -->
+    <div class="fk-history">
+      <!-- FK_HIST_START -->
+      <div class="fk-hist-entry" id="fk-hist-3">
+        <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-3')">
+          <span class="fk-hist-edition">第 3 期</span>
+          <span class="fk-hist-name">博多區</span>
+          <span class="fk-hist-date">2026-05-19</span>
+          <span class="fk-hist-toggle" id="fk-hist-3-toggle">▶</span>
+        </div>
+        <div class="fk-hist-detail" id="fk-hist-3-detail">
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
       <div class="fk-edition">第 3 期</div>
       <div class="fk-district-name">博多區</div>
     </div>
@@ -2410,9 +2555,8 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
     </div>
   </div>
 </div>
-    <!-- FK_CARD_END -->
-    <div class="fk-history">
-      <!-- FK_HIST_START -->
+        </div>
+      </div>
       <div class="fk-hist-entry" id="fk-hist-2">
         <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-2')">
           <span class="fk-hist-edition">第 2 期</span>
