@@ -1,77 +1,77 @@
 {
-  "updated_at": "2026-06-11 19:12",
+  "updated_at": "2026-06-12 06:44",
   "us": {
     "AMZN": {
-      "price": 238.0,
-      "change": 1.92,
-      "pct": 0.81,
-      "state": "PRE"
+      "price": 241.51,
+      "change": 5.43,
+      "pct": 2.3,
+      "state": "POST"
     },
     "CELH": {
-      "price": 28.37,
-      "change": 0.0004,
-      "pct": 0.0,
-      "state": "PRE"
+      "price": 28.4,
+      "change": 0.0304,
+      "pct": 0.11,
+      "state": "POST"
     },
     "GOOGL": {
-      "price": 356.38,
-      "change": 1.76,
-      "pct": 0.5,
-      "state": "PRE"
+      "price": 357.77,
+      "change": 3.15,
+      "pct": 0.89,
+      "state": "POST"
     },
     "MELI": {
-      "price": 1588.29,
-      "change": 3.79,
-      "pct": 0.24,
-      "state": "PRE"
+      "price": 1610.0,
+      "change": 25.5,
+      "pct": 1.61,
+      "state": "POST"
     },
     "MSFT": {
-      "price": 397.36,
-      "change": 0.86,
-      "pct": 0.22,
-      "state": "PRE"
+      "price": 390.34,
+      "change": -6.16,
+      "pct": -1.55,
+      "state": "POST"
     },
     "NVDA": {
-      "price": 200.42,
-      "change": 1.2208,
-      "pct": 0.61,
-      "state": "PRE"
+      "price": 204.87,
+      "change": 5.6708,
+      "pct": 2.85,
+      "state": "POST"
     },
     "ONDS": {
-      "price": 9.31,
-      "change": 0.06,
-      "pct": 0.65,
-      "state": "PRE"
+      "price": 9.83,
+      "change": 0.58,
+      "pct": 6.27,
+      "state": "POST"
     },
     "RBRK": {
-      "price": 71.32,
-      "change": 1.63,
-      "pct": 2.34,
-      "state": "PRE"
+      "price": 71.45,
+      "change": 1.76,
+      "pct": 2.53,
+      "state": "POST"
     },
     "S": {
-      "price": 14.79,
-      "change": 0.06,
-      "pct": 0.41,
-      "state": "PRE"
+      "price": 14.76,
+      "change": 0.03,
+      "pct": 0.2,
+      "state": "POST"
     },
     "SOUN": {
-      "price": 6.75,
-      "change": 0.07,
-      "pct": 1.05,
-      "state": "PRE"
+      "price": 7.0,
+      "change": 0.32,
+      "pct": 4.79,
+      "state": "POST"
     },
     "TSLA": {
-      "price": 381.59,
-      "change": 2.7903,
-      "pct": 0.74,
-      "state": "PRE"
+      "price": 399.15,
+      "change": 20.3503,
+      "pct": 5.37,
+      "state": "POST"
     },
     "ZS": {
-      "price": 124.73,
-      "change": 0.98,
-      "pct": 0.79,
-      "state": "PRE"
+      "price": 126.11,
+      "change": 2.36,
+      "pct": 1.91,
+      "state": "POST"
     }
   },
   "jpy_twd": 0.199,
@@ -310,6 +310,11 @@
       "date": "2026-06-11",
       "buy": 0.1951,
       "sell": 0.199
+    },
+    {
+      "date": "2026-06-12",
+      "buy": 0.1951,
+      "sell": 0.199
     }
   ],
   "usd_twd": 31.6452,
@@ -538,6 +543,11 @@
       "date": "2026-06-11",
       "us": 428737,
       "total": 428737
+    },
+    {
+      "date": "2026-06-12",
+      "us": 436241,
+      "total": 436241
     }
   ]
 }
