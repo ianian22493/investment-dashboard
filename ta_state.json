@@ -1,5 +1,5 @@
 {
-  "week": 9,
+  "week": 10,
   "covered": [
     "NVDA",
     "TSLA",
@@ -9,8 +9,9 @@
     "CELH",
     "MELI",
     "ONDS",
-    "RBRK"
+    "RBRK",
+    "S"
   ],
-  "lesson_idx": 8,
-  "last_updated": "2026-06-08"
+  "lesson_idx": 9,
+  "last_updated": "2026-06-15"
 }
