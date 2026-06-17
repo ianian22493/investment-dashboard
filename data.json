@@ -1,77 +1,77 @@
 {
-  "updated_at": "2026-06-17 14:12",
+  "updated_at": "2026-06-17 19:21",
   "us": {
     "AMZN": {
       "price": 246.0,
-      "change": -2.23,
-      "pct": -0.9,
-      "state": "CLOSED"
+      "change": 0.2327,
+      "pct": 0.09,
+      "state": "PRE"
     },
     "CELH": {
       "price": 30.01,
-      "change": 1.1737,
-      "pct": 4.07,
-      "state": "CLOSED"
+      "change": -0.04,
+      "pct": -0.13,
+      "state": "PRE"
     },
     "GOOGL": {
       "price": 373.25,
-      "change": 3.9367,
-      "pct": 1.07,
-      "state": "CLOSED"
+      "change": 1.28,
+      "pct": 0.34,
+      "state": "PRE"
     },
     "MELI": {
       "price": 1674.08,
-      "change": 28.08,
-      "pct": 1.71,
-      "state": "CLOSED"
+      "change": 4.482,
+      "pct": 0.27,
+      "state": "PRE"
     },
     "MSFT": {
       "price": 393.83,
-      "change": -5.53,
-      "pct": -1.38,
-      "state": "CLOSED"
+      "change": 0.68,
+      "pct": 0.17,
+      "state": "PRE"
     },
     "NVDA": {
       "price": 207.41,
-      "change": -4.5298,
-      "pct": -2.14,
-      "state": "CLOSED"
+      "change": -0.1392,
+      "pct": -0.07,
+      "state": "PRE"
     },
     "ONDS": {
       "price": 9.21,
-      "change": -0.3103,
-      "pct": -3.26,
-      "state": "CLOSED"
+      "change": -0.04,
+      "pct": -0.43,
+      "state": "PRE"
     },
     "RBRK": {
       "price": 69.18,
       "change": -0.82,
       "pct": -1.17,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "S": {
       "price": 15.03,
-      "change": -0.2,
-      "pct": -1.31,
-      "state": "CLOSED"
+      "change": 0.01,
+      "pct": 0.07,
+      "state": "PRE"
     },
     "SOUN": {
       "price": 7.03,
-      "change": -0.32,
-      "pct": -4.35,
-      "state": "CLOSED"
+      "change": 0.0003,
+      "pct": 0.0,
+      "state": "PRE"
     },
     "TSLA": {
       "price": 404.66,
-      "change": -4.32,
-      "pct": -1.06,
-      "state": "CLOSED"
+      "change": 1.82,
+      "pct": 0.45,
+      "state": "PRE"
     },
     "ZS": {
       "price": 127.23,
-      "change": -3.02,
-      "pct": -2.32,
-      "state": "CLOSED"
+      "change": 0.33,
+      "pct": 0.26,
+      "state": "PRE"
     }
   },
   "jpy_twd": 0.1989,
