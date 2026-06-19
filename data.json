@@ -1,77 +1,77 @@
 {
-  "updated_at": "2026-06-19 14:20",
+  "updated_at": "2026-06-19 19:05",
   "us": {
     "AMZN": {
       "price": 244.39,
       "change": 4.99,
       "pct": 2.08,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "CELH": {
       "price": 30.8,
       "change": 0.18,
       "pct": 0.59,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "GOOGL": {
       "price": 368.03,
       "change": 2.36,
       "pct": 0.65,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "MELI": {
       "price": 1635.15,
       "change": -8.35,
       "pct": -0.51,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "MSFT": {
       "price": 379.4,
       "change": -2.86,
       "pct": -0.75,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "NVDA": {
       "price": 210.69,
       "change": 4.39,
       "pct": 2.13,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "ONDS": {
       "price": 9.27,
       "change": -0.0174,
       "pct": -0.19,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "RBRK": {
       "price": 70.22,
       "change": 0.58,
       "pct": 0.83,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "S": {
       "price": 15.02,
       "change": 0.16,
       "pct": 1.08,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "SOUN": {
       "price": 7.12,
       "change": 0.08,
       "pct": 1.14,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "TSLA": {
       "price": 400.49,
       "change": 2.74,
       "pct": 0.69,
-      "state": "CLOSED"
+      "state": "PRE"
     },
     "ZS": {
       "price": 124.85,
       "change": 0.24,
       "pct": 0.19,
-      "state": "CLOSED"
+      "state": "PRE"
     }
   },
   "jpy_twd": 0.1986,
