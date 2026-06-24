@@ -1,9 +1,11 @@
 name: 更新股價資料
 
 on:
+  schedule:
+    - cron: '0 1 * * 1-5'   # 台灣 09:00（美股昨收）
+    - cron: '35 6 * * 1-5'  # 台灣 14:35（台股收盤後）
+    - cron: '0 21 * * 1-5'  # 台灣 05:00 隔天（美股收盤後）
   workflow_dispatch:
-  # 改由 cron-job.org 外部觸發（GitHub 內建 cron 延誤不可控）
-  # 三個時間點：09:00 台灣（美股昨收）、14:35 台灣（台股收盤）、05:00 台灣（美股收盤）
 
 # 允許 Actions 寫入 repo（commit data.json 需要）
 permissions:
