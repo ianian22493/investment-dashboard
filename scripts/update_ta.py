@@ -7,7 +7,7 @@ update_ta.py — 每週技術分析教學自動更新腳本
   第 11 週起：工具箱綜合分析（永久模式）
 """
 
-import json, re
+import json, os, re
 from datetime import datetime, timezone, timedelta
 
 # ════════════════════════════════════════════════════════════════════
@@ -24,9 +24,7 @@ ROTATION = [
     {"symbol": "ONDS",  "name": "Ondas Holdings",   "market": "US", "sector": "無人機",      "yf": "ONDS",     "desc": "工業級無人機系統與鐵路自動化，防務訂單是主要催化劑"},
     {"symbol": "RBRK",  "name": "Rubrik",           "market": "US", "sector": "資安備份",    "yf": "RBRK",     "desc": "企業資料安全與雲端備份平台，Zero Trust 架構受市場重視"},
     {"symbol": "S",     "name": "SentinelOne",      "market": "US", "sector": "資安",        "yf": "S",        "desc": "AI 驅動端點安全平台，與 CrowdStrike 競爭最激烈的資安股"},
-    {"symbol": "SMR",   "name": "NuScale Power",    "market": "US", "sector": "小型核電",    "yf": "SMR",      "desc": "小型模組化反應爐（SMR）先驅，AI 資料中心用電需求是最大催化劑"},
     {"symbol": "SOUN",  "name": "SoundHound AI",    "market": "US", "sector": "語音 AI",     "yf": "SOUN",     "desc": "車用語音 AI 商業化領先，NVIDIA 為策略投資方"},
-    {"symbol": "TTD",   "name": "The Trade Desk",   "market": "US", "sector": "廣告科技",    "yf": "TTD",      "desc": "獨立程序化廣告平台龍頭，CTV 串流廣告成長最大受惠者"},
     {"symbol": "ZS",    "name": "Zscaler",          "market": "US", "sector": "零信任資安",  "yf": "ZS",       "desc": "雲端原生 SASE 安全架構龍頭，企業數位轉型的必要基礎建設"},
     {"symbol": "00692", "name": "富邦公司治理",      "market": "TW", "sector": "ETF",        "yf": "00692.TW", "desc": "追蹤公司治理評鑑優良企業，成分股品質穩定，適合長期持有領配息"},
     {"symbol": "00915", "name": "凱基優選高股息30",  "market": "TW", "sector": "ETF",        "yf": "00915.TW", "desc": "高股息 ETF，每月配息策略，適合需要穩定現金流的長期投資人"},
@@ -1017,24 +1015,44 @@ def _gemini_narrative(stock, ind):
 RSI：{ind['rsi']}（{rsi_s}）　MACD 柱：{ind['hist']:+.3f}　KD：K {ind['kd_k']} / D {ind['kd_d']}
 布林位置：{ind['bb_pos']:.0f}%　52週位置：{ind['w52pct']}%
 
-請輸出以下 7 行，不要任何其他文字：
+請輸出以下 8 行，不要任何其他文字：
 多方1：[多方論點，25字內]
 多方2：[多方論點，25字內]
 多方3：[多方論點，25字內]
 空方1：[空方風險，25字內]
 空方2：[空方風險，25字內]
 空方3：[空方風險，25字內]
-本週關注：[本週最重要的關注焦點與催化劑，40字內]"""
+本週關注：[本週最重要的關注焦點，40字內]
+催化劑：[近期最重要的催化劑事件，30字內]"""
         response_text = _gemini_call(client, types, prompt)
         lines = {}
         for line in response_text.strip().split('\n'):
             if '：' in line:
                 k, v = line.split('：', 1)
                 lines[k.strip()] = v.strip()
-        bull  = [lines.get("多方1","—"), lines.get("多方2","—"), lines.get("多方3","—")]
-        bear  = [lines.get("空方1","—"), lines.get("空方2","—"), lines.get("空方3","—")]
-        watch = lines.get("本週關注", "—")
+        bull     = [lines.get("多方1","—"), lines.get("多方2","—"), lines.get("多方3","—")]
+        bear     = [lines.get("空方1","—"), lines.get("空方2","—"), lines.get("空方3","—")]
+        watch    = lines.get("本週關注", "—")
+        catalyst = lines.get("催化劑", "—")
         print(f"  ✓ Gemini 敘述生成成功（{stock['symbol']}）")
+
+        # 成功後將最新多空論點寫回 narratives.json，作為未來備援
+        try:
+            narr_file = "narratives.json"
+            narr_data = {}
+            if os.path.exists(narr_file):
+                with open(narr_file, encoding="utf-8") as f:
+                    narr_data = json.load(f)
+            narr_data[stock["symbol"]] = {
+                "bull": bull, "bear": bear,
+                "watch": watch, "catalyst": catalyst,
+            }
+            with open(narr_file, "w", encoding="utf-8") as f:
+                json.dump(narr_data, f, ensure_ascii=False, indent=2)
+            print(f"  ✓ narratives.json 已更新（{stock['symbol']}）")
+        except Exception as e_save:
+            print(f"  ⚠ narratives.json 更新失敗（{e_save}）")
+
         return bull, bear, watch
     except Exception as e:
         print(f"  ✗ Gemini 敘述失敗（{stock['symbol']}）：{e}，改用靜態備援")
