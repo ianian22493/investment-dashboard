@@ -2526,6 +2526,139 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
+      <div class="fk-edition">第 6 期</div>
+      <div class="fk-district-name">城南区</div>
+    </div>
+    <div class="fk-header-date">2026-06-30</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">別府</div>
+      <div class="fk-spot-note">七隈線交通核心，生活機能極佳</div>
+      <div class="fk-spot-price">3,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">七隈</div>
+      <div class="fk-spot-note">大學城氛圍濃厚，年輕人多，機能完善</div>
+      <div class="fk-spot-price">3,200万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">長尾</div>
+      <div class="fk-spot-note">住宅區，環境清幽，公園綠地多</div>
+      <div class="fk-spot-price">2,800万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart6" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart6" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart6"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [42, 45, 49, 53, 57],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart6"] = {
+      type: "bar",
+      data: { labels: ["\u5225\u5e9c", "\u4e03\u9688", "\u9577\u5c3e"], datasets: [{
+        label: "70㎡（萬円）", data: [3500, 3200, 2800],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[3500, 3200, 2800]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart6", "fkSpotChart6"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">クレアネクスト別府四丁目</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 別府駅・徒步7分</div>
+        <div class="fk-presale-price">💴 7,398〜12,832 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2026年9月下旬預定</div>
+        <div class="fk-presale-note">ZEH-M Ready雙認證，全戶南向，高品質住宅。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">デュ・レジア大濠サウスサイド</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 別府駅・徒步4分</div>
+        <div class="fk-presale-price">💴 6,370〜8,020 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2026年4月分讓開始</div>
+        <div class="fk-presale-note">近大濠公園，環境優美，部分戶型可達155m²。</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 預售屋價格普遍高於中古屋約15-20%，考量居住品質與新屋折舊，仍具吸引力。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">七隈線貫穿，交通便利。學區完善，公園綠地多，適合家庭，居住環境清幽。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">七隈線交通便利，直達天神市中心。</div>
+        <div class="fk-item">學區完善，教育資源豐富，適合家庭移居。</div>
+        <div class="fk-item">居住環境清幽，公園綠地多，生活品質佳。</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">部分區域預售屋價格偏高，可能超出預算範圍。</div>
+        <div class="fk-item">新築公寓供給量相對較少，選擇性不如中古屋多。</div>
+        <div class="fk-item">距離市中心稍遠，部分區域仰賴巴士接駁。</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓預算可考慮長尾、友泉亭的中古屋，或七隈部分較舊的新築公寓。預售屋則需提高預算或考慮小坪數物件。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>
+      <span class="fk-next">▶ 下期：下一期預告：西區・姪浜與學園都市</span>
+    </div>
+  </div>
+</div>
+    <!-- FK_CARD_END -->
+    <div class="fk-history">
+      <!-- FK_HIST_START -->
+      <div class="fk-hist-entry" id="fk-hist-5">
+        <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-5')">
+          <span class="fk-hist-edition">第 5 期</span>
+          <span class="fk-hist-name">南区</span>
+          <span class="fk-hist-date">2026-06-16</span>
+          <span class="fk-hist-toggle" id="fk-hist-5-toggle">▶</span>
+        </div>
+        <div class="fk-hist-detail" id="fk-hist-5-detail">
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
       <div class="fk-edition">第 5 期</div>
       <div class="fk-district-name">南区</div>
     </div>
@@ -2654,9 +2787,8 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
     </div>
   </div>
 </div>
-    <!-- FK_CARD_END -->
-    <div class="fk-history">
-      <!-- FK_HIST_START -->
+        </div>
+      </div>
       <div class="fk-hist-entry" id="fk-hist-4">
         <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-4')">
           <span class="fk-hist-edition">第 4 期</span>
