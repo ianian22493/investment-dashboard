@@ -1,77 +1,77 @@
 {
-  "updated_at": "2026-07-10 06:14",
+  "updated_at": "2026-07-10 12:51",
   "us": {
     "AMZN": {
       "price": 247.04,
       "change": 3.9601,
       "pct": 1.63,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CELH": {
       "price": 30.52,
       "change": -0.2099,
       "pct": -0.68,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "GOOGL": {
       "price": 358.89,
       "change": -3.01,
       "pct": -0.83,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "MELI": {
       "price": 1807.83,
       "change": 4.83,
       "pct": 0.27,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "MSFT": {
       "price": 384.36,
       "change": 0.47,
       "pct": 0.12,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "NVDA": {
       "price": 202.78,
       "change": -0.84,
       "pct": -0.41,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ONDS": {
       "price": 7.65,
       "change": 0.11,
       "pct": 1.46,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "RBRK": {
       "price": 88.75,
       "change": 4.075,
       "pct": 4.81,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "S": {
       "price": 18.86,
       "change": 1.07,
       "pct": 6.01,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "SOUN": {
       "price": 6.68,
       "change": -0.09,
       "pct": -1.33,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "TSLA": {
       "price": 406.55,
       "change": 12.5513,
       "pct": 3.19,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ZS": {
       "price": 147.12,
       "change": 3.52,
       "pct": 2.45,
-      "state": "POST"
+      "state": "CLOSED"
     }
   },
   "jpy_twd": 0.2002,
@@ -382,7 +382,7 @@
       "sell": 0.2002
     }
   ],
-  "usd_twd": 32.0991,
+  "usd_twd": 32.1225,
   "portfolio_history": [
     {
       "date": "2026-04-21",
@@ -731,8 +731,8 @@
     },
     {
       "date": "2026-07-10",
-      "us": 462958,
-      "total": 462958
+      "us": 463295,
+      "total": 463295
     }
   ]
 }
