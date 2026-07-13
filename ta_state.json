@@ -1,5 +1,5 @@
 {
-  "week": 13,
+  "week": 14,
   "covered": [
     "NVDA",
     "TSLA",
@@ -13,8 +13,9 @@
     "S",
     "SMR",
     "SOUN",
-    "ZS"
+    "ZS",
+    "00692"
   ],
   "lesson_idx": 10,
-  "last_updated": "2026-07-06"
+  "last_updated": "2026-07-13"
 }
