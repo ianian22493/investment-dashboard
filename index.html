@@ -2907,11 +2907,137 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
       <div class="sh-line"></div>
     </div>
     <!-- FK_CARD_START -->
-    <div style="text-align:center;padding:36px;color:var(--text3)">
-      <div style="font-size:36px;margin-bottom:12px">🏠</div>
-      <div style="font-size:15px;font-weight:700;margin-bottom:8px">第 7 期：西区・糸島市</div>
-      <div style="font-size:12px">AI 分析暫時不可用，請稍後再試</div>
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
+      <div class="fk-edition">第 8 期</div>
+      <div class="fk-district-name">福岡市購屋指南</div>
     </div>
+    <div class="fk-header-date">2026-07-28</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">天神・博多</div>
+      <div class="fk-spot-note">市中心精華區，交通娛樂首選，增值潛力高。</div>
+      <div class="fk-spot-price">5,000万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">西新</div>
+      <div class="fk-spot-note">文教區，生活機能佳，離市中心近，受家庭歡迎。</div>
+      <div class="fk-spot-price">3,800万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">大橋</div>
+      <div class="fk-spot-note">交通便利，CP值高，新開發案多，生活機能逐步完善。</div>
+      <div class="fk-spot-price">3,200万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart8" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart8" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart8"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [55, 60, 65, 72, 80],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart8"] = {
+      type: "bar",
+      data: { labels: ["\u5929\u795e\u30fb\u535a\u591a", "\u897f\u65b0", "\u5927\u6a4b"], datasets: [{
+        label: "70㎡（萬円）", data: [5000, 3800, 3200],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[5000, 3800, 3200]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart8", "fkSpotChart8"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">クリオ福岡博多セントラルマークス</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 中洲川端駅・徒步5分</div>
+        <div class="fk-presale-price">💴 3,500〜7,500 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2028年7月預定</div>
+        <div class="fk-presale-note">近市中心，生活機能佳，交通便利。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">プレサンス ロジェ 博多STATION NORTH</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 博多駅・徒步12分</div>
+        <div class="fk-presale-price">💴 4,480〜5,680 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2026年7月預定</div>
+        <div class="fk-presale-note">博多車站圈，投資自住皆宜，公共設施完善。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">フリーディア高宮駅前プレミアム</span>
+          <span class="fk-presale-status fk-status-soon">即將登場</span>
+        </div>
+        <div class="fk-presale-loc">📍 高宮駅・徒步1分</div>
+        <div class="fk-presale-price">💴 4,500〜8,000 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2028年5月預定</div>
+        <div class="fk-presale-note">車站正前方，交通便利，規劃3LDK-4LDK。</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 福岡市預售屋目前較中古屋平均貴約30-40%，若追求全新設備與較長屋齡保障，仍具吸引力。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">交通便捷，生活機能完善，兼具都市繁華與自然宜居。近年再開發案多，吸引國內外目光。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">福岡交通便利，往返台灣快速便捷。</div>
+        <div class="fk-item">福岡生活成本相對東京大阪較低，生活品質高。</div>
+        <div class="fk-item">福岡市人口持續增長，不動產保值與增值潛力佳。</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">日本銀行對外國人貸款審核嚴格，現金購屋是主流。</div>
+        <div class="fk-item">福岡房價近年快速上漲，須留意追高風險。</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓預算建議可考慮福岡市郊區，或選擇中古屋。預售屋則可鎖定一房或小坪數物件，並多方比較各區推案。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>
+      <span class="fk-next">▶ 下期：下一期：福岡市中央區深度剖析</span>
+    </div>
+  </div>
+</div>
     <!-- FK_CARD_END -->
     <div class="fk-history">
       <!-- FK_HIST_START -->
