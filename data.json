@@ -1,77 +1,77 @@
 {
-  "updated_at": "2026-08-06 17:26",
+  "updated_at": "2026-08-07 08:59",
   "us": {
     "AMZN": {
-      "price": 272.65,
-      "change": -0.1012,
-      "pct": -0.04,
-      "state": "PRE"
+      "price": 272.26,
+      "change": -0.4912,
+      "pct": -0.18,
+      "state": "CLOSED"
     },
     "CELH": {
-      "price": 29.15,
-      "change": -0.5,
-      "pct": -1.69,
-      "state": "PRE"
+      "price": 23.77,
+      "change": -5.88,
+      "pct": -19.83,
+      "state": "CLOSED"
     },
     "GOOGL": {
-      "price": 362.43,
-      "change": -2.2654,
-      "pct": -0.62,
-      "state": "PRE"
+      "price": 357.75,
+      "change": -6.9454,
+      "pct": -1.9,
+      "state": "CLOSED"
     },
     "MELI": {
-      "price": 1922.57,
-      "change": 86.5699,
-      "pct": 4.72,
-      "state": "PRE"
+      "price": 1830.0,
+      "change": -6.0,
+      "pct": -0.33,
+      "state": "CLOSED"
     },
     "MSFT": {
-      "price": 487.46,
-      "change": 1.7107,
-      "pct": 0.35,
-      "state": "PRE"
+      "price": 499.86,
+      "change": 14.1107,
+      "pct": 2.9,
+      "state": "CLOSED"
     },
     "NVDA": {
-      "price": 219.22,
-      "change": -1.5223,
-      "pct": -0.69,
-      "state": "PRE"
+      "price": 218.99,
+      "change": -1.7523,
+      "pct": -0.79,
+      "state": "CLOSED"
     },
     "ONDS": {
-      "price": 8.87,
-      "change": 0.03,
-      "pct": 0.34,
-      "state": "PRE"
+      "price": 8.74,
+      "change": -0.1,
+      "pct": -1.13,
+      "state": "CLOSED"
     },
     "RBRK": {
-      "price": 84.81,
-      "change": 0.81,
-      "pct": 0.96,
-      "state": "PRE"
+      "price": 84.6,
+      "change": 0.6,
+      "pct": 0.71,
+      "state": "CLOSED"
     },
     "S": {
-      "price": 21.0,
-      "change": 0.15,
-      "pct": 0.72,
-      "state": "PRE"
+      "price": 20.76,
+      "change": -0.09,
+      "pct": -0.43,
+      "state": "CLOSED"
     },
     "SOUN": {
-      "price": 6.43,
-      "change": -1.4146,
-      "pct": -18.03,
-      "state": "PRE"
+      "price": 7.08,
+      "change": -0.7646,
+      "pct": -9.75,
+      "state": "CLOSED"
     },
     "TSLA": {
-      "price": 321.55,
-      "change": 0.05,
-      "pct": 0.02,
-      "state": "PRE"
+      "price": 319.53,
+      "change": -1.97,
+      "pct": -0.61,
+      "state": "CLOSED"
     },
     "ZS": {
-      "price": 161.65,
-      "change": 1.49,
-      "pct": 0.93,
-      "state": "PRE"
+      "price": 162.6,
+      "change": 2.44,
+      "pct": 1.52,
+      "state": "CLOSED"
     }
   },
   "jpy_twd": 0.2062,
@@ -81,11 +81,6 @@
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
   "jpy_rate_history": [
-    {
-      "date": "2026-05-29",
-      "buy": 0.1949,
-      "sell": 0.1987
-    },
     {
       "date": "2026-05-30",
       "buy": 0.1949,
@@ -380,15 +375,15 @@
       "date": "2026-08-06",
       "buy": 0.2025,
       "sell": 0.2062
+    },
+    {
+      "date": "2026-08-07",
+      "buy": 0.2025,
+      "sell": 0.2062
     }
   ],
-  "usd_twd": 32.2019,
+  "usd_twd": 32.2107,
   "portfolio_history": [
-    {
-      "date": "2026-04-24",
-      "us": 429393,
-      "total": 429393
-    },
     {
       "date": "2026-04-25",
       "us": 436676,
@@ -833,6 +828,11 @@
       "date": "2026-08-06",
       "us": 463199,
       "total": 463199
+    },
+    {
+      "date": "2026-08-07",
+      "us": 460062,
+      "total": 460062
     }
   ]
 }
