@@ -3056,6 +3056,149 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
+      <div class="fk-edition">第 9 期</div>
+      <div class="fk-district-name">中央區</div>
+    </div>
+    <div class="fk-header-date">2026-08-11</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">天神</div>
+      <div class="fk-spot-note">商業核心區，百貨、美食林立，增值潛力高。</div>
+      <div class="fk-spot-price">5,800万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">大濠公園</div>
+      <div class="fk-spot-note">福岡最知名公園，環境優美，高級住宅區首選。</div>
+      <div class="fk-spot-price">7,000万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">薬院</div>
+      <div class="fk-spot-note">交通便利，生活機能佳，宜居住宅區。</div>
+      <div class="fk-spot-price">4,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart9" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart9" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart9"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [53, 57, 62, 68, 72],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart9"] = {
+      type: "bar",
+      data: { labels: ["\u5929\u795e", "\u5927\u6fe0\u516c\u5712", "\u85ac\u9662"], datasets: [{
+        label: "70㎡（萬円）", data: [5800, 7000, 4500],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[5800, 7000, 4500]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart9", "fkSpotChart9"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">パークホームズ福岡浄水通</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 薬院大通駅・徒步7分</div>
+        <div class="fk-presale-price">💴 5,000〜10,000 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2026年9月預定</div>
+        <div class="fk-presale-note">位處寧靜浄水通，設計優雅，近學區。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">The SANMAISON大濠公園</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 六本松駅・徒步11分</div>
+        <div class="fk-presale-price">💴 5,500〜7,500 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2025年3月預定</div>
+        <div class="fk-presale-note">稀有設計，電梯直達專有空間，生活品質高。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">フリーディア大濠公園レジデンス</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 六本松駅・徒步10分</div>
+        <div class="fk-presale-price">💴 8,880〜28,480 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2025年10月預定</div>
+        <div class="fk-presale-note">大濠公園周邊，高品質住宅，景觀優美。</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 該區預售屋比中古屋平均貴約20-30%，但考量屋齡與新機能，仍具吸引力。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">中央區坐擁天神商圈、大濠公園等，交通網絡發達，商業與自然兼具，吸引年輕人口與高資產人士。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">地點精華，具備天神商圈便利性，增值潛力高。</div>
+        <div class="fk-item">大濠公園等綠地豐富，居住環境舒適。</div>
+        <div class="fk-item">人口持續增長，租屋需求穩定，保值性佳。</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">中央區房價較高，3,000萬日圓預算選擇有限。</div>
+        <div class="fk-item">預售屋多為高價位，可能超出預算範圍。</div>
+        <div class="fk-item">福岡房價持續上漲，未來購屋門檻可能更高。</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓預算在中央區購置預售屋較困難，建議考慮中古屋或坪數較小物件，或將範圍擴展至近郊區。可關注薬院、六本松周邊，或評估較早期的預售案的小坪數單位。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>
+      <span class="fk-next">▶ 下期：下一期將分析福岡市「博多區」的房地產市場。</span>
+    </div>
+  </div>
+</div>
+    <!-- FK_CARD_END -->
+    <div class="fk-history">
+      <!-- FK_HIST_START -->
+      <div class="fk-hist-entry" id="fk-hist-8">
+        <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-8')">
+          <span class="fk-hist-edition">第 8 期</span>
+          <span class="fk-hist-name">福岡市購屋指南</span>
+          <span class="fk-hist-date">2026-07-28</span>
+          <span class="fk-hist-toggle" id="fk-hist-8-toggle">▶</span>
+        </div>
+        <div class="fk-hist-detail" id="fk-hist-8-detail">
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
       <div class="fk-edition">第 8 期</div>
       <div class="fk-district-name">福岡市購屋指南</div>
     </div>
@@ -3184,9 +3327,8 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
     </div>
   </div>
 </div>
-    <!-- FK_CARD_END -->
-    <div class="fk-history">
-      <!-- FK_HIST_START -->
+        </div>
+      </div>
       <div class="fk-hist-entry" id="fk-hist-6">
         <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-6')">
           <span class="fk-hist-edition">第 6 期</span>
