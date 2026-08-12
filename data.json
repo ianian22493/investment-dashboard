@@ -1,82 +1,82 @@
 {
-  "updated_at": "2026-08-12 05:36",
+  "updated_at": "2026-08-12 11:22",
   "us": {
     "AMZN": {
       "price": 272.27,
       "change": -4.96,
       "pct": -1.79,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CELH": {
       "price": 28.09,
       "change": 0.9,
       "pct": 3.31,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "GOOGL": {
       "price": 343.8,
       "change": -12.75,
       "pct": -3.58,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "MELI": {
       "price": 1940.0,
       "change": 114.8612,
       "pct": 6.29,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "MSFT": {
       "price": 503.81,
       "change": -1.45,
       "pct": -0.29,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "NVDA": {
       "price": 217.5,
       "change": -0.49,
       "pct": -0.22,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ONDS": {
       "price": 9.74,
       "change": 0.42,
       "pct": 4.51,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "RBRK": {
       "price": 96.93,
       "change": -1.07,
       "pct": -1.09,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "S": {
       "price": 22.46,
       "change": 0.24,
       "pct": 1.08,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "SOUN": {
       "price": 7.41,
       "change": -0.0269,
       "pct": -0.36,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "TSLA": {
       "price": 332.81,
       "change": 2.51,
       "pct": 0.76,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ZS": {
       "price": 178.55,
       "change": 1.85,
       "pct": 1.05,
-      "state": "POST"
+      "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2045,
-  "jpy_buy": 0.2009,
-  "jpy_sell": 0.2045,
+  "jpy_twd": 0.2038,
+  "jpy_buy": 0.2002,
+  "jpy_sell": 0.2038,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -378,11 +378,11 @@
     },
     {
       "date": "2026-08-12",
-      "buy": 0.2009,
-      "sell": 0.2045
+      "buy": 0.2002,
+      "sell": 0.2038
     }
   ],
-  "usd_twd": 32.2308,
+  "usd_twd": 32.2096,
   "portfolio_history": [
     {
       "date": "2026-04-30",
@@ -831,8 +831,8 @@
     },
     {
       "date": "2026-08-12",
-      "us": 476900,
-      "total": 476900
+      "us": 476586,
+      "total": 476586
     }
   ]
 }
