@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-14 11:23",
+  "updated_at": "2026-08-14 15:59",
   "us": {
     "AMZN": {
       "price": 265.13,
@@ -74,9 +74,9 @@
       "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2026,
-  "jpy_buy": 0.199,
-  "jpy_sell": 0.2026,
+  "jpy_twd": 0.2029,
+  "jpy_buy": 0.1992,
+  "jpy_sell": 0.2029,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -378,8 +378,8 @@
     },
     {
       "date": "2026-08-14",
-      "buy": 0.199,
-      "sell": 0.2026
+      "buy": 0.1992,
+      "sell": 0.2029
     }
   ],
   "usd_twd": 32.123,
