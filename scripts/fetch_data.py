@@ -13,7 +13,7 @@ from datetime import datetime, timezone, timedelta
 # 持倉清單（和 index.html 保持一致）
 # ──────────────────────────────────────────
 US_STOCKS = [
-    "AMZN", "CELH", "GOOGL", "MELI", "MSFT", "NVDA",
+    "AMZN", "CAVA", "CELH", "DRAM", "GOOGL", "MSFT", "NVDA",
     "ONDS", "RBRK", "S", "SOUN", "TSLA", "ZS",
 ]
 
