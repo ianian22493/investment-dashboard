@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-18 10:14",
+  "updated_at": "2026-08-18 15:22",
   "us": {
     "AMZN": {
       "price": 261.31,
@@ -14,7 +14,7 @@
       "state": "CLOSED"
     },
     "CELH": {
-      "price": 29.94,
+      "price": 29.95,
       "change": 0.6935,
       "pct": 2.37,
       "state": "CLOSED"
@@ -80,9 +80,9 @@
       "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2011,
-  "jpy_buy": 0.1974,
-  "jpy_sell": 0.2011,
+  "jpy_twd": 0.2019,
+  "jpy_buy": 0.1982,
+  "jpy_sell": 0.2019,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -384,8 +384,8 @@
     },
     {
       "date": "2026-08-18",
-      "buy": 0.1974,
-      "sell": 0.2011
+      "buy": 0.1982,
+      "sell": 0.2019
     }
   ],
   "usd_twd": 31.8395,
@@ -837,8 +837,8 @@
     },
     {
       "date": "2026-08-18",
-      "us": 411391,
-      "total": 411391
+      "us": 411393,
+      "total": 411393
     }
   ]
 }
