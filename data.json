@@ -1,88 +1,88 @@
 {
-  "updated_at": "2026-08-18 05:16",
+  "updated_at": "2026-08-18 10:14",
   "us": {
     "AMZN": {
       "price": 261.31,
       "change": -1.8745,
       "pct": -0.71,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CAVA": {
       "price": 71.02,
       "change": -3.52,
       "pct": -4.72,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CELH": {
       "price": 29.94,
       "change": 0.6935,
       "pct": 2.37,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "DRAM": {
       "price": 60.39,
       "change": 3.02,
       "pct": 5.26,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "GOOGL": {
       "price": 344.0,
       "change": -3.27,
       "pct": -0.94,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "MSFT": {
       "price": 480.35,
       "change": -14.9169,
       "pct": -3.01,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "NVDA": {
       "price": 225.01,
       "change": 0.29,
       "pct": 0.13,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ONDS": {
       "price": 9.0,
       "change": -0.1699,
       "pct": -1.85,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "RBRK": {
       "price": 101.02,
       "change": -0.98,
       "pct": -0.96,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "S": {
       "price": 21.82,
       "change": -1.34,
       "pct": -5.79,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "SOUN": {
       "price": 7.04,
       "change": -0.392,
       "pct": -5.27,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "TSLA": {
       "price": 339.3,
       "change": -2.35,
       "pct": -0.69,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ZS": {
       "price": 184.44,
       "change": 1.0766,
       "pct": 0.59,
-      "state": "POST"
+      "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2021,
-  "jpy_buy": 0.1985,
-  "jpy_sell": 0.2021,
+  "jpy_twd": 0.2011,
+  "jpy_buy": 0.1974,
+  "jpy_sell": 0.2011,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -384,11 +384,11 @@
     },
     {
       "date": "2026-08-18",
-      "buy": 0.1985,
-      "sell": 0.2021
+      "buy": 0.1974,
+      "sell": 0.2011
     }
   ],
-  "usd_twd": 31.9667,
+  "usd_twd": 31.8395,
   "portfolio_history": [
     {
       "date": "2026-05-06",
@@ -837,8 +837,8 @@
     },
     {
       "date": "2026-08-18",
-      "us": 413034,
-      "total": 413034
+      "us": 411391,
+      "total": 411391
     }
   ]
 }
