@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-20 10:16",
+  "updated_at": "2026-08-20 15:25",
   "us": {
     "AMZN": {
       "price": 265.84,
@@ -21,8 +21,8 @@
     },
     "DRAM": {
       "price": 55.14,
-      "change": 0.6682,
-      "pct": 1.23,
+      "change": 0.7,
+      "pct": 1.29,
       "state": "CLOSED"
     },
     "GOOGL": {
@@ -80,9 +80,9 @@
       "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2029,
-  "jpy_buy": 0.1992,
-  "jpy_sell": 0.2029,
+  "jpy_twd": 0.2036,
+  "jpy_buy": 0.1999,
+  "jpy_sell": 0.2036,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -384,8 +384,8 @@
     },
     {
       "date": "2026-08-20",
-      "buy": 0.1992,
-      "sell": 0.2029
+      "buy": 0.1999,
+      "sell": 0.2036
     }
   ],
   "usd_twd": 31.8085,
