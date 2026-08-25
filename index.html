@@ -3025,6 +3025,139 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
+      <div class="fk-edition">第 10 期</div>
+      <div class="fk-district-name">早良區</div>
+    </div>
+    <div class="fk-header-date">2026-08-25</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">西新</div>
+      <div class="fk-spot-note">學術氣息濃，生活機能極佳，交通便利。</div>
+      <div class="fk-spot-price">4,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">藤崎</div>
+      <div class="fk-spot-note">鬧中取靜，公園綠地多，學區房受歡迎。</div>
+      <div class="fk-spot-price">3,800万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">室見</div>
+      <div class="fk-spot-note">水岸景觀宅，環境清幽，通勤天神便捷。</div>
+      <div class="fk-spot-price">3,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart10" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart10" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart10"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [42, 45, 49, 53, 57],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart10"] = {
+      type: "bar",
+      data: { labels: ["\u897f\u65b0", "\u85e4\u5d0e", "\u5ba4\u898b"], datasets: [{
+        label: "70㎡（萬円）", data: [4500, 3800, 3500],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[4500, 3800, 3500]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart10", "fkSpotChart10"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">MJR西新アークタワー</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 西新・徒步1分</div>
+        <div class="fk-presale-price">💴 5,000〜16,000 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：已竣工</div>
+        <div class="fk-presale-note">西新地標，超高層免震構造，生活機能極佳。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">オーヴィジョン室見一丁目</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 室見・徒步3分</div>
+        <div class="fk-presale-price">💴 3,200〜4,500 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2027年03月預定</div>
+        <div class="fk-presale-note">近車站與室見川，鬧中取靜，景觀優美。</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 預售屋通常比中古屋貴約15-20%，考量新屋折舊率與設計，值得考慮。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">早良區擁有福岡大學、西南學院大學等學府，文教氣息濃厚。地鐵空港線直達天神、博多，交通便捷。商店街、海濱公園，生活機能與休閒兼具。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">地鐵空港線直達，通勤天神、博多方便快捷。</div>
+        <div class="fk-item">學區優良，教育資源豐富，適合家庭移居。</div>
+        <div class="fk-item">生活機能完善，商店街、百貨、海濱公園一應俱全。</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">部分明星學區物件競爭激烈，價格相對較高。</div>
+        <div class="fk-item">屋齡較高的中古屋需注意修繕與管理費。</div>
+        <div class="fk-item">預售屋資訊變動快，需密切追蹤銷售狀況。</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓預算在早良區可考慮室見或藤崎的預售屋，或西新屋齡稍高的中古屋。建議多比較各建案公設與管理費，並預留裝修預算。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>
+      <span class="fk-next">▶ 下期：下一期・福岡市中央區：大濠公園・西公園</span>
+    </div>
+  </div>
+</div>
+    <!-- FK_CARD_END -->
+    <div class="fk-history">
+      <!-- FK_HIST_START -->
+      <div class="fk-hist-entry" id="fk-hist-9">
+        <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-9')">
+          <span class="fk-hist-edition">第 9 期</span>
+          <span class="fk-hist-name">中央區</span>
+          <span class="fk-hist-date">2026-08-11</span>
+          <span class="fk-hist-toggle" id="fk-hist-9-toggle">▶</span>
+        </div>
+        <div class="fk-hist-detail" id="fk-hist-9-detail">
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
       <div class="fk-edition">第 9 期</div>
       <div class="fk-district-name">中央區</div>
     </div>
@@ -3154,9 +3287,8 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
     </div>
   </div>
 </div>
-    <!-- FK_CARD_END -->
-    <div class="fk-history">
-      <!-- FK_HIST_START -->
+        </div>
+      </div>
       <div class="fk-hist-entry" id="fk-hist-8">
         <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-8')">
           <span class="fk-hist-edition">第 8 期</span>
