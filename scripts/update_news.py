@@ -13,25 +13,27 @@ INDEX_FILE = "index.html"
 
 # ── 所有持倉（用於 Gemini 搜尋範圍）──
 HOLDINGS = {
-    "TW": ["00692", "00915", "1104", "2211", "2330", "2536", "2834",
-           "3293", "3661", "3703", "4588", "4707"],
-    "US": ["AMZN", "CELH", "GOOGL", "MELI", "MSFT", "NVDA",
+    "TW": ["00675L", "00685L", "00692", "00915", "1104", "2211", "2308",
+           "2330", "2834", "3293", "3491", "3661", "3703", "6442", "8299"],
+    "US": ["AMZN", "CAVA", "CELH", "DRAM", "GOOGL", "MSFT", "NVDA",
            "ONDS", "RBRK", "S", "SOUN", "TSLA", "ZS"],
 }
 
 # ── 持倉名稱對照（顯示用）──
 NAMES = {
+    "00675L": "富邦臺灣加權正2", "00685L": "群益臺灣加權正2",
     "00692": "富邦公司治理", "00915": "凱基優選高股息30",
     "1104":  "環泥",         "2211":  "長榮鋼",
-    "2330":  "台積電",       "2536":  "宏普",
-    "2834":  "臺企銀",       "3293":  "鈺象",
-    "3661":  "世芯-KY",      "3703":  "欣陸",
-    "4588":  "玖鼎電力",     "4707":  "磐亞",
-    "AMZN":  "Amazon",       "CELH":  "Celsius",
-    "GOOGL": "Alphabet",     "MELI":  "MercadoLibre",
-    "MSFT":  "Microsoft",    "NVDA":  "NVIDIA",
-    "ONDS":  "Ondas",        "RBRK":  "Rubrik",
-    "S":     "SentinelOne",
+    "2308":  "台達電",       "2330":  "台積電",
+    "2834":  "臺企銀",       "3293":  "鈊象",
+    "3491":  "昇達科",       "3661":  "世芯-KY",
+    "3703":  "欣陸",         "6442":  "光聖",
+    "8299":  "群聯",
+    "AMZN":  "Amazon",       "CAVA":  "CAVA",
+    "CELH":  "Celsius",      "DRAM":  "Roundhill Memory ETF",
+    "GOOGL": "Alphabet",     "MSFT":  "Microsoft",
+    "NVDA":  "NVIDIA",       "ONDS":  "Ondas",
+    "RBRK":  "Rubrik",       "S":     "SentinelOne",
     "SOUN":  "SoundHound",   "TSLA":  "Tesla",
     "ZS":    "Zscaler",
 }
@@ -170,7 +172,7 @@ def build_news_html(items):
 
             imp_class = {"高": "imp-high", "中": "imp-mid", "低": "imp-low"}.get(importance, "imp-mid")
             # 虧損持倉用紅色標籤
-            tag_class = "tag-red" if ticker in ("TSLA", "2536", "4588", "3703") else ""
+            tag_class = "tag-red" if ticker in ("TSLA", "3703") else ""
             tag_html  = f'<span class="news-tag{" " + tag_class if tag_class else ""}">{ticker}</span>'
 
             html += (
