@@ -10,39 +10,15 @@ update_ta.py — 每週技術分析教學自動更新腳本
 import json, os, re
 from datetime import datetime, timezone, timedelta
 
+from holdings import load_holdings
+
 # ════════════════════════════════════════════════════════════════════
-# 持倉輪替清單
+# 持倉輪替清單：一律從 portfolio.json 衍生（單一真相來源，見 holdings.py）
+# 已賣出的股票不會出現在 portfolio.json，故不會再被輪替生成卡片。
+# 每筆含 symbol/name/market/sector/is_etf/yf/desc，順序為先美股後台股。
 # ════════════════════════════════════════════════════════════════════
-ROTATION = [
-    {"symbol": "NVDA",   "name": "NVIDIA",          "market": "US", "sector": "AI 晶片",     "yf": "NVDA",      "desc": "全球 AI 運算龍頭，CUDA 生態系護城河極深，H 系列 GPU 供不應求"},
-    {"symbol": "TSLA",   "name": "Tesla",            "market": "US", "sector": "電動車",      "yf": "TSLA",      "desc": "電動車品牌先驅，FSD 自駕與 Robotaxi 商業化是下一個成長引擎"},
-    {"symbol": "MSFT",   "name": "Microsoft",        "market": "US", "sector": "雲端軟體",    "yf": "MSFT",      "desc": "Azure 雲端 + Copilot AI 整合，企業軟體市場地位最穩固的科技股之一"},
-    {"symbol": "GOOGL",  "name": "Alphabet",         "market": "US", "sector": "AI 搜尋",     "yf": "GOOGL",     "desc": "全球搜尋廣告霸主，Gemini AI 與 YouTube 廣告雙引擎驅動"},
-    {"symbol": "AMZN",   "name": "Amazon",           "market": "US", "sector": "電商雲端",    "yf": "AMZN",      "desc": "AWS 雲端市占第一，電商物流護城河深，廣告業務快速成長"},
-    {"symbol": "CELH",   "name": "Celsius Holdings", "market": "US", "sector": "健康飲料",    "yf": "CELH",      "desc": "北美成長最快的功能性飲料品牌，正積極拓展國際市場"},
-    {"symbol": "CAVA",   "name": "CAVA Group",       "market": "US", "sector": "餐飲連鎖",    "yf": "CAVA",      "desc": "美式地中海料理連鎖，展店快速的餐飲成長股，同店銷售動能強勁"},
-    {"symbol": "ONDS",   "name": "Ondas Holdings",   "market": "US", "sector": "無人機",      "yf": "ONDS",      "desc": "工業級無人機系統與鐵路自動化，防務訂單是主要催化劑"},
-    {"symbol": "RBRK",   "name": "Rubrik",           "market": "US", "sector": "資安備份",    "yf": "RBRK",      "desc": "企業資料安全與雲端備份平台，Zero Trust 架構受市場重視"},
-    {"symbol": "S",      "name": "SentinelOne",      "market": "US", "sector": "資安",        "yf": "S",         "desc": "AI 驅動端點安全平台，與 CrowdStrike 競爭最激烈的資安股"},
-    {"symbol": "SOUN",   "name": "SoundHound AI",    "market": "US", "sector": "語音 AI",     "yf": "SOUN",      "desc": "車用語音 AI 商業化領先，NVIDIA 為策略投資方"},
-    {"symbol": "ZS",     "name": "Zscaler",          "market": "US", "sector": "零信任資安",  "yf": "ZS",        "desc": "雲端原生 SASE 安全架構龍頭，企業數位轉型的必要基礎建設"},
-    {"symbol": "DRAM",   "name": "Roundhill Memory ETF", "market": "US", "sector": "ETF",   "yf": "DRAM",      "desc": "追蹤記憶體與儲存晶片產業的 ETF，受惠 AI 帶動 HBM / DRAM 需求"},
-    {"symbol": "00675L", "name": "富邦臺灣加權正2",   "market": "TW", "sector": "ETF",        "yf": "00675L.TW", "desc": "富邦臺灣加權指數 2 倍槓桿 ETF，放大大盤漲跌，適合波段操作"},
-    {"symbol": "00685L", "name": "群益臺灣加權正2",   "market": "TW", "sector": "ETF",        "yf": "00685L.TW", "desc": "群益臺灣加權指數 2 倍槓桿 ETF，追蹤大盤 2 倍報酬"},
-    {"symbol": "00692",  "name": "富邦公司治理",      "market": "TW", "sector": "ETF",        "yf": "00692.TW",  "desc": "追蹤公司治理評鑑優良企業，成分股品質穩定，適合長期持有領配息"},
-    {"symbol": "00915",  "name": "凱基優選高股息30",  "market": "TW", "sector": "ETF",        "yf": "00915.TW",  "desc": "高股息 ETF，每月配息策略，適合需要穩定現金流的長期投資人"},
-    {"symbol": "1104",   "name": "環泥",              "market": "TW", "sector": "水泥",       "yf": "1104.TW",   "desc": "台灣水泥龍頭之一，受惠公共建設投資與房市需求"},
-    {"symbol": "2211",   "name": "長榮鋼",            "market": "TW", "sector": "鋼鐵",       "yf": "2211.TW",   "desc": "長榮集團旗下鋼材加工廠，與航運景氣連動程度高"},
-    {"symbol": "2308",   "name": "台達電",            "market": "TW", "sector": "電源零組件", "yf": "2308.TW",   "desc": "全球電源供應器與散熱方案龍頭，AI 伺服器電源與資料中心受惠股"},
-    {"symbol": "2330",   "name": "台積電",            "market": "TW", "sector": "半導體",     "yf": "2330.TW",   "desc": "全球最先進晶片的唯一製造商，AI 時代最核心的科技基礎建設"},
-    {"symbol": "2834",   "name": "臺企銀",            "market": "TW", "sector": "銀行",       "yf": "2834.TW",   "desc": "台灣政策性銀行，以中小企業放款為主要業務"},
-    {"symbol": "3293",   "name": "鈊象",              "market": "TW", "sector": "遊戲",       "yf": "3293.TW",   "desc": "電子遊戲機台與線上遊戲營運，海內外博弈娛樂需求穩定成長"},
-    {"symbol": "3491",   "name": "昇達科",            "market": "TW", "sector": "通訊零組件", "yf": "3491.TW",   "desc": "微波與衛星通訊零組件，低軌衛星與 5G 基地台供應鏈"},
-    {"symbol": "3661",   "name": "世芯-KY",           "market": "TW", "sector": "IC 設計",    "yf": "3661.TW",   "desc": "ASIC 客製化晶片設計領先者，AI / HPC 應用快速成長"},
-    {"symbol": "3703",   "name": "欣陸",              "market": "TW", "sector": "建設",       "yf": "3703.TW",   "desc": "台灣建設與土地開發，業績受房市景氣影響明顯"},
-    {"symbol": "6442",   "name": "光聖",              "market": "TW", "sector": "光通訊",     "yf": "6442.TW",   "desc": "光纖連接器與光通訊元件，資料中心與電信網路建置需求帶動"},
-    {"symbol": "8299",   "name": "群聯",              "market": "TW", "sector": "記憶體控制", "yf": "8299.TW",   "desc": "NAND Flash 控制晶片與儲存方案龍頭，受惠 AI 儲存需求成長"},
-]
+_HOLD    = load_holdings()
+ROTATION = _HOLD["us"] + _HOLD["tw"]
 
 US_TOTAL   = sum(1 for s in ROTATION if s["market"] == "US")
 TW_TOTAL   = sum(1 for s in ROTATION if s["market"] == "TW")
@@ -1509,7 +1485,7 @@ def update_stock_analysis():
     date_str = datetime.now(TZ_TW).strftime("%Y/%m")
     new_cards = []
 
-    all_stocks = [s for s in ROTATION if s["sector"] != "ETF"]
+    all_stocks = [s for s in ROTATION if not s["is_etf"]]
     total      = len(all_stocks)
     batch      = [all_stocks[(offset + i) % total] for i in range(ANALYSIS_BATCH_SIZE)]
 

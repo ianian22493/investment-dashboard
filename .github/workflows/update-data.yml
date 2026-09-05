@@ -33,7 +33,7 @@ jobs:
         run: |
           git config user.email "bot@investment-dashboard"
           git config user.name "Dashboard Bot"
-          git add data.json
+          git add data.json holdings.json
           git diff --cached --quiet || git commit -m "📊 更新股價資料 $(date -u +'%Y-%m-%d %H:%M UTC')"
           git pull --rebase
           git push

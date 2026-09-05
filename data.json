@@ -840,5 +840,157 @@
       "us": 409432,
       "total": 409432
     }
-  ]
+  ],
+  "holdings": {
+    "us": [
+      {
+        "ticker": "AMZN",
+        "name": "Amazon",
+        "shares": 2
+      },
+      {
+        "ticker": "CAVA",
+        "name": "CAVA Group",
+        "shares": 5
+      },
+      {
+        "ticker": "CELH",
+        "name": "Celsius",
+        "shares": 11
+      },
+      {
+        "ticker": "DRAM",
+        "name": "Roundhill Memory ETF",
+        "shares": 1
+      },
+      {
+        "ticker": "GOOGL",
+        "name": "Alphabet",
+        "shares": 7.00298
+      },
+      {
+        "ticker": "MSFT",
+        "name": "Microsoft",
+        "shares": 6.0081
+      },
+      {
+        "ticker": "NVDA",
+        "name": "Nvidia",
+        "shares": 4.00367
+      },
+      {
+        "ticker": "ONDS",
+        "name": "Ondas Holdings",
+        "shares": 13
+      },
+      {
+        "ticker": "RBRK",
+        "name": "Rubrik",
+        "shares": 9
+      },
+      {
+        "ticker": "S",
+        "name": "SentinelOne",
+        "shares": 1
+      },
+      {
+        "ticker": "SOUN",
+        "name": "SoundHound AI",
+        "shares": 16
+      },
+      {
+        "ticker": "TSLA",
+        "name": "Tesla",
+        "shares": 12
+      },
+      {
+        "ticker": "ZS",
+        "name": "Zscaler",
+        "shares": 10
+      }
+    ],
+    "tw": [
+      {
+        "code": "00675L",
+        "name": "富邦臺灣加權正2",
+        "shares": 200
+      },
+      {
+        "code": "00685L",
+        "name": "群益臺灣加權正2",
+        "shares": 1000
+      },
+      {
+        "code": "00692",
+        "name": "富邦公司治理",
+        "shares": 6988
+      },
+      {
+        "code": "00915",
+        "name": "凱基優選高股息30",
+        "shares": 2000
+      },
+      {
+        "code": "1104",
+        "name": "環泥",
+        "shares": 13000
+      },
+      {
+        "code": "1736",
+        "name": "喬山",
+        "shares": 1000
+      },
+      {
+        "code": "2211",
+        "name": "長榮鋼",
+        "shares": 4000
+      },
+      {
+        "code": "2308",
+        "name": "台達電",
+        "shares": 60
+      },
+      {
+        "code": "2330",
+        "name": "台積電",
+        "shares": 40
+      },
+      {
+        "code": "2834",
+        "name": "臺企銀",
+        "shares": 13000
+      },
+      {
+        "code": "3293",
+        "name": "鈊象",
+        "shares": 990
+      },
+      {
+        "code": "3546",
+        "name": "宇峻",
+        "shares": 1000
+      },
+      {
+        "code": "3703",
+        "name": "欣陸",
+        "shares": 12000
+      },
+      {
+        "code": "6442",
+        "name": "光聖",
+        "shares": 130
+      },
+      {
+        "code": "6534",
+        "name": "正瀚",
+        "shares": 1000
+      },
+      {
+        "code": "8299",
+        "name": "群聯",
+        "shares": 130
+      }
+    ],
+    "updated": "2026-09-05"
+  }
 }

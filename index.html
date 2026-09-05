@@ -4225,25 +4225,32 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 // 【持倉清單】只需要代號和名稱
 // 有新增/賣出時直接告訴 Claude 修改這裡就好
 // ─────────────────────────────────────────
-const TW_HOLDINGS = [
+// ═══════════════════════════════════════════════════════════════
+// 持股 = 單一真相來源，執行期由 data.json 的 holdings 區塊覆寫
+// （data.json.holdings 由 fetch_data.py 從 portfolio.json 衍生）
+// 下方僅為 data.json 尚無 holdings 時的離線 fallback，請勿手動維護；
+// 要改持股請改 portfolio.json，不要改這裡。
+// ═══════════════════════════════════════════════════════════════
+let TW_HOLDINGS = [
   { code: "00675L", name: "富邦臺灣加權正2"    },
   { code: "00685L", name: "群益臺灣加權正2"    },
   { code: "00692",  name: "富邦公司治理"       },
   { code: "00915",  name: "凱基優選高股息30"   },
   { code: "1104",   name: "環泥"               },
+  { code: "1736",   name: "喬山"               },
   { code: "2211",   name: "長榮鋼"             },
   { code: "2308",   name: "台達電"             },
   { code: "2330",   name: "台積電"             },
   { code: "2834",   name: "臺企銀"             },
   { code: "3293",   name: "鈊象"               },
-  { code: "3491",   name: "昇達科"             },
-  { code: "3661",   name: "世芯-KY"            },
+  { code: "3546",   name: "宇峻"               },
   { code: "3703",   name: "欣陸"               },
   { code: "6442",   name: "光聖"               },
+  { code: "6534",   name: "正瀚"               },
   { code: "8299",   name: "群聯"               },
 ];
 
-const US_HOLDINGS = [
+let US_HOLDINGS = [
   { ticker: "AMZN",  name: "Amazon"            },
   { ticker: "CAVA",  name: "CAVA Group"        },
   { ticker: "CELH",  name: "Celsius Holdings"  },
@@ -4261,16 +4268,11 @@ const US_HOLDINGS = [
 
 // JPY_GOAL / JPY_BALANCE 已移至 data.json (jpy_savings, jpy_monthly_estimate)
 
-// -----------------------------------------
-// 美股持倉（有變動時請告知 Claude 更新這裡）
-// -----------------------------------------
-const WIFE_SHARES = {
-  AMZN: 2, CAVA: 4, CELH: 11, DRAM: 1, GOOGL: 7.00298, MSFT: 6.0081,
-  NVDA: 4.00367, ONDS: 11, RBRK: 9, S: 1,
-  SOUN: 16, TSLA: 13, ZS: 10,
-  // MELI 1股 已於 2026-07-23 清倉
-  // SMR 1股 已於 2026-04-23 以 $12.54 賣出
-  // TTD 3股 已於 2026-04-23 以 $23.50 賣出
+// 美股持股數（fallback；執行期由 data.json.holdings 覆寫）
+let WIFE_SHARES = {
+  AMZN: 2, CAVA: 5, CELH: 11, DRAM: 1, GOOGL: 7.00298, MSFT: 6.0081,
+  NVDA: 4.00367, ONDS: 13, RBRK: 9, S: 1,
+  SOUN: 16, TSLA: 12, ZS: 10,
 };
 const WIFE_COST_TWD   = 400_000;
 const WIFE_TARGET_TWD = 420_000;
@@ -4411,6 +4413,7 @@ function renderAllocationChart(usData, usdTwd) {
     MSFT:'#4d9cf8', GOOGL:'#f0c040', CELH:'#a78bfa',
     ZS:'#fbbf24',   RBRK:'#2dd4bf',
     SOUN:'#f472b6', ONDS:'#94a3b8', S:'#67e8f9',
+    CAVA:'#fb923c', DRAM:'#c084fc',
   };
   const US_NAME = Object.fromEntries(US_HOLDINGS.map(h => [h.ticker, h.name]));
 
@@ -4780,6 +4783,16 @@ if (_pill) _pill.textContent = '連線中…';
   const setPill = (cls, txt) => { if (pill) { pill.className = cls; pill.textContent = txt; } };
   try {
     const data = await loadData();
+    // 用 data.json 的即時持股覆寫 fallback（來源 portfolio.json）
+    if (data.holdings) {
+      if (Array.isArray(data.holdings.us) && data.holdings.us.length) {
+        US_HOLDINGS = data.holdings.us.map(h => ({ ticker: h.ticker, name: h.name }));
+        WIFE_SHARES = Object.fromEntries(data.holdings.us.map(h => [h.ticker, h.shares]));
+      }
+      if (Array.isArray(data.holdings.tw) && data.holdings.tw.length) {
+        TW_HOLDINGS = data.holdings.tw.map(h => ({ code: h.code, name: h.name }));
+      }
+    }
     renderUS(data.us);
     renderWifeFund(data.us, data.usd_twd);
     renderAllocationChart(data.us, data.usd_twd);

@@ -9,23 +9,15 @@ import re
 import requests
 from datetime import datetime, timezone, timedelta
 
-# ──────────────────────────────────────────
-# 持倉清單（和 index.html 保持一致）
-# ──────────────────────────────────────────
-US_STOCKS = [
-    "AMZN", "CAVA", "CELH", "DRAM", "GOOGL", "MSFT", "NVDA",
-    "ONDS", "RBRK", "S", "SOUN", "TSLA", "ZS",
-]
+from holdings import load_holdings
 
-# 美股持倉：代號 → 股數（需與 index.html WIFE_SHARES 保持一致）
-# 2026-04-23：SMR 1股、TTD 3股 賣出
-# 2026-07-23：MELI 1股 清倉
-# 2026-08：倉位調整後最新股數（CAVA/DRAM 新增）
-US_POSITIONS = {
-    "AMZN": 2, "CAVA": 4, "CELH": 11, "DRAM": 1, "GOOGL": 7.00298, "MSFT": 6.0081,
-    "NVDA": 4.00367, "ONDS": 11, "RBRK": 9, "S": 1,
-    "SOUN": 16, "TSLA": 13, "ZS": 10,
-}
+# ──────────────────────────────────────────
+# 持倉清單：一律從 portfolio.json 衍生（單一真相來源，見 holdings.py）
+# write_cache=True → 同時寫入 holdings.json 作為離線 fallback
+# ──────────────────────────────────────────
+_HOLD        = load_holdings(write_cache=True)
+US_STOCKS    = [s["symbol"] for s in _HOLD["us"]]
+US_POSITIONS = {s["symbol"]: s["shares"] for s in _HOLD["us"]}
 
 # ──────────────────────────────────────────
 # 美股市場狀態（時間推算，EDT = UTC-4，EST = UTC-5）
@@ -235,6 +227,14 @@ def main():
         "jpy_rate_history":     history,            # 自動累積，供走勢分析使用
         "usd_twd":              usd_rate,
         "portfolio_history":    port_history,       # 每日美股市値（自動累積）
+        # 前端持股（僅代號/名稱/股數，來自 portfolio.json；不含現金/月薪/房產等隱私欄位）
+        "holdings": {
+            "us":      [{"ticker": s["symbol"], "name": s["name"], "shares": s["shares"]}
+                        for s in _HOLD["us"]],
+            "tw":      [{"code": s["symbol"], "name": s["name"], "shares": s["shares"]}
+                        for s in _HOLD["tw"]],
+            "updated": _HOLD.get("_updated"),
+        },
     }
 
     with open("data.json", "w", encoding="utf-8") as f:

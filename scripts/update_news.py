@@ -8,35 +8,19 @@ update_news.py — 每週重大消息自動更新
 import json, os, re, time
 from datetime import datetime, timezone, timedelta
 
+from holdings import load_holdings
+
 TZ_TW      = timezone(timedelta(hours=8))
 INDEX_FILE = "index.html"
 
-# ── 所有持倉（用於 Gemini 搜尋範圍）──
+# ── 所有持倉：一律從 portfolio.json 衍生（單一真相來源，見 holdings.py）──
+_HOLD    = load_holdings()
 HOLDINGS = {
-    "TW": ["00675L", "00685L", "00692", "00915", "1104", "2211", "2308",
-           "2330", "2834", "3293", "3491", "3661", "3703", "6442", "8299"],
-    "US": ["AMZN", "CAVA", "CELH", "DRAM", "GOOGL", "MSFT", "NVDA",
-           "ONDS", "RBRK", "S", "SOUN", "TSLA", "ZS"],
+    "TW": [s["symbol"] for s in _HOLD["tw"]],
+    "US": [s["symbol"] for s in _HOLD["us"]],
 }
-
 # ── 持倉名稱對照（顯示用）──
-NAMES = {
-    "00675L": "富邦臺灣加權正2", "00685L": "群益臺灣加權正2",
-    "00692": "富邦公司治理", "00915": "凱基優選高股息30",
-    "1104":  "環泥",         "2211":  "長榮鋼",
-    "2308":  "台達電",       "2330":  "台積電",
-    "2834":  "臺企銀",       "3293":  "鈊象",
-    "3491":  "昇達科",       "3661":  "世芯-KY",
-    "3703":  "欣陸",         "6442":  "光聖",
-    "8299":  "群聯",
-    "AMZN":  "Amazon",       "CAVA":  "CAVA",
-    "CELH":  "Celsius",      "DRAM":  "Roundhill Memory ETF",
-    "GOOGL": "Alphabet",     "MSFT":  "Microsoft",
-    "NVDA":  "NVIDIA",       "ONDS":  "Ondas",
-    "RBRK":  "Rubrik",       "S":     "SentinelOne",
-    "SOUN":  "SoundHound",   "TSLA":  "Tesla",
-    "ZS":    "Zscaler",
-}
+NAMES = {s["symbol"]: s["name"] for s in _HOLD["us"] + _HOLD["tw"]}
 
 
 # ════════════════════════════════════════════════════════════════════
