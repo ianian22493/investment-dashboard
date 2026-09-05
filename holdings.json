@@ -9,6 +9,7 @@
       "yf": "AMZN",
       "shares": 2,
       "strategy": "long",
+      "ai": "adjacent",
       "desc": "AWS 雲端市占第一，電商物流護城河深，廣告業務快速成長"
     },
     {
@@ -20,6 +21,7 @@
       "yf": "CAVA",
       "shares": 5,
       "strategy": "long",
+      "ai": "none",
       "desc": "美式地中海料理連鎖，展店快速的餐飲成長股，同店銷售動能強勁"
     },
     {
@@ -31,6 +33,7 @@
       "yf": "CELH",
       "shares": 11,
       "strategy": "long",
+      "ai": "none",
       "desc": "北美成長最快的功能性飲料品牌，正積極拓展國際市場"
     },
     {
@@ -42,6 +45,7 @@
       "yf": "DRAM",
       "shares": 1,
       "strategy": "long",
+      "ai": "adjacent",
       "desc": "追蹤記憶體與儲存晶片產業的 ETF，受惠 AI 帶動 HBM / DRAM 需求"
     },
     {
@@ -53,6 +57,7 @@
       "yf": "GOOGL",
       "shares": 7.00298,
       "strategy": "long",
+      "ai": "core",
       "desc": "全球搜尋廣告霸主，Gemini AI 與 YouTube 廣告雙引擎驅動"
     },
     {
@@ -64,6 +69,7 @@
       "yf": "MSFT",
       "shares": 6.0081,
       "strategy": "long",
+      "ai": "core",
       "desc": "Azure 雲端 + Copilot AI 整合，企業軟體市場地位最穩固的科技股之一"
     },
     {
@@ -75,6 +81,7 @@
       "yf": "NVDA",
       "shares": 4.00367,
       "strategy": "long",
+      "ai": "core",
       "desc": "全球 AI 運算龍頭，CUDA 生態系護城河極深，H 系列 GPU 供不應求"
     },
     {
@@ -86,6 +93,7 @@
       "yf": "ONDS",
       "shares": 13,
       "strategy": "long",
+      "ai": "adjacent",
       "desc": "工業級無人機系統與鐵路自動化，防務訂單是主要催化劑"
     },
     {
@@ -97,6 +105,7 @@
       "yf": "RBRK",
       "shares": 9,
       "strategy": "long",
+      "ai": "adjacent",
       "desc": "企業資料安全與雲端備份平台，Zero Trust 架構受市場重視"
     },
     {
@@ -108,6 +117,7 @@
       "yf": "S",
       "shares": 1,
       "strategy": "long",
+      "ai": "adjacent",
       "desc": "AI 驅動端點安全平台，與 CrowdStrike 競爭最激烈的資安股"
     },
     {
@@ -119,6 +129,7 @@
       "yf": "SOUN",
       "shares": 16,
       "strategy": "long",
+      "ai": "core",
       "desc": "車用語音 AI 商業化領先，NVIDIA 為策略投資方"
     },
     {
@@ -130,6 +141,7 @@
       "yf": "TSLA",
       "shares": 12,
       "strategy": "long",
+      "ai": "adjacent",
       "desc": "電動車品牌先驅，FSD 自駕與 Robotaxi 商業化是下一個成長引擎"
     },
     {
@@ -141,6 +153,7 @@
       "yf": "ZS",
       "shares": 10,
       "strategy": "long",
+      "ai": "adjacent",
       "desc": "雲端原生 SASE 安全架構龍頭，企業數位轉型的必要基礎建設"
     }
   ],

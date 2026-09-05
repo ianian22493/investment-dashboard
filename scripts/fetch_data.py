@@ -229,7 +229,8 @@ def main():
         "portfolio_history":    port_history,       # 每日美股市値（自動累積）
         # 前端持股（僅代號/名稱/股數，來自 portfolio.json；不含現金/月薪/房產等隱私欄位）
         "holdings": {
-            "us":      [{"ticker": s["symbol"], "name": s["name"], "shares": s["shares"]}
+            "us":      [{"ticker": s["symbol"], "name": s["name"], "shares": s["shares"],
+                         "sector": s["sector"], "ai": s.get("ai", "none")}
                         for s in _HOLD["us"]],
             "tw":      [{"code": s["symbol"], "name": s["name"], "shares": s["shares"]}
                         for s in _HOLD["tw"]],

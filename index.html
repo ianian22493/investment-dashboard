@@ -436,6 +436,24 @@
     .alloc-right { text-align:right; flex-shrink:0; }
     .alloc-pct { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
     .alloc-val { font-size:10px; color:var(--text3); margin-top:2px; }
+    /* 產業 + AI 曝險 */
+    .alloc-extra { margin-top:26px; padding-top:24px; border-top:1px solid var(--glass-border); display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+    @media(max-width:760px) { .alloc-extra { grid-template-columns:1fr; gap:26px; } }
+    .ax-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:13px; }
+    .ax-title { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text2); }
+    .ax-sub { font-size:11px; color:var(--text3); font-variant-numeric:tabular-nums; }
+    .ax-bar { display:flex; height:16px; border-radius:8px; overflow:hidden; background:var(--glass-bg2); }
+    .ax-seg { height:100%; transition:width .5s ease; }
+    .ax-legend { display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; }
+    .ax-leg-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text2); }
+    .ax-leg-dot { width:9px; height:9px; border-radius:2px; flex-shrink:0; }
+    .ax-leg-pct { font-weight:700; font-variant-numeric:tabular-nums; color:var(--text); }
+    .ax-sectors { display:flex; flex-direction:column; gap:9px; }
+    .ax-srow { display:grid; grid-template-columns:66px 1fr 38px; align-items:center; gap:10px; font-size:11px; }
+    .ax-sname { color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .ax-strack { height:8px; border-radius:4px; background:var(--glass-bg2); overflow:hidden; }
+    .ax-sfill { height:100%; border-radius:4px; background:var(--cyan); transition:width .5s ease; }
+    .ax-spct { text-align:right; color:var(--text3); font-weight:700; font-variant-numeric:tabular-nums; }
     .alloc-bar-row { grid-column:2/-1; grid-row:2; }
     .alloc-bar-bg { height:2px; background:rgba(255,255,255,.07); border-radius:100px; overflow:hidden; }
     .alloc-bar-fill { height:100%; border-radius:100px; transition:width .8s cubic-bezier(.4,0,.2,1); }
@@ -1308,6 +1326,17 @@
           <!-- rendered by JS -->
         </div>
       </div>
+      <div class="alloc-extra">
+        <div class="ax-block">
+          <div class="ax-head"><span class="ax-title">AI 曝險</span><span class="ax-sub" id="aiSub">—</span></div>
+          <div class="ax-bar" id="aiBar"></div>
+          <div class="ax-legend" id="aiLegend"></div>
+        </div>
+        <div class="ax-block">
+          <div class="ax-head"><span class="ax-title">產業配置</span></div>
+          <div class="ax-sectors" id="sectorList"></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1322,19 +1351,6 @@
       <div class="sh-line"></div>
     </div>
     <div class="analysis-grid">
-      <div class="a-card neut">
-        <div class="a-bar neut"></div>
-        <div class="a-inner">
-          <div class="a-head">
-            <div><div class="a-ticker">3661 世芯-KY</div><div class="a-name">世芯-KY · IC 設計</div></div>
-            <span class="a-sent s-neut">觀察</span>
-          </div>
-          <div class="a-body">世芯-KY (3661) 現處於<strong>均線糾結</strong>階段，RSI與KD指標顯示多方力道尚可。MACD柱狀體為正，顯示動能持續。
-            <div class="a-tip"><strong>觀察重點：</strong>布林通道位於高檔，52週位置顯示股價仍有上漲空間，但需留意短期震盪風險。</div>
-          </div>
-        </div>
-        <div class="a-foot"><span>更新：2026/09</span><span style="color:var(--amber);font-weight:600">◎ 觀察</span></div>
-      </div>
       <div class="a-card bear">
         <div class="a-bar bear"></div>
         <div class="a-inner">
@@ -4274,6 +4290,17 @@ let WIFE_SHARES = {
   NVDA: 4.00367, ONDS: 13, RBRK: 9, S: 1,
   SOUN: 16, TSLA: 12, ZS: 10,
 };
+// 每檔的產業 / AI 分層（fallback；執行期由 data.json.holdings 覆寫）
+// AI 分層來源：holdings.py 的 AI_TIER，要調整分類請改那裡
+let US_META = {
+  NVDA:{sector:'AI 晶片',ai:'core'},   MSFT:{sector:'雲端軟體',ai:'core'},
+  GOOGL:{sector:'AI 搜尋',ai:'core'},  SOUN:{sector:'語音 AI',ai:'core'},
+  AMZN:{sector:'電商雲端',ai:'adjacent'}, TSLA:{sector:'電動車',ai:'adjacent'},
+  ONDS:{sector:'無人機',ai:'adjacent'}, S:{sector:'資安',ai:'adjacent'},
+  ZS:{sector:'零信任資安',ai:'adjacent'}, RBRK:{sector:'資安備份',ai:'adjacent'},
+  DRAM:{sector:'ETF',ai:'adjacent'},   CELH:{sector:'健康飲料',ai:'none'},
+  CAVA:{sector:'餐飲連鎖',ai:'none'},
+};
 const WIFE_COST_TWD   = 400_000;
 const WIFE_TARGET_TWD = 420_000;
 
@@ -4505,6 +4532,66 @@ function renderAllocationChart(usData, usdTwd) {
           </div>
         </div>
       </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────
+// 產業 + AI 曝險（併入持倉配置區，資料同 WIFE_SHARES × 即時價）
+// ─────────────────────────────────────────
+function renderAllocExtra(usData) {
+  if (!usData) return;
+  const vals = {};
+  let total = 0;
+  for (const [t, sh] of Object.entries(WIFE_SHARES)) {
+    const q = usData[t];
+    if (!q?.price) continue;
+    const v = q.price * sh;
+    vals[t] = v; total += v;
+  }
+  if (!total) return;
+
+  // ── AI 三層堆疊 ──
+  const AI_KEYS  = ['core', 'adjacent', 'none'];
+  const AI_LABEL = { core:'AI 核心', adjacent:'AI 周邊', none:'非 AI' };
+  const AI_COLOR = { core:'#00d4ff', adjacent:'#5b8bf5', none:'#556070' };
+  const tier = { core:0, adjacent:0, none:0 };
+  for (const [t, v] of Object.entries(vals)) {
+    tier[(US_META[t]?.ai) || 'none'] += v;
+  }
+  const bar = document.getElementById('aiBar');
+  if (bar) bar.innerHTML = AI_KEYS.filter(k => tier[k] > 0).map(k => {
+    const pct = tier[k] / total * 100;
+    return `<div class="ax-seg" style="width:${pct}%;background:${AI_COLOR[k]}" title="${AI_LABEL[k]} ${pct.toFixed(0)}%"></div>`;
+  }).join('');
+  const leg = document.getElementById('aiLegend');
+  if (leg) leg.innerHTML = AI_KEYS.map(k => {
+    const pct = tier[k] / total * 100;
+    return `<div class="ax-leg-item"><span class="ax-leg-dot" style="background:${AI_COLOR[k]}"></span>${AI_LABEL[k]}<span class="ax-leg-pct">${pct.toFixed(0)}%</span></div>`;
+  }).join('');
+  const sub = document.getElementById('aiSub');
+  if (sub) sub.textContent = `核心＋周邊 ${((tier.core + tier.adjacent) / total * 100).toFixed(0)}%`;
+
+  // ── 產業配置 ──
+  const sec = {};
+  for (const [t, v] of Object.entries(vals)) {
+    const s = (US_META[t]?.sector) || '其他';
+    sec[s] = (sec[s] || 0) + v;
+  }
+  let rows = Object.entries(sec).sort((a, b) => b[1] - a[1]);
+  // 只留前 6 大，其餘併「其他」，保持精簡
+  const TOP = 6;
+  if (rows.length > TOP) {
+    const rest = rows.slice(TOP).reduce((sum, r) => sum + r[1], 0);
+    rows = rows.slice(0, TOP);
+    if (rest > 0) rows.push(['其他', rest]);
+  }
+  const maxV = rows[0]?.[1] || 1;
+  const list = document.getElementById('sectorList');
+  if (list) list.innerHTML = rows.map(([s, v]) => {
+    const pct = v / total * 100;
+    return `<div class="ax-srow"><span class="ax-sname">${s}</span>`
+         + `<span class="ax-strack"><span class="ax-sfill" style="width:${v / maxV * 100}%"></span></span>`
+         + `<span class="ax-spct">${pct.toFixed(0)}%</span></div>`;
   }).join('');
 }
 
@@ -4788,6 +4875,7 @@ if (_pill) _pill.textContent = '連線中…';
       if (Array.isArray(data.holdings.us) && data.holdings.us.length) {
         US_HOLDINGS = data.holdings.us.map(h => ({ ticker: h.ticker, name: h.name }));
         WIFE_SHARES = Object.fromEntries(data.holdings.us.map(h => [h.ticker, h.shares]));
+        US_META = Object.fromEntries(data.holdings.us.map(h => [h.ticker, { sector: h.sector, ai: h.ai }]));
       }
       if (Array.isArray(data.holdings.tw) && data.holdings.tw.length) {
         TW_HOLDINGS = data.holdings.tw.map(h => ({ code: h.code, name: h.name }));
@@ -4796,6 +4884,7 @@ if (_pill) _pill.textContent = '連線中…';
     renderUS(data.us);
     renderWifeFund(data.us, data.usd_twd);
     renderAllocationChart(data.us, data.usd_twd);
+    renderAllocExtra(data.us);
     renderPortfolioChart(data.portfolio_history || []);
     if (window.__taCharts) {
       Object.keys(window.__taCharts).forEach(id => {

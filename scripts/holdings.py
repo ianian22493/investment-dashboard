@@ -60,6 +60,15 @@ DESC_OVERRIDES = {
 }
 
 
+# ── AI 曝險分層（美股儀表板用；core=本業 AI / adjacent=AI 受惠 / none=非 AI）──
+# 分類可調整，改這裡即可，前端會自動跟著變。
+AI_TIER = {
+    "NVDA": "core", "MSFT": "core", "GOOGL": "core", "SOUN": "core",
+    "AMZN": "adjacent", "TSLA": "adjacent", "ONDS": "adjacent", "S": "adjacent",
+    "ZS": "adjacent", "RBRK": "adjacent", "DRAM": "adjacent",
+    "CELH": "none", "CAVA": "none",
+}
+
 # ── 產業別覆寫（美股 portfolio.json 無 sector 欄；台股沿用 portfolio.json）──
 SECTOR_OVERRIDES = {
     "NVDA": "AI 晶片",   "TSLA": "電動車",     "MSFT": "雲端軟體",
@@ -101,6 +110,7 @@ def _normalize(pf):
             "yf":       t,
             "shares":   s.get("shares", 0),
             "strategy": s.get("strategy", "long"),
+            "ai":       AI_TIER.get(t, "none"),
             "desc":     DESC_OVERRIDES.get(t, s.get("sector") or s.get("name", t)),
         })
 

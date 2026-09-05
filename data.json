@@ -846,67 +846,93 @@
       {
         "ticker": "AMZN",
         "name": "Amazon",
-        "shares": 2
+        "shares": 2,
+        "sector": "電商雲端",
+        "ai": "adjacent"
       },
       {
         "ticker": "CAVA",
         "name": "CAVA Group",
-        "shares": 5
+        "shares": 5,
+        "sector": "餐飲連鎖",
+        "ai": "none"
       },
       {
         "ticker": "CELH",
         "name": "Celsius",
-        "shares": 11
+        "shares": 11,
+        "sector": "健康飲料",
+        "ai": "none"
       },
       {
         "ticker": "DRAM",
         "name": "Roundhill Memory ETF",
-        "shares": 1
+        "shares": 1,
+        "sector": "ETF",
+        "ai": "adjacent"
       },
       {
         "ticker": "GOOGL",
         "name": "Alphabet",
-        "shares": 7.00298
+        "shares": 7.00298,
+        "sector": "AI 搜尋",
+        "ai": "core"
       },
       {
         "ticker": "MSFT",
         "name": "Microsoft",
-        "shares": 6.0081
+        "shares": 6.0081,
+        "sector": "雲端軟體",
+        "ai": "core"
       },
       {
         "ticker": "NVDA",
         "name": "Nvidia",
-        "shares": 4.00367
+        "shares": 4.00367,
+        "sector": "AI 晶片",
+        "ai": "core"
       },
       {
         "ticker": "ONDS",
         "name": "Ondas Holdings",
-        "shares": 13
+        "shares": 13,
+        "sector": "無人機",
+        "ai": "adjacent"
       },
       {
         "ticker": "RBRK",
         "name": "Rubrik",
-        "shares": 9
+        "shares": 9,
+        "sector": "資安備份",
+        "ai": "adjacent"
       },
       {
         "ticker": "S",
         "name": "SentinelOne",
-        "shares": 1
+        "shares": 1,
+        "sector": "資安",
+        "ai": "adjacent"
       },
       {
         "ticker": "SOUN",
         "name": "SoundHound AI",
-        "shares": 16
+        "shares": 16,
+        "sector": "語音 AI",
+        "ai": "core"
       },
       {
         "ticker": "TSLA",
         "name": "Tesla",
-        "shares": 12
+        "shares": 12,
+        "sector": "電動車",
+        "ai": "adjacent"
       },
       {
         "ticker": "ZS",
         "name": "Zscaler",
-        "shares": 10
+        "shares": 10,
+        "sector": "零信任資安",
+        "ai": "adjacent"
       }
     ],
     "tw": [
