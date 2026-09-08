@@ -3134,6 +3134,149 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
+      <div class="fk-edition">第 11 期</div>
+      <div class="fk-district-name">博多區</div>
+    </div>
+    <div class="fk-header-date">2026-09-08</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">博多站</div>
+      <div class="fk-spot-note">交通核心，商業設施集中，生活機能極佳。</div>
+      <div class="fk-spot-price">4,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">東比恵</div>
+      <div class="fk-spot-note">機場線一站抵達機場與博多，生活機能便利。</div>
+      <div class="fk-spot-price">3,800万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">住吉</div>
+      <div class="fk-spot-note">博多站徒步圈內，七隈線延伸帶來新價值。</div>
+      <div class="fk-spot-price">3,200万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart11" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart11" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart11"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [42, 45, 49, 53, 57],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart11"] = {
+      type: "bar",
+      data: { labels: ["\u535a\u591a\u7ad9", "\u6771\u6bd4\u6075", "\u4f4f\u5409"], datasets: [{
+        label: "70㎡（萬円）", data: [4500, 3800, 3200],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[4500, 3800, 3200]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart11", "fkSpotChart11"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">モンドミオ福岡博多 HIGASHIHIE STATION</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 東比恵駅・徒步1分</div>
+        <div class="fk-presale-price">💴 3,500〜6,500 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：未定</div>
+        <div class="fk-presale-note">機場線東比惠站旁，交通便利性極高。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">オーヴィジョン博多パピヨン通り</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 千代県庁口駅・徒步5分</div>
+        <div class="fk-presale-price">💴 3,000〜5,500 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2028年8月預定</div>
+        <div class="fk-presale-note">近車站，周邊生活機能完善。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">ASSOCIA博多翠景</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 東比恵駅・徒步19分</div>
+        <div class="fk-presale-price">💴 4,010〜6,350 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2028年1月預定</div>
+        <div class="fk-presale-note">近機場與博多站，有再開發利多。</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 預售屋通常較中古屋貴10-20%，考量屋況、保固及貸款，仍值得考慮。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">博多區為福岡玄關，新幹線、機場便捷。商業繁榮、生活機能完善，兼具都會便利與投資潛力。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">博多站交通便利，新幹線與機場直達。</div>
+        <div class="fk-item">商業設施集中，購物美食選擇多。</div>
+        <div class="fk-item">福岡市人口持續增長，租賃需求穩健。</div>
+        <div class="fk-item">博多CONNECTED再開發，區域價值提升。</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">市中心地價、房價漲幅明顯，總價較高。</div>
+        <div class="fk-item">部分地區預售屋供給量較少，選擇有限。</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓預算在博多區可鎖定中古屋或新築小型單位。考慮東比惠、住吉一帶，尋找近車站且坪數適中的預售屋。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>
+      <span class="fk-next">▶ 下期：下一期預告：福岡市中央區，天神商業核心。</span>
+    </div>
+  </div>
+</div>
+    <!-- FK_CARD_END -->
+    <div class="fk-history">
+      <!-- FK_HIST_START -->
+      <div class="fk-hist-entry" id="fk-hist-10">
+        <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-10')">
+          <span class="fk-hist-edition">第 10 期</span>
+          <span class="fk-hist-name">早良區</span>
+          <span class="fk-hist-date">2026-08-25</span>
+          <span class="fk-hist-toggle" id="fk-hist-10-toggle">▶</span>
+        </div>
+        <div class="fk-hist-detail" id="fk-hist-10-detail">
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
       <div class="fk-edition">第 10 期</div>
       <div class="fk-district-name">早良區</div>
     </div>
@@ -3253,9 +3396,8 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
     </div>
   </div>
 </div>
-    <!-- FK_CARD_END -->
-    <div class="fk-history">
-      <!-- FK_HIST_START -->
+        </div>
+      </div>
       <div class="fk-hist-entry" id="fk-hist-9">
         <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-9')">
           <span class="fk-hist-edition">第 9 期</span>
