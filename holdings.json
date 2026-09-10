@@ -19,7 +19,7 @@
       "sector": "餐飲連鎖",
       "is_etf": false,
       "yf": "CAVA",
-      "shares": 5,
+      "shares": 7,
       "strategy": "long",
       "ai": "none",
       "desc": "美式地中海料理連鎖，展店快速的餐飲成長股，同店銷售動能強勁"
@@ -31,7 +31,7 @@
       "sector": "健康飲料",
       "is_etf": false,
       "yf": "CELH",
-      "shares": 11,
+      "shares": 13,
       "strategy": "long",
       "ai": "none",
       "desc": "北美成長最快的功能性飲料品牌，正積極拓展國際市場"
@@ -155,6 +155,30 @@
       "strategy": "long",
       "ai": "adjacent",
       "desc": "雲端原生 SASE 安全架構龍頭，企業數位轉型的必要基礎建設"
+    },
+    {
+      "symbol": "BROS",
+      "name": "Dutch Bros",
+      "market": "US",
+      "sector": "美股",
+      "is_etf": false,
+      "yf": "BROS",
+      "shares": 2,
+      "strategy": "long·非AI消費分散腿",
+      "ai": "none",
+      "desc": "Dutch Bros"
+    },
+    {
+      "symbol": "CRH",
+      "name": "CRH plc",
+      "market": "US",
+      "sector": "美股",
+      "is_etf": false,
+      "yf": "CRH",
+      "shares": 1,
+      "strategy": "long·雙擊骨材誤殺",
+      "ai": "none",
+      "desc": "CRH plc"
     }
   ],
   "tw": [
@@ -242,7 +266,7 @@
       "sector": "AI電源散熱",
       "is_etf": false,
       "yf": "2308.TW",
-      "shares": 60,
+      "shares": 70,
       "strategy": "long",
       "desc": "全球電源供應器與散熱方案龍頭，AI 伺服器電源與資料中心受惠股"
     },
@@ -278,17 +302,6 @@
       "shares": 990,
       "strategy": "long",
       "desc": "電子遊戲機台與線上遊戲營運，海內外博弈娛樂需求穩定成長"
-    },
-    {
-      "symbol": "3546",
-      "name": "宇峻",
-      "market": "TW",
-      "sector": "遊戲軟體",
-      "is_etf": false,
-      "yf": "3546.TW",
-      "shares": 1000,
-      "strategy": "long",
-      "desc": "老牌遊戲廠（宇峻奧汀），毛利率高，新作與 IP 授權挹注業績"
     },
     {
       "symbol": "3703",
