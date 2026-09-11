@@ -1,100 +1,100 @@
 {
-  "updated_at": "2026-09-11 06:51",
+  "updated_at": "2026-09-11 13:37",
   "us": {
     "AMZN": {
       "price": 251.89,
       "change": -0.5448,
       "pct": -0.22,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CAVA": {
       "price": 54.0,
       "change": -2.75,
       "pct": -4.85,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CELH": {
       "price": 26.63,
       "change": -1.22,
       "pct": -4.38,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "DRAM": {
       "price": 58.56,
       "change": -2.866,
       "pct": -4.67,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "GOOGL": {
       "price": 332.6,
       "change": 1.68,
       "pct": 0.51,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "MSFT": {
       "price": 492.44,
       "change": 0.2584,
       "pct": 0.05,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "NVDA": {
       "price": 218.36,
       "change": -5.3099,
       "pct": -2.37,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ONDS": {
       "price": 7.25,
       "change": -0.07,
       "pct": -0.96,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "RBRK": {
       "price": 88.91,
       "change": -0.09,
       "pct": -0.1,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "S": {
       "price": 19.81,
       "change": 0.36,
       "pct": 1.85,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "SOUN": {
       "price": 6.28,
       "change": -0.1997,
       "pct": -3.08,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "TSLA": {
       "price": 363.56,
       "change": -3.6642,
       "pct": -1.0,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ZS": {
       "price": 163.48,
       "change": -2.52,
       "pct": -1.52,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "BROS": {
       "price": 43.44,
       "change": -1.66,
       "pct": -3.68,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CRH": {
       "price": 87.66,
       "change": -1.69,
       "pct": -1.89,
-      "state": "POST"
+      "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2077,
-  "jpy_buy": 0.2039,
-  "jpy_sell": 0.2077,
+  "jpy_twd": 0.2074,
+  "jpy_buy": 0.2037,
+  "jpy_sell": 0.2074,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -396,11 +396,11 @@
     },
     {
       "date": "2026-09-11",
-      "buy": 0.2039,
-      "sell": 0.2077
+      "buy": 0.2037,
+      "sell": 0.2074
     }
   ],
-  "usd_twd": 31.4702,
+  "usd_twd": 31.6004,
   "portfolio_history": [
     {
       "date": "2026-08-17",
@@ -514,8 +514,8 @@
     },
     {
       "date": "2026-09-11",
-      "us": 460578,
-      "total": 460578
+      "us": 465563,
+      "total": 465563
     }
   ],
   "holdings": {
@@ -530,7 +530,7 @@
       {
         "ticker": "CAVA",
         "name": "CAVA Group",
-        "shares": 7,
+        "shares": 8,
         "sector": "餐飲連鎖",
         "ai": "none"
       },
@@ -614,7 +614,7 @@
       {
         "ticker": "BROS",
         "name": "Dutch Bros",
-        "shares": 2,
+        "shares": 3,
         "sector": "美股",
         "ai": "none"
       },
@@ -703,6 +703,6 @@
         "shares": 130
       }
     ],
-    "updated": "2026-09-10"
+    "updated": "2026-09-11"
   }
 }

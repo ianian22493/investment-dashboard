@@ -19,7 +19,7 @@
       "sector": "餐飲連鎖",
       "is_etf": false,
       "yf": "CAVA",
-      "shares": 7,
+      "shares": 8,
       "strategy": "long",
       "ai": "none",
       "desc": "美式地中海料理連鎖，展店快速的餐飲成長股，同店銷售動能強勁"
@@ -163,7 +163,7 @@
       "sector": "美股",
       "is_etf": false,
       "yf": "BROS",
-      "shares": 2,
+      "shares": 3,
       "strategy": "long·非AI消費分散腿",
       "ai": "none",
       "desc": "Dutch Bros"
@@ -348,5 +348,5 @@
       "desc": "NAND Flash 控制晶片與儲存方案龍頭，受惠 AI 儲存需求成長"
     }
   ],
-  "_updated": "2026-09-10"
+  "_updated": "2026-09-11"
 }
