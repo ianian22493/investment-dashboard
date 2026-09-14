@@ -1,100 +1,100 @@
 {
-  "updated_at": "2026-09-14 13:48",
+  "updated_at": "2026-09-14 21:17",
   "us": {
     "AMZN": {
       "price": 256.78,
-      "change": 5.48,
-      "pct": 2.18,
-      "state": "CLOSED"
+      "change": 0.08,
+      "pct": 0.03,
+      "state": "PRE"
     },
     "CAVA": {
       "price": 55.88,
-      "change": 1.75,
-      "pct": 3.23,
-      "state": "CLOSED"
+      "change": -0.27,
+      "pct": -0.48,
+      "state": "PRE"
     },
     "CELH": {
       "price": 27.22,
-      "change": 0.1654,
-      "pct": 0.61,
-      "state": "CLOSED"
+      "change": 0.02,
+      "pct": 0.07,
+      "state": "PRE"
     },
     "DRAM": {
       "price": 59.1,
-      "change": 1.0,
-      "pct": 1.72,
-      "state": "CLOSED"
+      "change": 0.13,
+      "pct": 0.22,
+      "state": "PRE"
     },
     "GOOGL": {
       "price": 338.5,
-      "change": 7.3001,
-      "pct": 2.2,
-      "state": "CLOSED"
+      "change": 0.1105,
+      "pct": 0.03,
+      "state": "PRE"
     },
     "MSFT": {
       "price": 495.63,
-      "change": 5.442,
-      "pct": 1.11,
-      "state": "CLOSED"
+      "change": 0.74,
+      "pct": 0.15,
+      "state": "PRE"
     },
     "NVDA": {
       "price": 218.29,
-      "change": 0.53,
-      "pct": 0.24,
-      "state": "CLOSED"
+      "change": 0.03,
+      "pct": 0.01,
+      "state": "PRE"
     },
     "ONDS": {
       "price": 7.23,
-      "change": 0.0,
-      "pct": 0.0,
-      "state": "CLOSED"
+      "change": -0.01,
+      "pct": -0.14,
+      "state": "PRE"
     },
     "RBRK": {
       "price": 86.65,
-      "change": -2.49,
-      "pct": -2.79,
-      "state": "CLOSED"
+      "change": 0.12,
+      "pct": 0.14,
+      "state": "PRE"
     },
     "S": {
       "price": 19.75,
-      "change": -0.14,
-      "pct": -0.7,
-      "state": "CLOSED"
+      "change": -0.05,
+      "pct": -0.25,
+      "state": "PRE"
     },
     "SOUN": {
       "price": 6.26,
-      "change": -0.02,
-      "pct": -0.32,
-      "state": "CLOSED"
+      "change": -0.01,
+      "pct": -0.16,
+      "state": "PRE"
     },
     "TSLA": {
       "price": 365.44,
-      "change": 2.02,
-      "pct": 0.56,
-      "state": "CLOSED"
+      "change": 0.19,
+      "pct": 0.05,
+      "state": "PRE"
     },
     "ZS": {
       "price": 164.54,
-      "change": 0.84,
-      "pct": 0.51,
-      "state": "CLOSED"
+      "change": -0.0065,
+      "pct": -0.0,
+      "state": "PRE"
     },
     "BROS": {
       "price": 43.9,
-      "change": 0.38,
-      "pct": 0.87,
-      "state": "CLOSED"
+      "change": -0.0999,
+      "pct": -0.23,
+      "state": "PRE"
     },
     "CRH": {
       "price": 88.55,
-      "change": 0.89,
-      "pct": 1.02,
-      "state": "CLOSED"
+      "change": 0.3059,
+      "pct": 0.35,
+      "state": "PRE"
     }
   },
-  "jpy_twd": 0.2078,
-  "jpy_buy": 0.2041,
-  "jpy_sell": 0.2078,
+  "jpy_twd": 0.2076,
+  "jpy_buy": 0.2039,
+  "jpy_sell": 0.2076,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -396,8 +396,8 @@
     },
     {
       "date": "2026-09-14",
-      "buy": 0.2041,
-      "sell": 0.2078
+      "buy": 0.2039,
+      "sell": 0.2076
     }
   ],
   "usd_twd": 31.5598,
@@ -675,7 +675,7 @@
       {
         "code": "2308",
         "name": "台達電",
-        "shares": 70
+        "shares": 80
       },
       {
         "code": "2330",
@@ -716,8 +716,13 @@
         "code": "1256",
         "name": "鮮活果汁-KY",
         "shares": 1000
+      },
+      {
+        "code": "3661",
+        "name": "世芯-KY",
+        "shares": 10
       }
     ],
-    "updated": "2026-09-14"
+    "updated": "2026-09-06"
   }
 }

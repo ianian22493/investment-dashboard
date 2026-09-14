@@ -266,7 +266,7 @@
       "sector": "AI電源散熱",
       "is_etf": false,
       "yf": "2308.TW",
-      "shares": 70,
+      "shares": 80,
       "strategy": "long",
       "desc": "全球電源供應器與散熱方案龍頭，AI 伺服器電源與資料中心受惠股"
     },
@@ -357,7 +357,18 @@
       "shares": 1000,
       "strategy": "寶藏·收稅口(手搖飲原料)·非AI",
       "desc": "食品"
+    },
+    {
+      "symbol": "3661",
+      "name": "世芯-KY",
+      "market": "TW",
+      "sector": "AI ASIC設計",
+      "is_etf": false,
+      "yf": "3661.TW",
+      "shares": 10,
+      "strategy": "long",
+      "desc": "AI ASIC設計"
     }
   ],
-  "_updated": "2026-09-14"
+  "_updated": "2026-09-06"
 }
