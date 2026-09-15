@@ -380,6 +380,17 @@
       "shares": 10,
       "strategy": "long",
       "desc": "AI ASIC設計"
+    },
+    {
+      "symbol": "2645",
+      "name": "長榮航太",
+      "market": "TW",
+      "sector": "航太MRO+國防無人機",
+      "is_etf": false,
+      "yf": "2645.TW",
+      "shares": 1000,
+      "strategy": "long",
+      "desc": "航太MRO+國防無人機"
     }
   ],
   "_updated": "2026-09-15"
