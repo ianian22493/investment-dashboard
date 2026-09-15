@@ -151,7 +151,7 @@
       "sector": "零信任資安",
       "is_etf": false,
       "yf": "ZS",
-      "shares": 10,
+      "shares": 7,
       "strategy": "long",
       "ai": "adjacent",
       "desc": "雲端原生 SASE 安全架構龍頭，企業數位轉型的必要基礎建設"
@@ -179,6 +179,18 @@
       "strategy": "long·雙擊骨材誤殺",
       "ai": "none",
       "desc": "CRH plc"
+    },
+    {
+      "symbol": "AVGO",
+      "name": "Broadcom",
+      "market": "US",
+      "sector": "美股",
+      "is_etf": false,
+      "yf": "AVGO",
+      "shares": 1,
+      "strategy": "long",
+      "ai": "none",
+      "desc": "Broadcom"
     }
   ],
   "tw": [
@@ -370,5 +382,5 @@
       "desc": "AI ASIC設計"
     }
   ],
-  "_updated": "2026-09-14"
+  "_updated": "2026-09-15"
 }
