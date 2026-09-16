@@ -109,25 +109,13 @@
       "desc": "企業資料安全與雲端備份平台，Zero Trust 架構受市場重視"
     },
     {
-      "symbol": "S",
-      "name": "SentinelOne",
-      "market": "US",
-      "sector": "資安",
-      "is_etf": false,
-      "yf": "S",
-      "shares": 1,
-      "strategy": "long",
-      "ai": "adjacent",
-      "desc": "AI 驅動端點安全平台，與 CrowdStrike 競爭最激烈的資安股"
-    },
-    {
       "symbol": "SOUN",
       "name": "SoundHound AI",
       "market": "US",
       "sector": "語音 AI",
       "is_etf": false,
       "yf": "SOUN",
-      "shares": 16,
+      "shares": 18,
       "strategy": "long",
       "ai": "core",
       "desc": "車用語音 AI 商業化領先，NVIDIA 為策略投資方"
@@ -151,7 +139,7 @@
       "sector": "零信任資安",
       "is_etf": false,
       "yf": "ZS",
-      "shares": 7,
+      "shares": 6,
       "strategy": "long",
       "ai": "adjacent",
       "desc": "雲端原生 SASE 安全架構龍頭，企業數位轉型的必要基礎建設"
@@ -187,7 +175,7 @@
       "sector": "美股",
       "is_etf": false,
       "yf": "AVGO",
-      "shares": 1,
+      "shares": 2,
       "strategy": "long",
       "ai": "none",
       "desc": "Broadcom"
