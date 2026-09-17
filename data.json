@@ -1,100 +1,112 @@
 {
-  "updated_at": "2026-09-17 07:24",
+  "updated_at": "2026-09-17 13:45",
   "us": {
     "AMZN": {
       "price": 245.96,
       "change": -2.4177,
       "pct": -0.97,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CAVA": {
       "price": 49.76,
       "change": -0.6035,
       "pct": -1.2,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CELH": {
       "price": 28.25,
       "change": 0.0,
       "pct": 0.0,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "DRAM": {
       "price": 55.33,
       "change": 0.42,
       "pct": 0.76,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "GOOGL": {
       "price": 342.87,
       "change": -1.727,
       "pct": -0.5,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "MSFT": {
       "price": 490.3,
       "change": -8.5,
       "pct": -1.7,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "NVDA": {
       "price": 213.9,
       "change": 1.5295,
       "pct": 0.72,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ONDS": {
       "price": 7.2,
       "change": -0.03,
       "pct": -0.41,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "RBRK": {
       "price": 104.98,
       "change": 2.8476,
       "pct": 2.79,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "SOUN": {
       "price": 5.93,
       "change": -0.22,
       "pct": -3.58,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "TSLA": {
       "price": 358.08,
       "change": 2.23,
       "pct": 0.63,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "ZS": {
       "price": 191.58,
       "change": -1.82,
       "pct": -0.94,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "BROS": {
       "price": 41.37,
       "change": -0.63,
       "pct": -1.5,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "CRH": {
       "price": 86.7,
       "change": -0.99,
       "pct": -1.13,
-      "state": "POST"
+      "state": "CLOSED"
     },
     "AVGO": {
       "price": 339.51,
       "change": -0.04,
       "pct": -0.01,
-      "state": "POST"
+      "state": "CLOSED"
+    },
+    "GRAB": {
+      "price": 2.87,
+      "change": -0.03,
+      "pct": -1.03,
+      "state": "CLOSED"
+    },
+    "NU": {
+      "price": 13.81,
+      "change": -0.39,
+      "pct": -2.75,
+      "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2078,
-  "jpy_buy": 0.2041,
-  "jpy_sell": 0.2078,
+  "jpy_twd": 0.2066,
+  "jpy_buy": 0.2026,
+  "jpy_sell": 0.2066,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -396,11 +408,11 @@
     },
     {
       "date": "2026-09-17",
-      "buy": 0.2041,
-      "sell": 0.2078
+      "buy": 0.2026,
+      "sell": 0.2066
     }
   ],
-  "usd_twd": 31.8404,
+  "usd_twd": 31.8414,
   "portfolio_history": [
     {
       "date": "2026-08-17",
@@ -539,8 +551,8 @@
     },
     {
       "date": "2026-09-17",
-      "us": 477519,
-      "total": 477519
+      "us": 478672,
+      "total": 478672
     }
   ],
   "holdings": {
@@ -597,7 +609,7 @@
       {
         "ticker": "ONDS",
         "name": "Ondas Holdings",
-        "shares": 13,
+        "shares": 14,
         "sector": "無人機",
         "ai": "adjacent"
       },
@@ -611,7 +623,7 @@
       {
         "ticker": "SOUN",
         "name": "SoundHound AI",
-        "shares": 18,
+        "shares": 20,
         "sector": "語音 AI",
         "ai": "core"
       },
@@ -647,6 +659,20 @@
         "ticker": "AVGO",
         "name": "Broadcom",
         "shares": 2,
+        "sector": "美股",
+        "ai": "none"
+      },
+      {
+        "ticker": "GRAB",
+        "name": "Grab Holdings",
+        "shares": 1,
+        "sector": "美股",
+        "ai": "none"
+      },
+      {
+        "ticker": "NU",
+        "name": "Nubank",
+        "shares": 1,
         "sector": "美股",
         "ai": "none"
       }
@@ -743,6 +769,6 @@
         "shares": 1000
       }
     ],
-    "updated": "2026-09-16"
+    "updated": "2026-09-15"
   }
 }

@@ -91,7 +91,7 @@
       "sector": "無人機",
       "is_etf": false,
       "yf": "ONDS",
-      "shares": 13,
+      "shares": 14,
       "strategy": "long",
       "ai": "adjacent",
       "desc": "工業級無人機系統與鐵路自動化，防務訂單是主要催化劑"
@@ -115,7 +115,7 @@
       "sector": "語音 AI",
       "is_etf": false,
       "yf": "SOUN",
-      "shares": 18,
+      "shares": 20,
       "strategy": "long",
       "ai": "core",
       "desc": "車用語音 AI 商業化領先，NVIDIA 為策略投資方"
@@ -179,6 +179,30 @@
       "strategy": "long",
       "ai": "none",
       "desc": "Broadcom"
+    },
+    {
+      "symbol": "GRAB",
+      "name": "Grab Holdings",
+      "market": "US",
+      "sector": "美股",
+      "is_etf": false,
+      "yf": "GRAB",
+      "shares": 1,
+      "strategy": "long",
+      "ai": "none",
+      "desc": "Grab Holdings"
+    },
+    {
+      "symbol": "NU",
+      "name": "Nubank",
+      "market": "US",
+      "sector": "美股",
+      "is_etf": false,
+      "yf": "NU",
+      "shares": 1,
+      "strategy": "long",
+      "ai": "none",
+      "desc": "Nubank"
     }
   ],
   "tw": [
@@ -381,5 +405,5 @@
       "desc": "航太MRO+國防無人機"
     }
   ],
-  "_updated": "2026-09-16"
+  "_updated": "2026-09-15"
 }
