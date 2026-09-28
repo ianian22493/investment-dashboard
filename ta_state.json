@@ -1,5 +1,5 @@
 {
-  "week": 23,
+  "week": 24,
   "covered": [
     "NVDA",
     "TSLA",
@@ -20,8 +20,9 @@
     "2834",
     "CAVA",
     "DRAM",
-    "BROS"
+    "BROS",
+    "CRH"
   ],
   "lesson_idx": 10,
-  "last_updated": "2026-09-21"
+  "last_updated": "2026-09-28"
 }
