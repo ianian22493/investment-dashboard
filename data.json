@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-01 08:16",
+  "updated_at": "2026-10-01 14:50",
   "us": {
     "AMZN": {
       "price": 249.15,
@@ -104,9 +104,9 @@
       "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2049,
-  "jpy_buy": 0.2012,
-  "jpy_sell": 0.2049,
+  "jpy_twd": 0.2035,
+  "jpy_buy": 0.1998,
+  "jpy_sell": 0.2035,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -408,11 +408,11 @@
     },
     {
       "date": "2026-10-01",
-      "buy": 0.2012,
-      "sell": 0.2049
+      "buy": 0.1998,
+      "sell": 0.2035
     }
   ],
-  "usd_twd": 31.8407,
+  "usd_twd": 31.9089,
   "portfolio_history": [
     {
       "date": "2026-08-17",
@@ -611,8 +611,8 @@
     },
     {
       "date": "2026-10-01",
-      "us": 489603,
-      "total": 489603
+      "us": 491055,
+      "total": 491055
     }
   ],
   "holdings": {
@@ -732,7 +732,7 @@
       {
         "ticker": "NU",
         "name": "Nubank",
-        "shares": 1,
+        "shares": 2,
         "sector": "美股",
         "ai": "none"
       }
@@ -762,11 +762,6 @@
         "code": "1104",
         "name": "環泥",
         "shares": 13000
-      },
-      {
-        "code": "1736",
-        "name": "喬山",
-        "shares": 1000
       },
       {
         "code": "2211",
@@ -829,6 +824,6 @@
         "shares": 1000
       }
     ],
-    "updated": "2026-09-30"
+    "updated": "2026-10-01"
   }
 }

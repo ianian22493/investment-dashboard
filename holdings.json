@@ -199,7 +199,7 @@
       "sector": "美股",
       "is_etf": false,
       "yf": "NU",
-      "shares": 1,
+      "shares": 2,
       "strategy": "long",
       "ai": "none",
       "desc": "Nubank"
@@ -260,17 +260,6 @@
       "shares": 13000,
       "strategy": "long",
       "desc": "台灣水泥龍頭之一，受惠公共建設投資與房市需求"
-    },
-    {
-      "symbol": "1736",
-      "name": "喬山",
-      "market": "TW",
-      "sector": "健身器材",
-      "is_etf": false,
-      "yf": "1736.TW",
-      "shares": 1000,
-      "strategy": "long",
-      "desc": "全球健身器材龍頭，品牌與通路兼具，健身與復健需求長期成長"
     },
     {
       "symbol": "2211",
@@ -405,5 +394,5 @@
       "desc": "航太MRO+國防無人機"
     }
   ],
-  "_updated": "2026-09-30"
+  "_updated": "2026-10-01"
 }
