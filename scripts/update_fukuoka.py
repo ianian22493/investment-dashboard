@@ -17,6 +17,7 @@ update_fukuoka.py — 每兩週二福岡房市 AI 分析
 import json
 import os
 import re
+import sys
 from datetime import datetime, timezone, timedelta
 
 TZ_TW      = timezone(timedelta(hours=8))
@@ -517,13 +518,18 @@ def main():
     print(f"🏠 第 {period_num} 期福岡房市分析：{district['name']}（{district['areas']}）")
 
     analysis = generate_with_gemini(district, period_num)
+    if analysis is None:
+        # 失敗：不覆蓋成空白 placeholder、不前進輪替，直接報錯通知（別再默默壞掉）
+        print("  ✗ 分析生成失敗，保留現有內容（不覆蓋、不前進輪替）")
+        sys.exit(1)
+
     fk_html  = build_fk_html(district, analysis, today, period_num)
 
     if update_index_html(fk_html):
         print(f"  ✓ index.html 福岡區塊已更新")
     else:
         print(f"  ✗ 更新失敗，請手動確認 FK_CARD_START/END 標記")
-        return
+        sys.exit(1)
 
     # 更新狀態
     state["period"]       = period_num
