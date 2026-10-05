@@ -42,7 +42,7 @@ jobs:
 
       - name: 安裝依賴
         if: steps.check.outputs.skip == 'false'
-        run: pip install yfinance google-genai
+        run: pip install yfinance google-genai requests
 
       - name: 執行每週技術分析更新
         if: steps.check.outputs.skip == 'false'
