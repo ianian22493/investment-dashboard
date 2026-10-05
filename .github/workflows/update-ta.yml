@@ -53,6 +53,7 @@ jobs:
 
       - name: 執行每週重大消息更新
         if: steps.check.outputs.skip == 'false'
+        continue-on-error: true   # 新聞額度不足時不拖垮技術分析＋股價的提交
         env:
           GEMINI_API_KEY_DASH: ${{ secrets.GEMINI_API_KEY_DASH }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
