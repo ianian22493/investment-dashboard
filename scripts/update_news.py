@@ -31,6 +31,9 @@ def fetch_news_from_gemini():
     if not api_key:
         print("  ✗ 未找到 GEMINI_API_KEY，跳過重大消息更新")
         return None
+    # 診斷：確認用的是哪把 key（只印來源與長度，絕不印 key 本身）
+    _src = "GEMINI_API_KEY_DASH(專屬)" if os.environ.get("GEMINI_API_KEY_DASH") else "GEMINI_API_KEY(共用·fallback)"
+    print(f"  🔑 key 來源：{_src}（長度 {len(api_key)}）")
 
     from google import genai
     from google.genai import types
