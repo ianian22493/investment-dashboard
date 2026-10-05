@@ -1,0 +1,38 @@
+name: 手動更新重大消息
+
+# 只手動觸發：重大消息可獨立於每週技術分析之外單獨重跑
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝依賴
+        run: pip install google-genai requests
+
+      - name: 執行重大消息更新（真實 RSS + Gemini 整理）
+        env:
+          GEMINI_API_KEY_DASH: ${{ secrets.GEMINI_API_KEY_DASH }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/update_news.py
+
+      - name: Commit 並 Push
+        run: |
+          git config user.email "bot@investment-dashboard"
+          git config user.name "Dashboard Bot"
+          git add index.html
+          git diff --cached --quiet || git commit -m "📰 手動更新重大消息 $(date -u +'%Y-%m-%d')"
+          git pull --rebase
+          git push
