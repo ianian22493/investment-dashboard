@@ -108,7 +108,7 @@ def should_run_today(state):
 # Gemini API — 生成分析內容
 # ════════════════════════════════════════════════════════════════════
 def generate_with_gemini(district, period_num):
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("GEMINI_API_KEY_DASH") or os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("  ✗ 未找到 GEMINI_API_KEY，跳過 AI 分析")
         return None

@@ -27,7 +27,7 @@ NAMES = {s["symbol"]: s["name"] for s in _HOLD["us"] + _HOLD["tw"]}
 # Gemini 呼叫
 # ════════════════════════════════════════════════════════════════════
 def fetch_news_from_gemini():
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("GEMINI_API_KEY_DASH") or os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("  ✗ 未找到 GEMINI_API_KEY，跳過重大消息更新")
         return None
@@ -75,9 +75,14 @@ def fetch_news_from_gemini():
             text = resp.text.strip()
             break
         except Exception as e:
-            if "503" in str(e) and attempt < 2:
+            es = str(e)
+            if "503" in es and attempt < 2:
                 wait = 20 * (attempt + 1)
                 print(f"  ⏳ 503 繁忙，{wait}s 後重試...")
+                time.sleep(wait)
+            elif "429" in es and attempt < 2:
+                wait = 65 * (attempt + 1)   # 等過每分鐘頻率窗口再重試
+                print(f"  ⏳ 429 額度/頻率限制，{wait}s 後重試...")
                 time.sleep(wait)
             else:
                 raise

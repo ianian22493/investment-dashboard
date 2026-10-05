@@ -971,7 +971,7 @@ def _gemini_call(client, types, prompt):
 def _gemini_narrative(stock, ind):
     """用 Gemini API 生成動態多空論點（需環境變數 GEMINI_API_KEY）"""
     import os
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("GEMINI_API_KEY_DASH") or os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return None
     try:
@@ -1401,7 +1401,7 @@ _SENT_MAP = {
 def _gemini_acard(stock, ind):
     """用 Gemini 生成個股分析卡片內容，返回 (sentiment, body, tip) 或 None"""
     import os, time
-    api_key = os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("GEMINI_API_KEY_DASH") or os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return None
     try:

@@ -47,12 +47,14 @@ jobs:
       - name: 執行每週技術分析更新
         if: steps.check.outputs.skip == 'false'
         env:
+          GEMINI_API_KEY_DASH: ${{ secrets.GEMINI_API_KEY_DASH }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scripts/update_ta.py
 
       - name: 執行每週重大消息更新
         if: steps.check.outputs.skip == 'false'
         env:
+          GEMINI_API_KEY_DASH: ${{ secrets.GEMINI_API_KEY_DASH }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scripts/update_news.py
 
