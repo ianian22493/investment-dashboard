@@ -65,7 +65,7 @@ def fetch_news_from_gemini():
     for attempt in range(3):
         try:
             resp = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-3.6-flash",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     tools=[types.Tool(google_search=types.GoogleSearch())],
@@ -102,7 +102,7 @@ def fetch_news_from_gemini():
         for attempt2 in range(3):
             try:
                 resp2 = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.6-flash",
                     contents=prompt + "\n\n重要：只輸出純 JSON 陣列，不含任何引用標記、括號數字或其他文字。",
                     config=types.GenerateContentConfig(
                         tools=[types.Tool(google_search=types.GoogleSearch())],

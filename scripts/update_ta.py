@@ -954,7 +954,7 @@ def _gemini_call(client, types, prompt):
     for attempt in range(3):
         try:
             resp = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-3.6-flash",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     thinking_config=types.ThinkingConfig(thinking_budget=0)

@@ -188,7 +188,7 @@ def generate_with_gemini(district, period_num):
         for attempt in range(3):
             try:
                 resp = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.6-flash",
                     contents=prompt,
                     config=types.GenerateContentConfig(
                         tools=[types.Tool(google_search=types.GoogleSearch())],
@@ -224,7 +224,7 @@ def generate_with_gemini(district, period_num):
             for attempt2 in range(3):
                 try:
                     resp2 = client.models.generate_content(
-                        model="gemini-2.5-flash",
+                        model="gemini-3.6-flash",
                         contents=prompt + "\n\n重要：只輸出純 JSON，不含任何引用標記、括號數字或額外說明。",
                         config=types.GenerateContentConfig(
                             tools=[types.Tool(google_search=types.GoogleSearch())],
