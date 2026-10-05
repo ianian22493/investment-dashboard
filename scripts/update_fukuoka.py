@@ -191,15 +191,15 @@ def generate_with_gemini(district, period_num):
                     model="gemini-3.6-flash",
                     contents=prompt,
                     config=types.GenerateContentConfig(
-                        tools=[types.Tool(google_search=types.GoogleSearch())],
                         thinking_config=types.ThinkingConfig(thinking_budget=0)
-                    )
+                    ),   # ← 不用 google_search grounding（免費額度已枯竭且本來就抓不到實價）
                 )
                 text = resp.text.strip()
                 break
             except Exception as e:
-                if "503" in str(e) and attempt < 2:
-                    time.sleep(20 * (attempt + 1))
+                es = str(e)
+                if ("503" in es or "429" in es) and attempt < 2:
+                    time.sleep(30 * (attempt + 1))
                 else:
                     raise
         if text is None:
@@ -227,9 +227,8 @@ def generate_with_gemini(district, period_num):
                         model="gemini-3.6-flash",
                         contents=prompt + "\n\n重要：只輸出純 JSON，不含任何引用標記、括號數字或額外說明。",
                         config=types.GenerateContentConfig(
-                            tools=[types.Tool(google_search=types.GoogleSearch())],
                             thinking_config=types.ThinkingConfig(thinking_budget=0)
-                        )
+                        ),
                     )
                     t2 = resp2.text.strip()
                     t2 = re.sub(r'^```json\s*', '', t2, flags=re.MULTILINE)
@@ -242,8 +241,8 @@ def generate_with_gemini(district, period_num):
                     data = json.loads(t2)
                     break
                 except Exception as e2:
-                    if "503" in str(e2) and attempt2 < 2:
-                        time.sleep(20 * (attempt2 + 1))
+                    if ("503" in str(e2) or "429" in str(e2)) and attempt2 < 2:
+                        time.sleep(30 * (attempt2 + 1))
                     else:
                         raise
         print(f"  ✓ Gemini 分析生成成功（{district['name']}）")
@@ -430,7 +429,7 @@ def build_fk_html(district, analysis, date_str, period_num):
         f'    </div>\n'
         f'    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>{analysis.get("budget_advice", "—")}</div>\n'
         f'    <div class="fk-ai-footer">\n'
-        f'      <span>🤖 由 Gemini AI 生成，房價僅供參考，實際行情請向仲介確認</span>\n'
+        f'      <span>🤖 房價為 AI 推估（非即時實價，僅供長期規劃參考），實際行情請向當地仲介確認</span>\n'
     )
     if next_preview:
         parts.append(f'      <span class="fk-next">▶ 下期：{next_preview}</span>\n')
