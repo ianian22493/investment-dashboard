@@ -59,26 +59,39 @@ def _fetch_rss(query, hl, gl, ceid, limit=3):
     return out
 
 
-def _month_from_pubdate(pub):
-    """把 RSS pubDate（RFC822）轉成 YYYY/MM；失敗則回當月。"""
+def _parse_pubdate(pub):
+    """把 RSS pubDate（RFC822）轉成 datetime；失敗回 None。"""
     for fmt in ("%a, %d %b %Y %H:%M:%S %Z", "%a, %d %b %Y %H:%M:%S %z"):
         try:
-            return datetime.strptime(pub, fmt).strftime("%Y/%m")
+            return datetime.strptime(pub, fmt)
         except Exception:
             pass
-    return datetime.now(TZ_TW).strftime("%Y/%m")
+    return None
+
+
+def _month_from_pubdate(pub):
+    dt = _parse_pubdate(pub)
+    return dt.strftime("%Y/%m") if dt else datetime.now(TZ_TW).strftime("%Y/%m")
 
 
 def collect_headlines():
     """對每檔持股抓近期標題，回傳扁平清單。"""
-    print("  📥 從 Google News RSS 抓真實標題...")
+    print("  📥 從 Google News RSS 抓真實標題（近 14 天）...")
     heads = []
-    jobs = ([(s["symbol"], s["name"], f'"{s["name"]}" 股票', "zh-TW", "TW", "TW:zh-Hant")
+    # when:14d → 只抓近兩週，避免回傳過時的季報舊聞
+    jobs = ([(s["symbol"], s["name"], f'"{s["name"]}" 股票 when:14d', "zh-TW", "TW", "TW:zh-Hant")
              for s in _HOLD["tw"]]
-          + [(s["symbol"], s["name"], f'"{s["name"]}" stock', "en-US", "US", "US:en")
+          + [(s["symbol"], s["name"], f'"{s["name"]}" stock when:14d', "en-US", "US", "US:en")
              for s in _HOLD["us"]])
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    dropped = 0
     for code, name, q, hl, gl, ceid in jobs:
-        for h in _fetch_rss(q, hl, gl, ceid, limit=3):
+        for h in _fetch_rss(q, hl, gl, ceid, limit=4):
+            dt = _parse_pubdate(h["pubDate"])
+            # 後備過濾：若可解析且超過 21 天，丟掉（when:14d 的保險）
+            if dt is not None and (now - dt).days > 21:
+                dropped += 1
+                continue
             heads.append({
                 "ticker": code,
                 "name":   name,
@@ -87,7 +100,7 @@ def collect_headlines():
                 "source": h["source"],
             })
         time.sleep(0.2)   # 對 Google News 禮貌一點
-    print(f"  ✓ 共抓到 {len(heads)} 則真實標題（{len(jobs)} 檔持股）")
+    print(f"  ✓ 共抓到 {len(heads)} 則近期標題（{len(jobs)} 檔持股，另濾掉 {dropped} 則過舊）")
     return heads
 
 
@@ -120,23 +133,27 @@ def organize_with_gemini(headlines):
              for h in headlines]
     headlines_text = "\n".join(lines)
 
-    prompt = f"""今天是 {today}。以下是我持倉個股的「真實新聞標題」（來自 Google News，每行一則）：
+    prompt = f"""今天是 {today}。以下是我持倉個股近兩週的「真實新聞標題」（來自 Google News，每行一則）：
 
 {headlines_text}
 
 請從上面這些真實標題中，挑出 5～8 則對我的持股最有實質影響的（財報、重大公告、分析師升降評、
-政策、併購、重要產品或訂單等），依重要性排序。規則：
-- 只能根據上面提供的標題，嚴禁自行編造或補上標題中沒有的事件、數字、評等。
-- 同一事件有多則標題時合併成一則。
-- 摘要只做「把標題用繁體中文說清楚」，不要杜撰具體數字或結論。
+政策、併購、重要產品或訂單等），依重要性排序。
+
+【最重要的規則，務必嚴守】
+- 你手上只有「標題」，沒有內文。body 只能把標題本身的資訊用通順繁體中文說清楚。
+- 絕對禁止加入任何標題文字裡『沒有出現』的數字、百分比、金額、年增率、EPS、評等、目標價或結論。
+  （例：標題若只寫「Q3財報優於預期」，body 就只能說財報優於預期，不可自己補「營收年增86%」這類數字。）
+- 若標題只是籠統描述，body 就籠統描述；寧可簡短，也不要用你記憶中的數據去補充。
+- 同一事件有多則標題時合併成一則；優先選最近、最重要的。
 
 請輸出純 JSON 陣列，不含任何其他文字或 markdown：
 [
   {{
-    "ticker": "代碼（如 NVDA 或 2330）",
+    "ticker": "代碼（如 NVDA 或 2330，須是上面出現過的）",
     "importance": "高、中、低 三選一",
-    "title": "標題（25 字內，繁體中文）",
-    "body": "內容摘要（60 字內，繁體中文，僅根據上面標題，不得杜撰數字）",
+    "title": "標題（25 字內，繁體中文，忠實反映原標題）",
+    "body": "摘要（50 字內，繁體中文，只改寫標題、不得補任何標題外的數字或結論）",
     "date": "YYYY/MM（用該標題旁括號內的月份）"
   }}
 ]"""
