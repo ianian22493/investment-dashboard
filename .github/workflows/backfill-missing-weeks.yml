@@ -33,7 +33,8 @@ jobs:
         run: |
           git config user.email "bot@investment-dashboard"
           git config user.name "Dashboard Bot"
-          git add index.html ta_state.json
+          git add index.html ta_state.json narratives.json
           git diff --cached --quiet || git commit -m "🧩 補齊技術分析第11/19週缺口（NU、台達電2308）$(date -u +'%Y-%m-%d')"
+          git checkout -- . 2>/dev/null || true   # 丟掉其餘衍生快取，確保 rebase 乾淨
           git pull --rebase
           git push
