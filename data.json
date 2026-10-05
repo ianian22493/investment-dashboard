@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-03 08:04",
+  "updated_at": "2026-10-05 14:33",
   "us": {
     "AMZN": {
       "price": 251.52,
@@ -104,18 +104,13 @@
       "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2038,
-  "jpy_buy": 0.2002,
-  "jpy_sell": 0.2038,
+  "jpy_twd": 0.2031,
+  "jpy_buy": 0.1994,
+  "jpy_sell": 0.2031,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
   "jpy_rate_history": [
-    {
-      "date": "2026-07-27",
-      "buy": 0.1958,
-      "sell": 0.1994
-    },
     {
       "date": "2026-07-28",
       "buy": 0.1963,
@@ -410,9 +405,14 @@
       "date": "2026-10-03",
       "buy": 0.2002,
       "sell": 0.2038
+    },
+    {
+      "date": "2026-10-05",
+      "buy": 0.1994,
+      "sell": 0.2031
     }
   ],
-  "usd_twd": 31.9947,
+  "usd_twd": 31.8717,
   "portfolio_history": [
     {
       "date": "2026-08-17",
@@ -623,6 +623,11 @@
       "date": "2026-10-03",
       "us": 500705,
       "total": 500705
+    },
+    {
+      "date": "2026-10-05",
+      "us": 498780,
+      "total": 498780
     }
   ],
   "holdings": {
@@ -809,11 +814,6 @@
         "shares": 130
       },
       {
-        "code": "6534",
-        "name": "正瀚",
-        "shares": 1000
-      },
-      {
         "code": "8299",
         "name": "群聯",
         "shares": 130
@@ -834,6 +834,6 @@
         "shares": 1000
       }
     ],
-    "updated": "2026-10-02"
+    "updated": "2026-10-05"
   }
 }
