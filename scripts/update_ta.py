@@ -1542,6 +1542,74 @@ def update_stock_analysis():
 
 
 # ════════════════════════════════════════════════════════════════════
+# 一次性：補齊被移除的已賣個股週別缺口（第11週 SMR、第19週 2536）
+# 用現有持股＋該週主題(工具箱綜合分析)重生教學卡，插回正確週別位置。
+# 註：圖表為當前資料（教學範例性質），卡上日期沿用該週原始日期以維持週別一致。
+# ════════════════════════════════════════════════════════════════════
+def backfill_missing_weeks():
+    # (週別, 代碼, 該週日期, 實際下一週代碼)
+    TARGETS = [
+        (11, "NU",   "2026/06/15", "SOUN"),   # 原為已賣的 SMR
+        (19, "2308", "2026/08/17", "2834"),   # 原為已賣的 2536 宏普
+    ]
+    toolbox = CURRICULUM[min(10, len(CURRICULUM) - 1)]   # 工具箱綜合分析
+
+    with open(INDEX_FILE, encoding="utf-8") as f:
+        html = f.read()
+
+    filled = []
+    for week_num, sym, date_str, next_tk in TARGETS:
+        if f'id="hist-{week_num}"' in html:
+            print(f"  ⏭ 第 {week_num} 週已存在，略過"); continue
+        stock = next((s for s in ROTATION if s["symbol"] == sym), None)
+        if stock is None:
+            print(f"  ✗ {sym} 不在目前持股清單，略過"); continue
+
+        ind = fetch_indicators(stock)
+        if ind is None:
+            print(f"  ✗ {sym} 無法取得指標，略過"); continue
+
+        card, summary = generate_ta_card(stock, ind, week_num, date_str, toolbox)
+        m = re.search(r'<!-- TA_CARD_START -->(.*?)<!-- TA_CARD_END -->', card, re.DOTALL)
+        inner = m.group(1).strip() if m else card.strip()
+        # 修正頁尾「下週」為該週實際的下一週，避免顯示錯誤的輪替預告
+        inner = re.sub(r'(· 下週：)[^<]+(</div>)', rf'\g<1>{next_tk}\g<2>', inner)
+
+        hist_row = generate_hist_row(f"hist-{week_num}", week_num, stock, date_str, summary, inner)
+
+        # 插在「下一個較低週別」的 entry 之前，維持降序排列
+        lower = week_num - 1
+        while lower >= 1 and f'id="hist-{lower}"' not in html:
+            lower -= 1
+        anchor = f'      <div class="ta-hist-entry" id="hist-{lower}">'
+        if lower >= 1 and anchor in html:
+            html = html.replace(anchor, hist_row + "\n" + anchor, 1)
+        else:
+            html = html.replace('      <!-- HIST_ROWS_START -->',
+                                '      <!-- HIST_ROWS_START -->\n' + hist_row, 1)
+        filled.append(sym)
+        print(f"  ✓ 已補第 {week_num} 週：{sym}（{stock['name']}）")
+
+    if not filled:
+        print("  無缺口需補"); return
+
+    with open(INDEX_FILE, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    # 補的股票加入 covered，避免近期輪替又重複
+    try:
+        st = load_state()
+        cov = st.setdefault("covered", [])
+        for sym in filled:
+            if sym not in cov:
+                cov.append(sym)
+        save_state(st)
+    except Exception as e:
+        print("  ⚠ 更新 covered 失敗：", e)
+    print(f"✅ 缺口補齊完成（{len(filled)} 週）")
+
+
+# ════════════════════════════════════════════════════════════════════
 # 主程式
 # ════════════════════════════════════════════════════════════════════
 def main():
@@ -1557,6 +1625,10 @@ def main():
     if os.environ.get("UPDATE_STOCK_ANALYSIS") == "true":
         print("📊 UPDATE_STOCK_ANALYSIS 模式：每月更新個股分析卡片")
         update_stock_analysis()
+        return
+    if os.environ.get("BACKFILL_MISSING") == "true":
+        print("🧩 BACKFILL_MISSING 模式：補齊被移除已賣個股留下的週別缺口")
+        backfill_missing_weeks()
         return
 
     state    = load_state()

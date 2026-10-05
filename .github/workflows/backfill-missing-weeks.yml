@@ -1,0 +1,39 @@
+name: 一次性補齊技術分析週別缺口
+
+# 一次性手動用：補第 11、19 週（原為已賣個股被移除的缺口）
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝依賴
+        run: pip install yfinance google-genai requests
+
+      - name: 補齊缺口
+        env:
+          BACKFILL_MISSING: "true"
+          GEMINI_API_KEY_DASH: ${{ secrets.GEMINI_API_KEY_DASH }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/update_ta.py
+
+      - name: Commit 並 Push
+        run: |
+          git config user.email "bot@investment-dashboard"
+          git config user.name "Dashboard Bot"
+          git add index.html ta_state.json
+          git diff --cached --quiet || git commit -m "🧩 補齊技術分析第11/19週缺口（NU、台達電2308）$(date -u +'%Y-%m-%d')"
+          git pull --rebase
+          git push
