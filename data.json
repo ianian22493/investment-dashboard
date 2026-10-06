@@ -1,112 +1,112 @@
 {
-  "updated_at": "2026-10-06 15:12",
+  "updated_at": "2026-10-06 21:34",
   "us": {
     "AMZN": {
-      "price": 251.4,
-      "change": 0.03,
-      "pct": 0.01,
-      "state": "CLOSED"
+      "price": 252.32,
+      "change": 0.365,
+      "pct": 0.14,
+      "state": "REGULAR"
     },
     "CAVA": {
-      "price": 54.1,
-      "change": -0.25,
-      "pct": -0.46,
-      "state": "CLOSED"
+      "price": 54.24,
+      "change": 0.01,
+      "pct": 0.02,
+      "state": "REGULAR"
     },
     "CELH": {
-      "price": 27.52,
-      "change": 0.73,
-      "pct": 2.72,
-      "state": "CLOSED"
+      "price": 27.74,
+      "change": 0.195,
+      "pct": 0.71,
+      "state": "REGULAR"
     },
     "DRAM": {
-      "price": 61.67,
-      "change": 0.1152,
-      "pct": 0.19,
-      "state": "CLOSED"
+      "price": 60.76,
+      "change": -1.0269,
+      "pct": -1.66,
+      "state": "REGULAR"
     },
     "GOOGL": {
-      "price": 346.47,
-      "change": 3.22,
-      "pct": 0.94,
-      "state": "CLOSED"
+      "price": 346.65,
+      "change": 0.605,
+      "pct": 0.17,
+      "state": "REGULAR"
     },
     "MSFT": {
-      "price": 525.18,
-      "change": 7.98,
-      "pct": 1.54,
-      "state": "CLOSED"
+      "price": 530.39,
+      "change": 4.9928,
+      "pct": 0.95,
+      "state": "REGULAR"
     },
     "NVDA": {
-      "price": 238.9,
-      "change": 4.6782,
-      "pct": 2.0,
-      "state": "CLOSED"
+      "price": 241.87,
+      "change": 1.6746,
+      "pct": 0.7,
+      "state": "REGULAR"
     },
     "ONDS": {
-      "price": 7.42,
-      "change": 0.1301,
-      "pct": 1.78,
-      "state": "CLOSED"
+      "price": 7.55,
+      "change": 0.0985,
+      "pct": 1.32,
+      "state": "REGULAR"
     },
     "RBRK": {
-      "price": 122.68,
-      "change": 4.38,
-      "pct": 3.7,
-      "state": "CLOSED"
+      "price": 126.62,
+      "change": 2.74,
+      "pct": 2.21,
+      "state": "REGULAR"
     },
     "SOUN": {
-      "price": 5.88,
-      "change": 0.02,
-      "pct": 0.34,
-      "state": "CLOSED"
+      "price": 5.91,
+      "change": 0.035,
+      "pct": 0.6,
+      "state": "REGULAR"
     },
     "TSLA": {
-      "price": 378.73,
-      "change": 7.2824,
-      "pct": 1.96,
-      "state": "CLOSED"
+      "price": 382.29,
+      "change": 2.54,
+      "pct": 0.67,
+      "state": "REGULAR"
     },
     "ZS": {
-      "price": 201.8,
-      "change": 5.2191,
-      "pct": 2.65,
-      "state": "CLOSED"
+      "price": 214.0,
+      "change": 11.0899,
+      "pct": 5.47,
+      "state": "REGULAR"
     },
     "BROS": {
-      "price": 38.23,
-      "change": -0.52,
-      "pct": -1.34,
-      "state": "CLOSED"
+      "price": 38.35,
+      "change": 0.085,
+      "pct": 0.22,
+      "state": "REGULAR"
     },
     "CRH": {
-      "price": 82.65,
-      "change": 0.71,
-      "pct": 0.87,
-      "state": "CLOSED"
+      "price": 83.01,
+      "change": 0.6415,
+      "pct": 0.78,
+      "state": "REGULAR"
     },
     "AVGO": {
-      "price": 362.51,
-      "change": 7.4208,
-      "pct": 2.09,
-      "state": "CLOSED"
+      "price": 364.5,
+      "change": 1.51,
+      "pct": 0.42,
+      "state": "REGULAR"
     },
     "GRAB": {
-      "price": 3.17,
-      "change": 0.08,
-      "pct": 2.59,
-      "state": "CLOSED"
+      "price": 3.2,
+      "change": 0.0265,
+      "pct": 0.83,
+      "state": "REGULAR"
     },
     "NU": {
-      "price": 15.18,
-      "change": 1.72,
-      "pct": 12.78,
-      "state": "CLOSED"
+      "price": 15.55,
+      "change": 0.34,
+      "pct": 2.24,
+      "state": "REGULAR"
     }
   },
-  "jpy_twd": 0.2028,
-  "jpy_buy": 0.1992,
-  "jpy_sell": 0.2028,
+  "jpy_twd": 0.2029,
+  "jpy_buy": 0.1993,
+  "jpy_sell": 0.2029,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -408,8 +408,8 @@
     },
     {
       "date": "2026-10-06",
-      "buy": 0.1992,
-      "sell": 0.2028
+      "buy": 0.1993,
+      "sell": 0.2029
     }
   ],
   "usd_twd": 31.785,
@@ -631,8 +631,8 @@
     },
     {
       "date": "2026-10-06",
-      "us": 506342,
-      "total": 506342
+      "us": 512973,
+      "total": 512973
     }
   ],
   "holdings": {
@@ -827,11 +827,6 @@
         "code": "1256",
         "name": "鮮活果汁-KY",
         "shares": 1000
-      },
-      {
-        "code": "3661",
-        "name": "世芯-KY",
-        "shares": 10
       },
       {
         "code": "2645",

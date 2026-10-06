@@ -361,17 +361,6 @@
       "desc": "食品"
     },
     {
-      "symbol": "3661",
-      "name": "世芯-KY",
-      "market": "TW",
-      "sector": "AI ASIC設計",
-      "is_etf": false,
-      "yf": "3661.TW",
-      "shares": 10,
-      "strategy": "long",
-      "desc": "AI ASIC設計"
-    },
-    {
       "symbol": "2645",
       "name": "長榮航太",
       "market": "TW",
