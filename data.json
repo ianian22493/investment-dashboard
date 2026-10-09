@@ -1,107 +1,107 @@
 {
-  "updated_at": "2026-10-09 15:08",
+  "updated_at": "2026-10-09 21:41",
   "us": {
     "AMZN": {
-      "price": 254.06,
-      "change": -5.86,
-      "pct": -2.25,
-      "state": "CLOSED"
+      "price": 258.48,
+      "change": 4.415,
+      "pct": 1.74,
+      "state": "REGULAR"
     },
     "CAVA": {
-      "price": 54.31,
-      "change": 2.24,
-      "pct": 4.3,
-      "state": "CLOSED"
+      "price": 53.86,
+      "change": -0.14,
+      "pct": -0.26,
+      "state": "REGULAR"
     },
     "CELH": {
-      "price": 27.4,
-      "change": 0.48,
-      "pct": 1.78,
-      "state": "CLOSED"
+      "price": 27.23,
+      "change": -0.175,
+      "pct": -0.64,
+      "state": "REGULAR"
     },
     "DRAM": {
-      "price": 56.93,
-      "change": -3.43,
-      "pct": -5.68,
-      "state": "CLOSED"
+      "price": 57.6,
+      "change": 0.6507,
+      "pct": 1.14,
+      "state": "REGULAR"
     },
     "GOOGL": {
-      "price": 348.29,
-      "change": -2.21,
-      "pct": -0.63,
-      "state": "CLOSED"
+      "price": 352.2,
+      "change": 3.91,
+      "pct": 1.12,
+      "state": "REGULAR"
     },
     "MSFT": {
-      "price": 522.61,
-      "change": -7.15,
-      "pct": -1.35,
-      "state": "CLOSED"
+      "price": 526.85,
+      "change": 4.24,
+      "pct": 0.81,
+      "state": "REGULAR"
     },
     "NVDA": {
-      "price": 230.48,
-      "change": -6.99,
-      "pct": -2.94,
-      "state": "CLOSED"
+      "price": 232.18,
+      "change": 1.6999,
+      "pct": 0.74,
+      "state": "REGULAR"
     },
     "ONDS": {
-      "price": 6.85,
-      "change": -0.34,
-      "pct": -4.73,
-      "state": "CLOSED"
+      "price": 6.76,
+      "change": -0.0914,
+      "pct": -1.33,
+      "state": "REGULAR"
     },
     "RBRK": {
-      "price": 120.89,
-      "change": -2.84,
-      "pct": -2.3,
-      "state": "CLOSED"
+      "price": 119.91,
+      "change": -0.98,
+      "pct": -0.81,
+      "state": "REGULAR"
     },
     "SOUN": {
-      "price": 5.52,
-      "change": -0.11,
-      "pct": -1.95,
-      "state": "CLOSED"
+      "price": 5.49,
+      "change": -0.0293,
+      "pct": -0.53,
+      "state": "REGULAR"
     },
     "TSLA": {
-      "price": 375.0,
-      "change": -2.81,
-      "pct": -0.74,
-      "state": "CLOSED"
+      "price": 385.69,
+      "change": 10.69,
+      "pct": 2.85,
+      "state": "REGULAR"
     },
     "ZS": {
-      "price": 216.81,
-      "change": 3.26,
-      "pct": 1.53,
-      "state": "CLOSED"
+      "price": 221.61,
+      "change": 4.8,
+      "pct": 2.21,
+      "state": "REGULAR"
     },
     "BROS": {
-      "price": 39.78,
-      "change": 1.4047,
-      "pct": 3.66,
-      "state": "CLOSED"
+      "price": 39.01,
+      "change": -0.765,
+      "pct": -1.92,
+      "state": "REGULAR"
     },
     "CRH": {
-      "price": 81.88,
-      "change": 0.42,
-      "pct": 0.52,
-      "state": "CLOSED"
+      "price": 81.18,
+      "change": -0.705,
+      "pct": -0.86,
+      "state": "REGULAR"
     },
     "AVGO": {
-      "price": 360.14,
-      "change": -16.37,
-      "pct": -4.35,
-      "state": "CLOSED"
+      "price": 366.15,
+      "change": 6.0082,
+      "pct": 1.67,
+      "state": "REGULAR"
     },
     "GRAB": {
-      "price": 3.11,
-      "change": 0.03,
-      "pct": 0.97,
-      "state": "CLOSED"
+      "price": 3.15,
+      "change": 0.0399,
+      "pct": 1.28,
+      "state": "REGULAR"
     },
     "NU": {
-      "price": 15.38,
-      "change": -0.24,
-      "pct": -1.54,
-      "state": "CLOSED"
+      "price": 15.61,
+      "change": 0.225,
+      "pct": 1.46,
+      "state": "REGULAR"
     }
   },
   "jpy_twd": 0.2038,
@@ -646,8 +646,8 @@
     },
     {
       "date": "2026-10-09",
-      "us": 508463,
-      "total": 508463
+      "us": 515471,
+      "total": 515471
     }
   ],
   "holdings": {
