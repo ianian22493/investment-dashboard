@@ -1,121 +1,116 @@
 {
-  "updated_at": "2026-10-12 14:59",
+  "updated_at": "2026-10-13 00:02",
   "us": {
     "AMZN": {
-      "price": 262.43,
-      "change": 8.37,
-      "pct": 3.29,
-      "state": "CLOSED"
+      "price": 261.12,
+      "change": -1.305,
+      "pct": -0.5,
+      "state": "REGULAR"
     },
     "CAVA": {
-      "price": 53.64,
-      "change": -0.36,
-      "pct": -0.67,
-      "state": "CLOSED"
+      "price": 51.15,
+      "change": -2.4898,
+      "pct": -4.64,
+      "state": "REGULAR"
     },
     "CELH": {
-      "price": 28.58,
-      "change": 1.18,
-      "pct": 4.31,
-      "state": "CLOSED"
+      "price": 28.43,
+      "change": -0.15,
+      "pct": -0.52,
+      "state": "REGULAR"
     },
     "DRAM": {
-      "price": 57.19,
-      "change": 0.2407,
-      "pct": 0.42,
-      "state": "CLOSED"
+      "price": 55.01,
+      "change": -2.235,
+      "pct": -3.9,
+      "state": "REGULAR"
     },
     "GOOGL": {
-      "price": 351.66,
-      "change": 3.37,
-      "pct": 0.97,
-      "state": "CLOSED"
+      "price": 354.39,
+      "change": 2.73,
+      "pct": 0.78,
+      "state": "REGULAR"
     },
     "MSFT": {
-      "price": 535.07,
-      "change": 12.46,
-      "pct": 2.38,
-      "state": "CLOSED"
+      "price": 541.57,
+      "change": 6.5,
+      "pct": 1.21,
+      "state": "REGULAR"
     },
     "NVDA": {
-      "price": 229.28,
-      "change": -1.2,
-      "pct": -0.52,
-      "state": "CLOSED"
+      "price": 226.53,
+      "change": -2.75,
+      "pct": -1.2,
+      "state": "REGULAR"
     },
     "ONDS": {
-      "price": 6.73,
-      "change": -0.12,
-      "pct": -1.75,
-      "state": "CLOSED"
+      "price": 6.74,
+      "change": 0.01,
+      "pct": 0.15,
+      "state": "REGULAR"
     },
     "RBRK": {
-      "price": 125.14,
-      "change": 4.25,
-      "pct": 3.52,
-      "state": "CLOSED"
+      "price": 121.6,
+      "change": -3.54,
+      "pct": -2.83,
+      "state": "REGULAR"
     },
     "SOUN": {
-      "price": 5.39,
-      "change": -0.13,
-      "pct": -2.36,
-      "state": "CLOSED"
+      "price": 5.08,
+      "change": -0.3099,
+      "pct": -5.75,
+      "state": "REGULAR"
     },
     "TSLA": {
-      "price": 382.7,
-      "change": 7.7,
-      "pct": 2.05,
-      "state": "CLOSED"
+      "price": 379.67,
+      "change": -3.025,
+      "pct": -0.79,
+      "state": "REGULAR"
     },
     "ZS": {
-      "price": 233.73,
-      "change": 16.92,
-      "pct": 7.8,
-      "state": "CLOSED"
+      "price": 228.18,
+      "change": -5.55,
+      "pct": -2.37,
+      "state": "REGULAR"
     },
     "BROS": {
-      "price": 38.05,
-      "change": -1.73,
-      "pct": -4.35,
-      "state": "CLOSED"
+      "price": 37.0,
+      "change": -1.1,
+      "pct": -2.89,
+      "state": "REGULAR"
     },
     "CRH": {
-      "price": 81.54,
-      "change": -0.34,
-      "pct": -0.42,
-      "state": "CLOSED"
+      "price": 81.93,
+      "change": 0.395,
+      "pct": 0.48,
+      "state": "REGULAR"
     },
     "AVGO": {
-      "price": 361.54,
-      "change": 1.4,
-      "pct": 0.39,
-      "state": "CLOSED"
+      "price": 357.33,
+      "change": -4.205,
+      "pct": -1.16,
+      "state": "REGULAR"
     },
     "GRAB": {
-      "price": 3.19,
-      "change": 0.08,
-      "pct": 2.57,
-      "state": "CLOSED"
+      "price": 3.13,
+      "change": -0.055,
+      "pct": -1.72,
+      "state": "REGULAR"
     },
     "NU": {
-      "price": 16.12,
-      "change": 0.73,
-      "pct": 4.74,
-      "state": "CLOSED"
+      "price": 16.08,
+      "change": 0.0127,
+      "pct": 0.08,
+      "state": "REGULAR"
     }
   },
-  "jpy_twd": 0.2038,
-  "jpy_buy": 0.2001,
-  "jpy_sell": 0.2038,
+  "jpy_twd": 0.2036,
+  "jpy_buy": 0.2,
+  "jpy_sell": 0.2036,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
   "jpy_rate_history": [
-    {
-      "date": "2026-08-04",
-      "buy": 0.2042,
-      "sell": 0.2079
-    },
     {
       "date": "2026-08-05",
       "buy": 0.203,
@@ -410,6 +405,11 @@
       "date": "2026-10-12",
       "buy": 0.2001,
       "sell": 0.2038
+    },
+    {
+      "date": "2026-10-13",
+      "buy": 0.2,
+      "sell": 0.2036
     }
   ],
   "usd_twd": 31.9644,
@@ -658,6 +658,11 @@
       "date": "2026-10-12",
       "us": 519593,
       "total": 519593
+    },
+    {
+      "date": "2026-10-13",
+      "us": 516447,
+      "total": 516447
     }
   ],
   "holdings": {
