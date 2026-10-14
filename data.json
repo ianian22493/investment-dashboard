@@ -1,107 +1,107 @@
 {
-  "updated_at": "2026-10-14 20:19",
+  "updated_at": "2026-10-15 07:32",
   "us": {
     "AMZN": {
-      "price": 258.58,
-      "change": -0.0,
-      "pct": -0.0,
-      "state": "PRE"
+      "price": 254.08,
+      "change": -4.5,
+      "pct": -1.74,
+      "state": "POST"
     },
     "CAVA": {
-      "price": 52.98,
-      "change": -0.03,
-      "pct": -0.06,
-      "state": "PRE"
+      "price": 51.59,
+      "change": -1.42,
+      "pct": -2.68,
+      "state": "POST"
     },
     "CELH": {
-      "price": 27.93,
-      "change": 0.0,
-      "pct": 0.0,
-      "state": "PRE"
+      "price": 27.17,
+      "change": -0.58,
+      "pct": -2.09,
+      "state": "POST"
     },
     "DRAM": {
-      "price": 52.84,
-      "change": 0.18,
-      "pct": 0.34,
-      "state": "PRE"
+      "price": 50.14,
+      "change": -2.52,
+      "pct": -4.79,
+      "state": "POST"
     },
     "GOOGL": {
-      "price": 353.78,
-      "change": -0.0,
-      "pct": -0.0,
-      "state": "PRE"
+      "price": 347.64,
+      "change": -6.14,
+      "pct": -1.74,
+      "state": "POST"
     },
     "MSFT": {
-      "price": 543.45,
-      "change": 0.0,
-      "pct": 0.0,
-      "state": "PRE"
+      "price": 533.69,
+      "change": -9.76,
+      "pct": -1.8,
+      "state": "POST"
     },
     "NVDA": {
-      "price": 228.52,
-      "change": 0.0,
-      "pct": 0.0,
-      "state": "PRE"
+      "price": 221.3,
+      "change": -7.22,
+      "pct": -3.16,
+      "state": "POST"
     },
     "ONDS": {
-      "price": 6.71,
-      "change": 0.0,
-      "pct": 0.0,
-      "state": "PRE"
+      "price": 6.14,
+      "change": -0.57,
+      "pct": -8.49,
+      "state": "POST"
     },
     "RBRK": {
-      "price": 118.47,
-      "change": 0.47,
-      "pct": 0.4,
-      "state": "PRE"
+      "price": 113.9,
+      "change": -4.1,
+      "pct": -3.47,
+      "state": "POST"
     },
     "SOUN": {
-      "price": 4.88,
-      "change": 0.0,
-      "pct": 0.0,
-      "state": "PRE"
+      "price": 4.53,
+      "change": -0.22,
+      "pct": -4.63,
+      "state": "POST"
     },
     "TSLA": {
-      "price": 375.23,
-      "change": 0.0,
-      "pct": 0.0,
-      "state": "PRE"
+      "price": 367.16,
+      "change": -8.07,
+      "pct": -2.15,
+      "state": "POST"
     },
     "ZS": {
-      "price": 228.66,
-      "change": 0.0,
-      "pct": 0.0,
-      "state": "PRE"
+      "price": 220.79,
+      "change": -7.87,
+      "pct": -3.44,
+      "state": "POST"
     },
     "BROS": {
-      "price": 37.98,
-      "change": 0.05,
-      "pct": 0.13,
-      "state": "PRE"
+      "price": 39.17,
+      "change": 1.24,
+      "pct": 3.27,
+      "state": "POST"
     },
     "CRH": {
-      "price": 80.14,
-      "change": -0.05,
-      "pct": -0.06,
-      "state": "PRE"
+      "price": 79.2,
+      "change": -0.99,
+      "pct": -1.23,
+      "state": "POST"
     },
     "AVGO": {
-      "price": 357.31,
-      "change": -0.0,
-      "pct": -0.0,
-      "state": "PRE"
+      "price": 346.25,
+      "change": -11.06,
+      "pct": -3.1,
+      "state": "POST"
     },
     "GRAB": {
-      "price": 2.98,
-      "change": 0.0,
-      "pct": 0.0,
-      "state": "PRE"
+      "price": 2.91,
+      "change": -0.07,
+      "pct": -2.35,
+      "state": "POST"
     },
     "NU": {
-      "price": 15.58,
-      "change": -0.0355,
-      "pct": -0.23,
-      "state": "PRE"
+      "price": 14.93,
+      "change": -0.6855,
+      "pct": -4.39,
+      "state": "POST"
     }
   },
   "jpy_twd": 0.2047,
@@ -111,11 +111,6 @@
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
   "jpy_rate_history": [
-    {
-      "date": "2026-08-06",
-      "buy": 0.2025,
-      "sell": 0.2062
-    },
     {
       "date": "2026-08-07",
       "buy": 0.2022,
@@ -410,6 +405,11 @@
       "date": "2026-10-14",
       "buy": 0.201,
       "sell": 0.2047
+    },
+    {
+      "date": "2026-10-15",
+      "buy": 0.201,
+      "sell": 0.2047
     }
   ],
   "usd_twd": 32.1416,
@@ -668,6 +668,11 @@
       "date": "2026-10-14",
       "us": 517152,
       "total": 517152
+    },
+    {
+      "date": "2026-10-15",
+      "us": 504801,
+      "total": 504801
     }
   ],
   "holdings": {
