@@ -279,7 +279,7 @@
       "sector": "AI電源散熱",
       "is_etf": false,
       "yf": "2308.TW",
-      "shares": 80,
+      "shares": 100,
       "strategy": "long",
       "desc": "全球電源供應器與散熱方案龍頭，AI 伺服器電源與資料中心受惠股"
     },
@@ -334,7 +334,7 @@
       "sector": "通訊網路-光通訊",
       "is_etf": false,
       "yf": "6442.TW",
-      "shares": 130,
+      "shares": 150,
       "strategy": "both",
       "desc": "光纖連接器與光通訊元件，資料中心與電信網路建置需求帶動"
     },
@@ -345,20 +345,9 @@
       "sector": "半導體-NAND控制IC",
       "is_etf": false,
       "yf": "8299.TW",
-      "shares": 130,
+      "shares": 160,
       "strategy": "long",
       "desc": "NAND Flash 控制晶片與儲存方案龍頭，受惠 AI 儲存需求成長"
-    },
-    {
-      "symbol": "1256",
-      "name": "鮮活果汁-KY",
-      "market": "TW",
-      "sector": "食品",
-      "is_etf": false,
-      "yf": "1256.TW",
-      "shares": 1000,
-      "strategy": "寶藏·收稅口(手搖飲原料)·非AI",
-      "desc": "食品"
     },
     {
       "symbol": "2645",
@@ -372,5 +361,5 @@
       "desc": "航太MRO+國防無人機"
     }
   ],
-  "_updated": "2026-10-15"
+  "_updated": "2026-10-16"
 }
