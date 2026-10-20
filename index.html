@@ -3772,6 +3772,138 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
+      <div class="fk-edition">第 14 期</div>
+      <div class="fk-district-name">城南区</div>
+    </div>
+    <div class="fk-header-date">2026-10-20</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">別府</div>
+      <div class="fk-spot-note">鄰近中央區，生活機能極佳，升值潛力高</div>
+      <div class="fk-spot-price">3,800万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">七隈</div>
+      <div class="fk-spot-note">大學城核心，學生租屋需求旺，生活消費平價</div>
+      <div class="fk-spot-price">3,000万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">長尾・友泉亭</div>
+      <div class="fk-spot-note">純住宅區景觀佳，雖無地鐵但公車班次密集</div>
+      <div class="fk-spot-price">2,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart14" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart14" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart14"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [42, 45, 49, 53, 57],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart14"] = {
+      type: "bar",
+      data: { labels: ["\u5225\u5e9c", "\u4e03\u9688", "\u9577\u5c3e\u30fb\u53cb\u6cc9\u4ead"], datasets: [{
+        label: "70㎡（萬円）", data: [3800, 3000, 2500],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[3800, 3000, 2500]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart14", "fkSpotChart14"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">MJR城南別府</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 別府站・徒歩5分</div>
+        <div class="fk-presale-price">💴 3,200〜4,500 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2025年03月預定</div>
+        <div class="fk-presale-note">JR九州知名品牌，近地鐵站且直通博多</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">Anex城南七隈</span>
+          <span class="fk-presale-status fk-status-soon">即將登場</span>
+        </div>
+        <div class="fk-presale-loc">📍 七隈站・徒歩7分</div>
+        <div class="fk-presale-price">💴 2,800〜3,600 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2025年10月預定</div>
+        <div class="fk-presale-note">主打小家庭與首購族，生活機能完善</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 預售屋比中古屋貴約 20-25%，考量七隈線通車效益，新築保值性高值得入手。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">七隈線延伸博多後交通大躍進，周邊有福岡大學，餐飲零售發達且居住環境靜謐宜人。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">七隈線直通博多與天神，通勤便利度大幅提升</div>
+        <div class="fk-item">大學城帶動周邊商圈，外食選擇多且物價親民</div>
+        <div class="fk-item">公園與綠地多，治安良好，非常適合宜居生活</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">部分離車站較遠區域需依賴公車，轉乘較費時</div>
+        <div class="fk-item">學生活動區域夜間可能較吵雜，選址需特別留意</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬預算在七隈可買2LDK預售屋；若看重空間或別府精華區，建議選擇10年內中古屋。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 房價為 AI 推估（非即時實價，僅供長期規劃參考），實際行情請向當地仲介確認</span>
+      <span class="fk-next">▶ 下期：第 15 期・早良區地區完全解析</span>
+    </div>
+  </div>
+</div>
+    <!-- FK_CARD_END -->
+    <div class="fk-history">
+      <!-- FK_HIST_START -->
+      <div class="fk-hist-entry" id="fk-hist-13">
+        <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-13')">
+          <span class="fk-hist-edition">第 13 期</span>
+          <span class="fk-hist-name">南区</span>
+          <span class="fk-hist-date">2026-10-06</span>
+          <span class="fk-hist-toggle" id="fk-hist-13-toggle">▶</span>
+        </div>
+        <div class="fk-hist-detail" id="fk-hist-13-detail">
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
       <div class="fk-edition">第 13 期</div>
       <div class="fk-district-name">南区</div>
     </div>
@@ -3890,9 +4022,8 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
     </div>
   </div>
 </div>
-    <!-- FK_CARD_END -->
-    <div class="fk-history">
-      <!-- FK_HIST_START -->
+        </div>
+      </div>
       <div class="fk-hist-entry" id="fk-hist-11">
         <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-11')">
           <span class="fk-hist-edition">第 11 期</span>
