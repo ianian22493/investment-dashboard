@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27 08:08",
+  "updated_at": "2026-10-27 13:59",
   "us": {
     "AMZN": {
       "price": 249.09,
@@ -104,9 +104,9 @@
       "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2094,
-  "jpy_buy": 0.2057,
-  "jpy_sell": 0.2094,
+  "jpy_twd": 0.2081,
+  "jpy_buy": 0.2044,
+  "jpy_sell": 0.2081,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -408,11 +408,11 @@
     },
     {
       "date": "2026-10-27",
-      "buy": 0.2057,
-      "sell": 0.2094
+      "buy": 0.2044,
+      "sell": 0.2081
     }
   ],
-  "usd_twd": 32.5961,
+  "usd_twd": 32.5924,
   "portfolio_history": [
     {
       "date": "2026-08-17",
@@ -721,8 +721,8 @@
     },
     {
       "date": "2026-10-27",
-      "us": 526083,
-      "total": 526083
+      "us": 526023,
+      "total": 526023
     }
   ],
   "holdings": {
@@ -874,11 +874,6 @@
         "shares": 13000
       },
       {
-        "code": "2211",
-        "name": "長榮鋼",
-        "shares": 4000
-      },
-      {
         "code": "2308",
         "name": "台達電",
         "shares": 100
@@ -919,6 +914,6 @@
         "shares": 1000
       }
     ],
-    "updated": "2026-10-26"
+    "updated": "2026-10-27"
   }
 }
