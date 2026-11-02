@@ -268,7 +268,7 @@
       "sector": "AI電源散熱",
       "is_etf": false,
       "yf": "2308.TW",
-      "shares": 100,
+      "shares": 120,
       "strategy": "long",
       "desc": "全球電源供應器與散熱方案龍頭，AI 伺服器電源與資料中心受惠股"
     },
@@ -323,7 +323,7 @@
       "sector": "通訊網路-光通訊",
       "is_etf": false,
       "yf": "6442.TW",
-      "shares": 150,
+      "shares": 180,
       "strategy": "both",
       "desc": "光纖連接器與光通訊元件，資料中心與電信網路建置需求帶動"
     },
@@ -348,7 +348,29 @@
       "shares": 1000,
       "strategy": "long",
       "desc": "航太MRO+國防無人機"
+    },
+    {
+      "symbol": "2360",
+      "name": "致茂",
+      "market": "TW",
+      "sector": "量測/自動測試設備·AI",
+      "is_etf": false,
+      "yf": "2360.TW",
+      "shares": 10,
+      "strategy": "long",
+      "desc": "量測/自動測試設備·AI"
+    },
+    {
+      "symbol": "7750",
+      "name": "新代",
+      "market": "TW",
+      "sector": "CNC控制器+機器人·工具機(非純AI)",
+      "is_etf": false,
+      "yf": "7750.TW",
+      "shares": 10,
+      "strategy": "long",
+      "desc": "CNC控制器+機器人·工具機(非純AI)"
     }
   ],
-  "_updated": "2026-10-30"
+  "_updated": "2026-11-02"
 }
