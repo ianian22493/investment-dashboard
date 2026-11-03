@@ -3864,6 +3864,138 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
+      <div class="fk-edition">第 15 期</div>
+      <div class="fk-district-name">西区・糸島市</div>
+    </div>
+    <div class="fk-header-date">2026-11-03</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">姪浜</div>
+      <div class="fk-spot-note">始發站保證有位，商場林立且生活極為便利</div>
+      <div class="fk-spot-price">3,600万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">今宿</div>
+      <div class="fk-spot-note">海景第一排，享有度假感與便捷交通</div>
+      <div class="fk-spot-price">3,000万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">筑前前原</div>
+      <div class="fk-spot-note">糸島市中心，行政機能齊全且房價親民</div>
+      <div class="fk-spot-price">2,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart15" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart15" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart15"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [38, 41, 44, 48, 52],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart15"] = {
+      type: "bar",
+      data: { labels: ["\u59ea\u6d5c", "\u4eca\u5bbf", "\u7b51\u524d\u524d\u539f"], datasets: [{
+        label: "70㎡（萬円）", data: [3600, 3000, 2500],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[3600, 3000, 2500]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart15", "fkSpotChart15"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">アルバガーデン今宿駅前</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 今宿站・徒步3分</div>
+        <div class="fk-presale-price">💴 2,900〜3,800 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2025年03月預定</div>
+        <div class="fk-presale-note">近車站與海灘，兼具通勤與休閒機能的景觀宅</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">サンリヤン筑前前原</span>
+          <span class="fk-presale-status fk-status-soon">即将登場</span>
+        </div>
+        <div class="fk-presale-loc">📍 筑前前原站・徒步5分</div>
+        <div class="fk-presale-price">💴 2,500〜3,200 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2025年08月預定</div>
+        <div class="fk-presale-note">西鐵品牌開發，糸島市中心高CP值新築</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 預售屋比中古屋貴約25%。糸島區新築房價親民，預算內入手中高層相當划算。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">直通天神博多，姪浜機能完善，越往西越擁海景與自然，悠閒氛圍深受台灣移居者喜愛。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">地鐵空港線直達天神與機場，免轉車非常方便</div>
+        <div class="fk-item">自然環境極佳，近海邊與咖啡廳，居住品質高</div>
+        <div class="fk-item">房價僅東區或中央區一半，空間更大無壓力和</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">沿海地區需注意海風鹽害與建築物維護成本</div>
+        <div class="fk-item">離市中心較遠，晚間地鐵班次減半且車程較長</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓在姪浜可買中古2-3房；若想買新築預售屋，建議鎖定今宿或前原站周邊。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 房價為 AI 推估（非即時實價，僅供長期規劃參考），實際行情請向當地仲介確認</span>
+      <span class="fk-next">▶ 下期：第16期：城南區・早良區南側總整理</span>
+    </div>
+  </div>
+</div>
+    <!-- FK_CARD_END -->
+    <div class="fk-history">
+      <!-- FK_HIST_START -->
+      <div class="fk-hist-entry" id="fk-hist-14">
+        <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-14')">
+          <span class="fk-hist-edition">第 14 期</span>
+          <span class="fk-hist-name">城南区</span>
+          <span class="fk-hist-date">2026-10-20</span>
+          <span class="fk-hist-toggle" id="fk-hist-14-toggle">▶</span>
+        </div>
+        <div class="fk-hist-detail" id="fk-hist-14-detail">
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
       <div class="fk-edition">第 14 期</div>
       <div class="fk-district-name">城南区</div>
     </div>
@@ -3982,9 +4114,8 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
     </div>
   </div>
 </div>
-    <!-- FK_CARD_END -->
-    <div class="fk-history">
-      <!-- FK_HIST_START -->
+        </div>
+      </div>
       <div class="fk-hist-entry" id="fk-hist-13">
         <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-13')">
           <span class="fk-hist-edition">第 13 期</span>
