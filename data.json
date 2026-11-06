@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-06 09:16",
+  "updated_at": "2026-11-06 15:39",
   "us": {
     "AMZN": {
       "price": 260.21,
@@ -81,8 +81,8 @@
     },
     "CRH": {
       "price": 95.45,
-      "change": -3.35,
-      "pct": -3.39,
+      "change": -2.55,
+      "pct": -2.6,
       "state": "CLOSED"
     },
     "AVGO": {
@@ -104,9 +104,9 @@
       "state": "CLOSED"
     }
   },
-  "jpy_twd": 0.2112,
-  "jpy_buy": 0.2074,
-  "jpy_sell": 0.2112,
+  "jpy_twd": 0.2096,
+  "jpy_buy": 0.2058,
+  "jpy_sell": 0.2096,
   "jpy_savings": 800000,
   "jpy_monthly_estimate": 50000,
   "jpy_taisho_discount": 0.0006,
@@ -408,8 +408,8 @@
     },
     {
       "date": "2026-11-06",
-      "buy": 0.2074,
-      "sell": 0.2112
+      "buy": 0.2058,
+      "sell": 0.2096
     }
   ],
   "usd_twd": 33.0519,
