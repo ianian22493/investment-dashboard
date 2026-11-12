@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12 10:03",
+  "updated_at": "2026-11-12 15:57",
   "us": {
     "AMZN": {
       "price": 266.17,
@@ -32,8 +32,8 @@
       "state": "CLOSED"
     },
     "MSFT": {
-      "price": 521.12,
-      "change": -13.875,
+      "price": 521.13,
+      "change": -13.87,
       "pct": -2.59,
       "state": "CLOSED"
     },
@@ -51,8 +51,8 @@
     },
     "RBRK": {
       "price": 109.26,
-      "change": -0.08,
-      "pct": -0.07,
+      "change": -1.74,
+      "pct": -1.57,
       "state": "CLOSED"
     },
     "SOUN": {
@@ -791,8 +791,8 @@
     },
     {
       "date": "2026-11-12",
-      "us": 502436,
-      "total": 502436
+      "us": 502438,
+      "total": 502438
     }
   ],
   "holdings": {
