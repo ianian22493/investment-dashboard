@@ -3847,6 +3847,138 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
 <div class="fk-report-wrap">
   <div class="fk-header">
     <div>
+      <div class="fk-edition">第 16 期</div>
+      <div class="fk-district-name">福岡市購屋指南</div>
+    </div>
+    <div class="fk-header-date">2026-11-17</div>
+  </div>
+  <div class="fk-spots-grid">
+    <div class="fk-spot">
+      <div class="fk-spot-num">01</div>
+      <div class="fk-spot-name">千早站（東區）</div>
+      <div class="fk-spot-note">重劃區街廓整齊，適合家庭且房價親民。</div>
+      <div class="fk-spot-price">2,800万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">02</div>
+      <div class="fk-spot-name">西新站（早良區）</div>
+      <div class="fk-spot-note">明星學區與文教重鎮，轉售保值性極高。</div>
+      <div class="fk-spot-price">3,500万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+    <div class="fk-spot">
+      <div class="fk-spot-num">03</div>
+      <div class="fk-spot-name">橋本站（西區）</div>
+      <div class="fk-spot-note">七隈線始發站，生活機能成熟且性價比高。</div>
+      <div class="fk-spot-price">2,600万円〜</div>
+      <div class="fk-spot-type">70㎡ 參考價格</div>
+    </div>
+  </div>
+    <div class="fk-charts-row">
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">📈 近5年均價走勢（萬円/㎡）</div>
+        <canvas id="fkTrendChart16" height="180"></canvas>
+      </div>
+      <div class="fk-chart-box">
+        <div class="fk-chart-title">🏘 推薦地段 70㎡ 參考價（萬円）</div>
+        <canvas id="fkSpotChart16" height="180"></canvas>
+      </div>
+    </div>
+    <script>
+    window.__fkCharts = window.__fkCharts || {};
+    window.__fkCharts["fkTrendChart16"] = {
+      type: "line",
+      data: { labels: ["2020", "2021", "2022", "2023", "2024"], datasets: [{
+        label: "均價（萬円/㎡）", data: [42, 46, 50, 55, 60],
+        borderColor: "#388bfd", backgroundColor: "rgba(56,139,253,0.12)",
+        tension: 0.3, fill: true, pointRadius: 4, pointBackgroundColor: "#388bfd"
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" }, beginAtZero: false } } }
+    };
+    window.__fkCharts["fkSpotChart16"] = {
+      type: "bar",
+      data: { labels: ["\u5343\u65e9\u7ad9\uff08\u6771\u5340\uff09", "\u897f\u65b0\u7ad9\uff08\u65e9\u826f\u5340\uff09", "\u6a4b\u672c\u7ad9\uff08\u897f\u5340\uff09"], datasets: [{
+        label: "70㎡（萬円）", data: [2800, 3500, 2600],
+        backgroundColor: ["rgba(56,139,253,0.7)","rgba(63,185,80,0.7)","rgba(210,153,34,0.7)"],
+        borderRadius: 6
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: "#8b949e" }, grid: { display: false } },
+                   y: { ticks: { color: "#8b949e" }, grid: { color: "rgba(139,148,158,0.15)" },
+                         min: Math.max(0, Math.min(...[2800, 3500, 2600]) - 500) } } }
+    };
+    (function(){
+      ["fkTrendChart16", "fkSpotChart16"].forEach(function(id) {
+        var c = document.getElementById(id);
+        if (c && !Chart.getChart(c)) new Chart(c, window.__fkCharts[id]);
+      });
+    })();
+    </script>
+    <div class="fk-presale-section">
+      <div class="fk-section-label">🏗 預售屋動態</div>
+      <div class="fk-presale-grid">
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">MJR千早三丁目</span>
+          <span class="fk-presale-status fk-status-sale">銷售中</span>
+        </div>
+        <div class="fk-presale-loc">📍 JR千早站・徒步8分</div>
+        <div class="fk-presale-price">💴 2,900〜3,600 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2025年03月預定</div>
+        <div class="fk-presale-note">大型開發商品牌，重劃區優質住宅。</div>
+      </div>
+      <div class="fk-presale-card">
+        <div class="fk-presale-header">
+          <span class="fk-presale-name">オーヴィジョン橋本站前</span>
+          <span class="fk-presale-status fk-status-soon">即將登場</span>
+        </div>
+        <div class="fk-presale-loc">📍 地鐵橋本站・徒步4分</div>
+        <div class="fk-presale-price">💴 2,600〜3,200 萬円</div>
+        <div class="fk-presale-delivery">🗓 交屋：2025年11月預定</div>
+        <div class="fk-presale-note">始發站純住宅，高CP值適合自住首選。</div>
+      </div>
+      </div>
+      <div class="fk-presale-note-row">💡 預售屋比中古屋貴約25%，預算3,000萬建議考慮蛋黃區中古或蛋白區預售。</div>
+    </div>
+  <div class="fk-ai-section">
+    <div class="fk-ai-lead">空港線與七隈線雙地鐵路網完善，生活機能極佳，兼具都市繁華與宜人居住環境。</div>
+    <div class="fk-pros-cons">
+      <div class="fk-pros">
+        <div class="fk-pc-title">優勢</div>
+        <div class="fk-item">機場至市中心僅10分鐘，往返台灣極為便利。</div>
+        <div class="fk-item">人口持續正成長，不動產具備良好抗跌保值性。</div>
+        <div class="fk-item">生活成本較東京低廉，居住環境舒適宜人。</div>
+      </div>
+      <div class="fk-cons">
+        <div class="fk-pc-title">風險</div>
+        <div class="fk-item">未取得日本永住身份前，非居住者貸款成數較低。</div>
+        <div class="fk-item">需負擔額外的管理費、修繕積立金及匯率波動風險。</div>
+      </div>
+    </div>
+    <div class="fk-budget-box"><strong>3,000万円 建議：</strong>3,000萬日圓在核心區可買20年內中古2LDK；若偏好新築，建議鎖定東區千早或西區橋本的預售案。</div>
+    <div class="fk-ai-footer">
+      <span>🤖 房價為 AI 推估（非即時實價，僅供長期規劃參考），實際行情請向當地仲介確認</span>
+      <span class="fk-next">▶ 下期：第 17 期：九州新幹線門戶・博多區深度剖析</span>
+    </div>
+  </div>
+</div>
+    <!-- FK_CARD_END -->
+    <div class="fk-history">
+      <!-- FK_HIST_START -->
+      <div class="fk-hist-entry" id="fk-hist-15">
+        <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-15')">
+          <span class="fk-hist-edition">第 15 期</span>
+          <span class="fk-hist-name">西区・糸島市</span>
+          <span class="fk-hist-date">2026-11-03</span>
+          <span class="fk-hist-toggle" id="fk-hist-15-toggle">▶</span>
+        </div>
+        <div class="fk-hist-detail" id="fk-hist-15-detail">
+<div class="fk-report-wrap">
+  <div class="fk-header">
+    <div>
       <div class="fk-edition">第 15 期</div>
       <div class="fk-district-name">西区・糸島市</div>
     </div>
@@ -3965,9 +4097,8 @@ RSI = 100 − 100 ÷ (1 + 12.90) = 100 − 7.2 = <strong style="color:var(--red)
     </div>
   </div>
 </div>
-    <!-- FK_CARD_END -->
-    <div class="fk-history">
-      <!-- FK_HIST_START -->
+        </div>
+      </div>
       <div class="fk-hist-entry" id="fk-hist-14">
         <div class="fk-hist-compact" onclick="toggleFkHist('fk-hist-14')">
           <span class="fk-hist-edition">第 14 期</span>
